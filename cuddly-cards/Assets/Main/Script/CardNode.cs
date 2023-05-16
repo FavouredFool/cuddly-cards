@@ -81,6 +81,18 @@ public class CardNode
 		return _children.Remove(node);
 	}
 
+	public int NodeCount()
+    {
+		int nodeCount = 1;
+
+		foreach (CardNode node in _children)
+        {
+			nodeCount += node.NodeCount();
+        }
+
+		return nodeCount;
+    }
+
 	public void Traverse(TraverseNodeDelegate handler)
 	{
 		if (!handler(this))

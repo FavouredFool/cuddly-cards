@@ -5,7 +5,8 @@ public class CardMover : MonoBehaviour
     [SerializeField]
     Transform _cardFolder;
 
-    readonly float CARDHEIGHT = 0.005f;
+    [SerializeField]
+    string _excludeName;
 
     float _jitterAmount = 0.01f;
 
@@ -23,28 +24,7 @@ public class CardMover : MonoBehaviour
         );
     }
 
-    //public void PileFromParenting(CardNode cardNode)
-    //{
-    //    if (cardNode.Parent != null)
-    //    {
-    //        Debug.LogError("Tried to create pile from non-root cardBody");
-    //    }
-
-    //    int cardCount = 0;
-
-    //    cardNode.TraverseHeight(
-    //        delegate (CardNode cardNode, int height)
-    //        {
-    //            SetHeight(cardNode.Body, height);
-    //            cardCount += 1;
-    //        }
-    //        , 0
-    //    );
-
-    //    SetHeight(cardNode.Body, cardCount);
-    //}
-
-    public void PileFromParentingTransform(CardBody rootBody)
+    public void PileFromParenting(CardBody rootBody)
     {
         if (rootBody.transform.parent != _cardFolder)
         {
@@ -67,7 +47,7 @@ public class CardMover : MonoBehaviour
 
         foreach (Transform child in bodyTransform)
         {
-            if (child.name == "CardContents")
+            if (child.name == _excludeName)
             {
                 continue;
             }
@@ -79,9 +59,23 @@ public class CardMover : MonoBehaviour
         return height;
     }
 
+    public void MoveCardRandom(CardNode card)
+    {
+        MoveCard(card, Random.insideUnitCircle * 2);
+    }
+
+    public void MoveCard(CardNode card, Vector2 position)
+    {
+        card.Body.transform.localPosition = new Vector3(position.x, card.Body.transform.localPosition.y, position.y);
+    }
+
     public void SetHeight(Transform bodyTransform, int height)
     {
-        bodyTransform.localPosition = new Vector3(0, CARDHEIGHT * height, 0);
+        bodyTransform.localPosition = new Vector3(
+            bodyTransform.localPosition.x,
+            CardInfo.CARDHEIGHT * height,
+            bodyTransform.localPosition.z
+        );
     }
 
 }
