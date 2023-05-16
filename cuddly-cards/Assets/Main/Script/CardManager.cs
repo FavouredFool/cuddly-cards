@@ -27,7 +27,9 @@ public class CardManager : MonoBehaviour
 
         _cardMover.ParentCards(_rootNode);
 
-        _cardMover.PileFromParenting(_rootNode);
+        //_cardMover.PileFromParenting(_rootNode);
+
+        _cardMover.PileFromParentingTransform(_rootNode.Body);
 
 
     }

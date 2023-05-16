@@ -9,6 +9,8 @@ public class CardMover : MonoBehaviour
 
     float _jitterAmount = 0.01f;
 
+    int _cardCount = 0;
+
     public void ParentCards(CardNode rootNode)
     {
         rootNode.Traverse(
@@ -21,29 +23,65 @@ public class CardMover : MonoBehaviour
         );
     }
 
-    public void PileFromParenting(CardNode cardNode)
+    //public void PileFromParenting(CardNode cardNode)
+    //{
+    //    if (cardNode.Parent != null)
+    //    {
+    //        Debug.LogError("Tried to create pile from non-root cardBody");
+    //    }
+
+    //    int cardCount = 0;
+
+    //    cardNode.TraverseHeight(
+    //        delegate (CardNode cardNode, int height)
+    //        {
+    //            SetHeight(cardNode.Body, height);
+    //            cardCount += 1;
+    //        }
+    //        , 0
+    //    );
+
+    //    SetHeight(cardNode.Body, cardCount);
+    //}
+
+    public void PileFromParentingTransform(CardBody rootBody)
     {
-        if (cardNode.Parent != null)
+        if (rootBody.transform.parent != _cardFolder)
         {
-            Debug.LogError("Tried to create pile from non-root cardBody");
+            Debug.LogError("Tried to create pile from non-root cardBody or root is null instead of cardFolder");
         }
 
-        int cardCount = 0;
+        _cardCount = 0;
 
-        cardNode.TraverseHeight(
-            delegate (CardNode cardNode, int height)
-            {
-                SetHeight(cardNode.Body, height);
-                cardCount += 1;
-            }
-            , 0
-        );
+        SetHeightRecursive(rootBody.transform, 0);
 
-        SetHeight(cardNode.Body, cardCount);
+        SetHeight(rootBody.transform, _cardCount);
     }
 
-    public void SetHeight(CardBody body, int height)
+    int SetHeightRecursive(Transform bodyTransform, int height)
     {
-        body.SetPosition(new Vector3(0, CARDHEIGHT * height, 0));
+        SetHeight(bodyTransform, height);
+        
+        _cardCount += 1;
+        height = 0;
+
+        foreach (Transform child in bodyTransform)
+        {
+            if (child.name == "CardContents")
+            {
+                continue;
+            }
+
+            height -= 1;
+            height += SetHeightRecursive(child, height);
+        }
+
+        return height;
     }
+
+    public void SetHeight(Transform bodyTransform, int height)
+    {
+        bodyTransform.localPosition = new Vector3(0, CARDHEIGHT * height, 0);
+    }
+
 }
