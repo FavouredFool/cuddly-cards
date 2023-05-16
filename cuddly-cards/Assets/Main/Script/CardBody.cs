@@ -11,4 +11,9 @@ public class CardBody : MonoBehaviour
     {
         _textField.text = labelText;
     }
+
+    public void SetPosition(Vector3 localPosition)
+    {
+        transform.localPosition = localPosition;
+    }
 }

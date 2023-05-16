@@ -8,7 +8,8 @@ using System.Collections.Generic;
 
 public class CardNode
 {
-	public delegate bool TraversalNodeDelegate(CardNode node);
+	public delegate bool TraverseNodeDelegate(CardNode node);
+	public delegate void TraverseNodeHeightDelegate(CardNode node, int height);
 
 	private readonly CardContext _context;
 	private readonly CardNode _parent;
@@ -37,6 +38,7 @@ public class CardNode
 	public CardContext Context { get { return _context; } }
 	public CardBody Body { set { _cardBody = value; } get { return _cardBody; } }
 	public CardNode Parent { get { return _parent; } }
+	public List<CardNode> Children { get { return _children; } }
 
 	public CardNode this[int key]
 	{
@@ -79,13 +81,32 @@ public class CardNode
 		return _children.Remove(node);
 	}
 
-	public void Traverse(TraversalNodeDelegate handler)
+	public void Traverse(TraverseNodeDelegate handler)
 	{
-		if (handler(this))
+		if (!handler(this))
+        {
+			return;
+        }
+
+		foreach (CardNode node in _children)
 		{
-			int i = 0, l = Count;
-			for (; i < l; ++i) _children[i].Traverse(handler);
+			node.Traverse(handler);
 		}
+	}
+
+	public int TraverseHeight(TraverseNodeHeightDelegate handler, int height)
+	{
+		handler(this, height);
+
+		height = 0;	
+
+		foreach (CardNode node in _children)
+        {
+			height -= 1;
+			height += node.TraverseHeight(handler, height);
+		}
+
+		return height;
 	}
 
 }

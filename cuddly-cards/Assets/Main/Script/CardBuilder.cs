@@ -9,13 +9,13 @@ public class CardBuilder : MonoBehaviour
     Transform _cardFolder;
 
 
-    public void BuildAllCards(CardNode treeRoot)
+    public void BuildAllCards(CardNode rootNode)
     {
-        treeRoot.Traverse(
-            delegate (CardNode treeNode)
+        rootNode.Traverse(
+            delegate (CardNode cardNode)
             {
-                CardContext context = treeNode.Context;
-                treeNode.Body = BuildCard(context);
+                CardContext context = cardNode.Context;
+                cardNode.Body = BuildCard(context);
                 return true;
             }
         );
