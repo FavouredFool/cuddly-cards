@@ -9,16 +9,13 @@ public class CardMover : MonoBehaviour
 
     float _jitterAmount = 0.01f;
 
-    public void ParentCards(TreeNode<CardContext> treeRoot)
+    public void ParentCards(CardNode nodeRoot)
     {
-        treeRoot.Traverse(
-            delegate (TreeNode<CardContext> treeNode)
+        nodeRoot.Traverse(
+            delegate (CardNode cardNode)
             {
-                CardContext context = treeNode.Data;
-                CardBody body = context.GetCardBody();
-
-                Transform parent = treeNode.Parent?.Data.GetCardBody().transform;
-                body.transform.parent = parent == null ? _cardFolder : parent;
+                Transform parent = cardNode.Parent?.Body.transform;
+                cardNode.Body.transform.parent = parent == null ? _cardFolder : parent;
                 return true;
             }
         );

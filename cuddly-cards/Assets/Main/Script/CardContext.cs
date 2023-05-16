@@ -3,9 +3,7 @@ using static CardManager;
 public class CardContext
 {
     string _label;
-    CardType _cardType;
-    CardBody _cardBody;
-    
+    CardType _cardType;   
 
 
     public CardContext(string label, CardType cardType)
@@ -18,16 +16,5 @@ public class CardContext
     {
         return _label;
     }
-
-    public void SetCardBody(CardBody cardBody)
-    {
-        _cardBody = cardBody;
-    }
-
-    public CardBody GetCardBody()
-    {
-        return _cardBody;
-    }
-
 
 }

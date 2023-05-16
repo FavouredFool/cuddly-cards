@@ -1,5 +1,5 @@
 using UnityEngine;
-using static TreeNode<CardContext>;
+using static CardNode;
 
 public class CardManager : MonoBehaviour
 {
@@ -11,21 +11,21 @@ public class CardManager : MonoBehaviour
 
     public enum CardType { PLACE }
 
-    TreeNode<CardContext> _treeRoot;
+    CardNode _noteRoot;
 
 
     public void Start()
     {
-        _treeRoot = new(new("Se Beginning", CardType.PLACE));
-        _treeRoot.AddChild(new("Level 1, first", CardType.PLACE));
-        _treeRoot.AddChild(new("Level 1, second", CardType.PLACE));
-        _treeRoot.AddChild(new("Level 1, third", CardType.PLACE));
-        _treeRoot[1].AddChild(new("Level 2, second_first", CardType.PLACE));
+        _noteRoot = new(new("Se Beginning", CardType.PLACE));
+        _noteRoot.AddChild(new("Level 1, first", CardType.PLACE));
+        _noteRoot.AddChild(new("Level 1, second", CardType.PLACE));
+        _noteRoot.AddChild(new("Level 1, third", CardType.PLACE));
+        _noteRoot[1].AddChild(new("Level 2, second_first", CardType.PLACE));
 
 
-        _cardBuilder.BuildAllCards(_treeRoot);
+        _cardBuilder.BuildAllCards(_noteRoot);
 
-        _cardMover.ParentCards(_treeRoot);
+        _cardMover.ParentCards(_noteRoot);
 
 
     }
