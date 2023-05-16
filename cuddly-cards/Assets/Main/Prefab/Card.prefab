@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7811054855460049670}
   m_Layer: 0
-  m_Name: CardScaled
+  m_Name: CardContents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa2ffe0a9b0fcbd4dbcd96c12652f62d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textField: {fileID: 7811054855992256772}
 --- !u!1 &7811054855745619492
 GameObject:
   m_ObjectHideFlags: 0

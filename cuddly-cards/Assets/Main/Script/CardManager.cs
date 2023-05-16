@@ -1,25 +1,32 @@
 using UnityEngine;
+using static TreeNode<CardContext>;
 
 public class CardManager : MonoBehaviour
 {
     [SerializeField]
-    GameObject _cardBlueprint;
+    CardBuilder _cardBuilder;
 
     [SerializeField]
-    Transform _cardParent;
+    CardMover _cardMover;
 
-    readonly float CARDHEIGHT = 0.005f;
+    public enum CardType { PLACE }
 
-    float _jitterAmount = 0.01f;
+    TreeNode<CardContext> _treeRoot;
 
 
     public void Start()
     {
-        for (int i = 0; i < 100; i++)
-        {            
-            Instantiate(_cardBlueprint, new Vector3(Random.Range(-1f, 1f) * _jitterAmount, i * CARDHEIGHT, Random.Range(-1f, 1f) * _jitterAmount), Quaternion.identity, _cardParent);
-        }
+        _treeRoot = new(new("Se Beginning", CardType.PLACE));
+        _treeRoot.AddChild(new("Level 1, first", CardType.PLACE));
+        _treeRoot.AddChild(new("Level 1, second", CardType.PLACE));
+        _treeRoot.AddChild(new("Level 1, third", CardType.PLACE));
+        _treeRoot[1].AddChild(new("Level 2, second_first", CardType.PLACE));
 
-        
+
+        _cardBuilder.BuildAllCards(_treeRoot);
+
+        _cardMover.ParentCards(_treeRoot);
+
+
     }
 }
