@@ -530,6 +530,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27812f7da76fc914e93a1bfd3d5d955b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _camera: {fileID: 330585545}
+  _cardManager: {fileID: 1221586264}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,14 +801,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardFolder: {fileID: 35637509}
-  _excludeName: CardContents
 --- !u!43 &1618291547
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh26672
+  m_Name: pb_Mesh26708
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

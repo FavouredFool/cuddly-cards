@@ -8,8 +8,6 @@ public class CardMover : MonoBehaviour
 
     float _jitterAmount = 0.01f;
 
-    int _cardCount = 0;
-
     public void ParentCards(CardNode rootNode, List<CardNode> topLevelNodes)
     {
         rootNode.TraverseContext(
@@ -35,34 +33,19 @@ public class CardMover : MonoBehaviour
             Debug.LogError("Tried to create pile from non-topLevel cardBody");
         }
 
-        _cardCount = 0;
+        topLevelNode.SetHeightRecursive(0);
+        topLevelNode.Body.SetHeight(topLevelNode.NodeCount());
 
-        SetHeightRecursive(topLevelNode, 0);
-
-        topLevelNode.Body.SetHeight(_cardCount);
-    }
-
-    int SetHeightRecursive(CardNode node, int height)
-    {
-        // this could also go inside of CardBody, but then i'd need a different solution for the _cardCount
-        node.Body.SetHeight(height);
-        
-        _cardCount += 1;
-        height = 0;
-
-        foreach (CardNode child in node.Children)
+        // This might be performance-intensive due to being heavily nested
+        topLevelNode.TraverseBody(delegate (CardNode node)
         {
-            if (child.IsTopLevel)
-            {
-                continue;
-            }
-
-            height -= 1;
-            height += SetHeightRecursive(child, height);
-        }
-
-        return height;
+            Vector2 jitter = Random.insideUnitCircle;
+            node.Body.transform.localPosition = new Vector3(jitter.x * _jitterAmount, node.Body.transform.localPosition.y, jitter.y * _jitterAmount);
+            return true;
+        });
     }
+
+
 
     public void MoveCardRandom(CardNode card)
     {

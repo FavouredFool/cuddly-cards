@@ -41,14 +41,6 @@ public class CardManager : MonoBehaviour
         _topLevelNodes.Add(_rootNode);
         _topLevelNodes.Add(_rootNode[1]);
 
-        // ändern
-        _rootNode.TraverseContext(
-            delegate (CardNode node)
-            {
-                node.IsTopLevel = _topLevelNodes.Contains(node);
-                return true;
-            });
-
         UpdatePiles();
 
         _topLevelNodes.ForEach(e => _cardMover.MoveCardRandom(e));
@@ -60,14 +52,78 @@ public class CardManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            _topLevelNodes.ForEach(e => _cardMover.MoveCardRandom(e));
-
-            _cardInput.UpdateColliders(_topLevelNodes);
+            SetLayout(_rootNode);
         }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            SetLayout(_rootNode[1]);
+        }
+    }
+
+    public void SetLayout(CardNode mainNode)
+    {
+        // When a cardpile is pressed, it's layout is set. This involves:
+        // Moving the topmost card onto a specific position
+        // Making direct children to topmost cards, reparenting, moving them based on their amount, putting all other cards someplace else
+        // updating colliders
+
+
+        // make all topcards false
+        ClearTopLevelNodes();
+
+        // set topcards
+        if (mainNode != _rootNode)
+        {
+            _topLevelNodes.Add(_rootNode);
+        }
+
+        _topLevelNodes.Add(mainNode);
+
+        foreach (CardNode childNode in mainNode.Children)
+        {
+            _topLevelNodes.Add(childNode);
+        }
+
+        // update the entire pile (always necessary)
+        UpdatePiles();
+
+        if (mainNode != _rootNode)
+        {
+            _cardMover.MoveCard(_rootNode, new Vector2(3, 3));
+        }
+
+        // Move them
+        _cardMover.MoveCard(mainNode, new Vector2(-3f, 0));
+
+        for (int i = 0; i < mainNode.Children.Count; i++)
+        {
+            _cardMover.MoveCard(mainNode.Children[i], new Vector2(i * 1.5f - 1f, 0));
+        }
+
+        _cardInput.UpdateColliders(_topLevelNodes);
+
+
+    }
+
+    void ClearTopLevelNodes()
+    {
+        _topLevelNodes.Clear();
+    }
+
+    void RefreshTopLevelForAllNodes()
+    {
+        _rootNode.TraverseContext(
+            delegate (CardNode node)
+            {
+                node.IsTopLevel = _topLevelNodes.Contains(node);
+                return true;
+            });
     }
 
     void UpdatePiles()
     {
+        RefreshTopLevelForAllNodes();
+
         _cardMover.ParentCards(_rootNode, _topLevelNodes);
 
         foreach (CardNode node in _topLevelNodes)
@@ -76,5 +132,9 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    public List<CardNode> GetTopLevelNodes()
+    {
+        return _topLevelNodes;
+    }
 
 }

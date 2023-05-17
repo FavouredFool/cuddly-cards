@@ -79,7 +79,6 @@ public class CardNode
 
 		foreach (CardNode child in _children)
 		{
-			// if it hits another toplevel, it does not go there. Like it should be for bodies!
 			if (child.IsTopLevel)
 			{
 				continue;
@@ -105,5 +104,26 @@ public class CardNode
 
 		return nodeCount;
     }
+
+
+	public int SetHeightRecursive(int height)
+	{
+		Body.SetHeight(height);
+
+		height = 0;
+
+		foreach (CardNode child in Children)
+		{
+			if (child.IsTopLevel)
+			{
+				continue;
+			}
+
+			height -= 1;
+			height += child.SetHeightRecursive(height);
+		}
+
+		return height;
+	}
 
 }
