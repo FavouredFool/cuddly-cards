@@ -9,23 +9,23 @@ public class CardBuilder : MonoBehaviour
     Transform _cardFolder;
 
 
-    public void BuildAllCards(CardNode rootNode)
+    public void BuildAllCards(ContextNode rootNode)
     {
         rootNode.Traverse(
-            delegate (CardNode cardNode)
+            delegate (ContextNode cardNode)
             {
                 CardContext context = cardNode.Context;
-                cardNode.Body = BuildCard(context);
+                cardNode.CBody = BuildCard(context);
                 return true;
             }
         );
     }
 
-    public CardBody BuildCard(CardContext cardContext)
+    public BodyNode BuildCard(CardContext cardContext)
     {
-        CardBody cardBody = Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, _cardFolder).GetComponent<CardBody>();
-        cardBody.SetLabel(cardContext.GetLabel());
-        cardBody.gameObject.name = "Card: \"" + cardContext.GetLabel() + "\"";
-        return cardBody;
+        BodyNode node = new(Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, _cardFolder).GetComponent<CardBody>());
+        node.Body.SetLabel(cardContext.GetLabel());
+        node.Body.gameObject.name = "Card: \"" + cardContext.GetLabel() + "\"";
+        return node;
     }
 }

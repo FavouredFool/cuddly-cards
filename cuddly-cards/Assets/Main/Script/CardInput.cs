@@ -10,19 +10,19 @@ public class CardInput : MonoBehaviour
         _colliders = new();
     }
 
-    public void UpdateColliders(List<CardNode> topLevelNodes)
+    public void UpdateColliders(List<BodyNode> topLevelNodes)
     {
         foreach (BoxCollider collider in _colliders)
         {
             Destroy(collider);
         }
 
-        foreach (CardNode node in topLevelNodes)
+        foreach (BodyNode node in topLevelNodes)
         {
             BoxCollider collider = gameObject.AddComponent<BoxCollider>();
 
-            float totalHeight = node.Body.BodyCount() * CardInfo.CARDHEIGHT;
-            //float totalHeight = node.Body.transform
+
+            float totalHeight = node.NodeCount() * CardInfo.CARDHEIGHT;
 
             collider.center = node.Body.transform.position - new Vector3(0, totalHeight / 2f, 0);
             collider.size = new Vector3(1f, totalHeight, CardInfo.CARDRATIO);
