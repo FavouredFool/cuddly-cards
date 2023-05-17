@@ -14,9 +14,9 @@ public class CardManager : MonoBehaviour
 
     public enum CardType { PLACE }
 
-    ContextNode _rootContextNode;
+    CardNode _rootNode;
 
-    List<BodyNode> _topLevelNodes;
+    List<CardNode> _topLevelNodes;
 
     public void Awake()
     {
@@ -25,21 +25,29 @@ public class CardManager : MonoBehaviour
 
     public void Start()
     {
-        _rootContextNode = new(new("Se Beginning", CardType.PLACE));
-        _rootContextNode.AddChild(new("Level 1, first", CardType.PLACE));
-        _rootContextNode.AddChild(new("Level 1, second", CardType.PLACE));
-        _rootContextNode.AddChild(new("Level 1, third", CardType.PLACE));
-        _rootContextNode[1].AddChild(new("Level 2, second_first", CardType.PLACE));
+        _rootNode = new(new("Se Beginning", CardType.PLACE));
+        _rootNode.AddChild(new("Level 1, first", CardType.PLACE));
+        _rootNode.AddChild(new("Level 1, second", CardType.PLACE));
+        _rootNode.AddChild(new("Level 1, third", CardType.PLACE));
+        _rootNode[1].AddChild(new("Level 2, second_first", CardType.PLACE));
 
         for (int i = 0; i < 100; i++)
         {
-            _rootContextNode[1].AddChild(new("Extra", CardType.PLACE));
+            _rootNode[1].AddChild(new("Extra", CardType.PLACE));
         }
 
-        _cardBuilder.BuildAllCards(_rootContextNode);
+        _cardBuilder.BuildAllCards(_rootNode);
 
-        _topLevelNodes.Add(_rootContextNode.CBody);
-        _topLevelNodes.Add(_rootContextNode[1].CBody);
+        _topLevelNodes.Add(_rootNode);
+        _topLevelNodes.Add(_rootNode[1]);
+
+        // ändern
+        _rootNode.TraverseContext(
+            delegate (CardNode node)
+            {
+                node.IsTopLevel = _topLevelNodes.Contains(node);
+                return true;
+            });
 
         UpdatePiles();
 
@@ -60,9 +68,9 @@ public class CardManager : MonoBehaviour
 
     void UpdatePiles()
     {
-        _cardMover.ParentCards(_rootContextNode, _topLevelNodes);
+        _cardMover.ParentCards(_rootNode, _topLevelNodes);
 
-        foreach (BodyNode node in _topLevelNodes)
+        foreach (CardNode node in _topLevelNodes)
         {
             _cardMover.PileFromParenting(node);
         }

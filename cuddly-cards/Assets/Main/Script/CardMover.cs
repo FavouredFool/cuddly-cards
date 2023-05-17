@@ -10,63 +10,53 @@ public class CardMover : MonoBehaviour
 
     int _cardCount = 0;
 
-    public void ParentCards(ContextNode rootNode, List<BodyNode> topLevelNodes)
+    public void ParentCards(CardNode rootNode, List<CardNode> topLevelNodes)
     {
-        rootNode.Traverse(
-            delegate (ContextNode contextNode)
+        rootNode.TraverseContext(
+            delegate (CardNode cardNode)
             {
-                // This sets both the Unity-Hierachie AND the implied bodyhierachie in code through ChildrenBody and ParentBody
-
-                // reset children: ONLY WORKS IF THE TRAVERSE-ORDER STAYS THE SAME
-                // IF THE CHILDREN EVER GET TRAVERSED BEFORE THE PARENT; THIS DIES
-
-                BodyNode bodyNode = contextNode.CBody;
-
-                bodyNode.Clear();
-
-                // parent
-                BodyNode parent = contextNode.Parent?.CBody;
+                CardNode parent = cardNode.Parent;
 
                 // If the node is top level, cut off any parenting
-                if (topLevelNodes.Contains(bodyNode)) parent = null;
+                if (topLevelNodes.Contains(cardNode)) parent = null;
 
-                // Set parent in both unity- and body-hierachie
-                bodyNode.Parent = parent;
-                bodyNode.Body.transform.parent = parent?.Body.transform;
-                bodyNode.Body.transform.parent ??= _cardFolder;
-
-                // Set child of parent
-                parent?.Children.Add(bodyNode);
+                cardNode.Body.transform.parent = parent?.Body.transform;
+                cardNode.Body.transform.parent ??= _cardFolder;
 
                 return true;
             }
         );
     }
 
-    public void PileFromParenting(BodyNode topLevelBodyNode)
+    public void PileFromParenting(CardNode topLevelNode)
     {
-        if (topLevelBodyNode.Parent != null)
+        if (!topLevelNode.IsTopLevel)
         {
             Debug.LogError("Tried to create pile from non-topLevel cardBody");
         }
 
         _cardCount = 0;
 
-        SetHeightRecursive(topLevelBodyNode, 0);
+        SetHeightRecursive(topLevelNode, 0);
 
-        topLevelBodyNode.Body.SetHeight(_cardCount);
+        topLevelNode.Body.SetHeight(_cardCount);
     }
 
-    int SetHeightRecursive(BodyNode bodyNode, int height)
+    int SetHeightRecursive(CardNode node, int height)
     {
         // this could also go inside of CardBody, but then i'd need a different solution for the _cardCount
-        bodyNode.Body.SetHeight(height);
+        node.Body.SetHeight(height);
         
         _cardCount += 1;
         height = 0;
 
-        foreach (BodyNode child in bodyNode.Children)
+        foreach (CardNode child in node.Children)
         {
+            if (child.IsTopLevel)
+            {
+                continue;
+            }
+
             height -= 1;
             height += SetHeightRecursive(child, height);
         }
@@ -74,12 +64,12 @@ public class CardMover : MonoBehaviour
         return height;
     }
 
-    public void MoveCardRandom(BodyNode card)
+    public void MoveCardRandom(CardNode card)
     {
         MoveCard(card, Random.insideUnitCircle * 2);
     }
 
-    public void MoveCard(BodyNode card, Vector2 position)
+    public void MoveCard(CardNode card, Vector2 position)
     {
         card.Body.transform.localPosition = new Vector3(position.x, card.Body.transform.localPosition.y, position.y);
     }

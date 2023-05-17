@@ -10,14 +10,14 @@ public class CardInput : MonoBehaviour
         _colliders = new();
     }
 
-    public void UpdateColliders(List<BodyNode> topLevelNodes)
+    public void UpdateColliders(List<CardNode> topLevelNodes)
     {
         foreach (BoxCollider collider in _colliders)
         {
             Destroy(collider);
         }
 
-        foreach (BodyNode node in topLevelNodes)
+        foreach (CardNode node in topLevelNodes)
         {
             BoxCollider collider = gameObject.AddComponent<BoxCollider>();
 
