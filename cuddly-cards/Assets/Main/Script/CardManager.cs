@@ -39,6 +39,7 @@ public class CardManager : MonoBehaviour
         _cardBuilder.BuildAllCards(_rootNode);
 
         _topLevelNodes.Add(_rootNode);
+        _topLevelNodes.Add(_rootNode[1]);
 
         UpdatePiles();
 
@@ -59,9 +60,10 @@ public class CardManager : MonoBehaviour
 
     void UpdatePiles()
     {
+        _cardMover.ParentCards(_rootNode, _topLevelNodes);
+
         foreach (CardNode node in _topLevelNodes)
         {
-            _cardMover.ParentCards(node);
             _cardMover.PileFromParenting(node.Body);
         }
     }

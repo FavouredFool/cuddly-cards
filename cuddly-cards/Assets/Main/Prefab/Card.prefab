@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textField: {fileID: 7811054855992256772}
+  _excludeName: CardContents
 --- !u!1 &7811054855745619492
 GameObject:
   m_ObjectHideFlags: 0

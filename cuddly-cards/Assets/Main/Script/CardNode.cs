@@ -12,49 +12,46 @@ public class CardNode
 	public delegate void TraverseNodeHeightDelegate(CardNode node, int height);
 
 	private readonly CardContext _context;
-	private readonly CardNode _parent;
+	private readonly CardNode _parentNode;
 	private readonly int _level;
-	private readonly List<CardNode> _children;
+	private readonly List<CardNode> _childrenNode;
 
 	private CardBody _cardBody;
 
 	public CardNode(CardContext context)
 	{
 		_context = context;
-		_children = new List<CardNode>();
+		_childrenNode = new List<CardNode>();
 		_level = 0;
 	}
 
 	public CardNode(CardContext context, CardNode parent) : this(context)
 	{
-		_parent = parent;
-		_level = _parent != null ? _parent.Level + 1 : 0;
+		_parentNode = parent;
+		_level = _parentNode != null ? _parentNode.Level + 1 : 0;
 	}
 
-	public int Level { get { return _level; } }
-	public int Count { get { return _children.Count; } }
-	public bool IsRoot { get { return _parent == null; } }
-	public bool IsLeaf { get { return _children.Count == 0; } }
 	public CardContext Context { get { return _context; } }
 	public CardBody Body { set { _cardBody = value; } get { return _cardBody; } }
-	public CardNode Parent { get { return _parent; } }
-	public List<CardNode> Children { get { return _children; } }
+	public CardNode ParentNode { get { return _parentNode; } }
+	public List<CardNode> ChildrenNode { get { return _childrenNode; } }
+	public int Level { get { return _level; } }
 
 	public CardNode this[int key]
 	{
-		get { return _children[key]; }
+		get { return _childrenNode[key]; }
 	}
 
 
 	public void Clear()
 	{
-		_children.Clear();
+		_childrenNode.Clear();
 	}
 
 	public CardNode AddChild(CardContext value)
 	{
 		CardNode node = new CardNode(value, this);
-		_children.Add(node);
+		_childrenNode.Add(node);
 
 		return node;
 	}
@@ -66,10 +63,9 @@ public class CardNode
 
 	public CardNode FindInChildren(CardContext context)
 	{
-		int i = 0, l = Count;
-		for (; i < l; ++i)
+		for (int i = 0; i < _childrenNode.Count; ++i)
 		{
-			CardNode child = _children[i];
+			CardNode child = _childrenNode[i];
 			if (child.Context.Equals(context)) return child;
 		}
 
@@ -78,14 +74,14 @@ public class CardNode
 
 	public bool RemoveChild(CardNode node)
 	{
-		return _children.Remove(node);
+		return _childrenNode.Remove(node);
 	}
 
 	public int NodeCount()
     {
 		int nodeCount = 1;
 
-		foreach (CardNode node in _children)
+		foreach (CardNode node in _childrenNode)
         {
 			nodeCount += node.NodeCount();
         }
@@ -100,7 +96,7 @@ public class CardNode
 			return;
         }
 
-		foreach (CardNode node in _children)
+		foreach (CardNode node in _childrenNode)
 		{
 			node.Traverse(handler);
 		}
@@ -112,7 +108,7 @@ public class CardNode
 
 		height = 0;	
 
-		foreach (CardNode node in _children)
+		foreach (CardNode node in _childrenNode)
         {
 			height -= 1;
 			height += node.TraverseHeight(handler, height);
