@@ -1,26 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.IO;
 
 public class CardManager : MonoBehaviour
 {
-
-    [SerializeField]
-    TextAsset _textBlueprint;
     public enum CardType { PLACE }
 
     CardBuilder _cardBuilder;
     CardMover _cardMover;
     CardInput _cardInput;
+    CardReader _cardReader;
 
     CardNode _rootNode;
 
     List<CardNode> _topLevelNodes;
-
-    JsonTextReader _jsonReader;
-
-    int _count;
 
     public void Awake()
     {
@@ -29,49 +21,16 @@ public class CardManager : MonoBehaviour
         _cardBuilder = GetComponent<CardBuilder>();
         _cardMover = GetComponent<CardMover>();
         _cardInput = GetComponent<CardInput>();
+        _cardReader = GetComponent<CardReader>();
     }
 
     public void Start()
     {
-        ParsedObject parsedObject = JsonConvert.DeserializeObject<ParsedObject>(_textBlueprint.text);
-
-        _count = 0;
-
-        ParsedObjectElement activeElement = parsedObject.elements[0];
-        CardContext context = new(activeElement.Label, activeElement.Description, activeElement.Type);
-
-        _rootNode = new(context);
-        _rootNode.Parent = null;
-
-        _count += 1;
-        int recursionDepth = 1;
-
-        List<ParsedObjectElement> elementList = parsedObject.elements;
-
-        while (_count < elementList.Count && elementList[_count].Depth == recursionDepth)
-        {
-            _rootNode.AddChild(InitNodes(elementList, recursionDepth + 1));
-        }
+        _rootNode = _cardReader.ReadCards();
 
         _cardBuilder.BuildAllCards(_rootNode);
 
         SetLayout(_rootNode);
-    }
-
-    public CardNode InitNodes(List<ParsedObjectElement> elementList, int recursionDepth)
-    {
-        ParsedObjectElement activeElement = elementList[_count];
-        CardContext context = new(activeElement.Label, activeElement.Description, activeElement.Type);
-        CardNode node = new(context);
-
-        _count += 1;
-
-        while (_count < elementList.Count && elementList[_count].Depth == recursionDepth)
-        {
-            node.AddChild(InitNodes(elementList, recursionDepth + 1));
-        }
-
-        return node;
     }
 
     public void SetLayout(CardNode mainNode)

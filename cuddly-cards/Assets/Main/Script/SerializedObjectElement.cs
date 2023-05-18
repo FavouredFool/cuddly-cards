@@ -2,7 +2,7 @@ using static CardManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-public class ParsedObjectElement
+public class SerializedObjectElement
 {
     public string Label { get; set; }
     public string Description { get; set; }
