@@ -3,16 +3,11 @@ using System.Collections.Generic;
 
 public class CardManager : MonoBehaviour
 {
-    [SerializeField]
-    CardBuilder _cardBuilder;
-
-    [SerializeField]
-    CardMover _cardMover;
-
-    [SerializeField]
-    CardInput _cardInput;
-
     public enum CardType { PLACE }
+
+    CardBuilder _cardBuilder;
+    CardMover _cardMover;
+    CardInput _cardInput;
 
     CardNode _rootNode;
 
@@ -21,6 +16,10 @@ public class CardManager : MonoBehaviour
     public void Awake()
     {
         _topLevelNodes = new();
+
+        _cardBuilder = GetComponent<CardBuilder>();
+        _cardMover = GetComponent<CardMover>();
+        _cardInput = GetComponent<CardInput>();
     }
 
     public void Start()
@@ -30,6 +29,9 @@ public class CardManager : MonoBehaviour
         _rootNode.AddChild(new("Level 1, second", CardType.PLACE));
         _rootNode.AddChild(new("Level 1, third", CardType.PLACE));
         _rootNode[1].AddChild(new("Level 2, second_first", CardType.PLACE));
+        _rootNode[1][0].AddChild(new("Level 3, first", CardType.PLACE));
+        _rootNode[1][0].AddChild(new("Level 3, second", CardType.PLACE));
+        _rootNode[1][0].AddChild(new("Level 3, third", CardType.PLACE));
 
         for (int i = 0; i < 100; i++)
         {
@@ -38,71 +40,41 @@ public class CardManager : MonoBehaviour
 
         _cardBuilder.BuildAllCards(_rootNode);
 
-        _topLevelNodes.Add(_rootNode);
-        _topLevelNodes.Add(_rootNode[1]);
-
-        UpdatePiles();
-
-        _topLevelNodes.ForEach(e => _cardMover.MoveCardRandom(e));
-
-        _cardInput.UpdateColliders(_topLevelNodes);
+        SetLayout(_rootNode);
     }
 
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SetLayout(_rootNode);
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            SetLayout(_rootNode[1]);
-        }
-    }
 
     public void SetLayout(CardNode mainNode)
     {
-        // When a cardpile is pressed, it's layout is set. This involves:
-        // Moving the topmost card onto a specific position
-        // Making direct children to topmost cards, reparenting, moving them based on their amount, putting all other cards someplace else
-        // updating colliders
-
-
-        // make all topcards false
         ClearTopLevelNodes();
 
-        // set topcards
+        SetTopNodes(mainNode);
+
+        UpdatePiles();
+
+        _cardMover.MoveCardsForLayout(mainNode, _rootNode);
+
+        _cardInput.UpdateColliders();
+    }
+
+    void SetTopNodes(CardNode mainNode)
+    {
+        _topLevelNodes.Add(_rootNode);
+
         if (mainNode != _rootNode)
         {
-            _topLevelNodes.Add(_rootNode);
-        }
+            _topLevelNodes.Add(mainNode);
 
-        _topLevelNodes.Add(mainNode);
+            if (mainNode.Parent != _rootNode)
+            {
+                _topLevelNodes.Add(mainNode.Parent);
+            }
+        }
 
         foreach (CardNode childNode in mainNode.Children)
         {
             _topLevelNodes.Add(childNode);
         }
-
-        // update the entire pile (always necessary)
-        UpdatePiles();
-
-        if (mainNode != _rootNode)
-        {
-            _cardMover.MoveCard(_rootNode, new Vector2(3, 3));
-        }
-
-        // Move them
-        _cardMover.MoveCard(mainNode, new Vector2(-3f, 0));
-
-        for (int i = 0; i < mainNode.Children.Count; i++)
-        {
-            _cardMover.MoveCard(mainNode.Children[i], new Vector2(i * 1.5f - 1f, 0));
-        }
-
-        _cardInput.UpdateColliders(_topLevelNodes);
-
-
     }
 
     void ClearTopLevelNodes()
@@ -126,6 +98,8 @@ public class CardManager : MonoBehaviour
 
         _cardMover.ParentCards(_rootNode, _topLevelNodes);
 
+        _cardMover.ResetPositionAndRotation(_rootNode);
+
         foreach (CardNode node in _topLevelNodes)
         {
             _cardMover.PileFromParenting(node);
@@ -135,6 +109,11 @@ public class CardManager : MonoBehaviour
     public List<CardNode> GetTopLevelNodes()
     {
         return _topLevelNodes;
+    }
+
+    public CardNode GetRootNode()
+    {
+        return _rootNode;
     }
 
 }

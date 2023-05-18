@@ -5,17 +5,17 @@ public class CardInput : MonoBehaviour
 {
     [SerializeField]
     Camera _camera;
-
-    [SerializeField]
-    CardManager _cardManager;
     
     List<Collider> _colliders;
+
+    CardManager _cardManager;
 
 
 
     public void Awake()
     {
         _colliders = new();
+        _cardManager = GetComponent<CardManager>();
     }
 
     public void Update()
@@ -43,10 +43,8 @@ public class CardInput : MonoBehaviour
         }
     }
 
-    public void UpdateColliders(List<CardNode> topLevelNodes)
+    public void UpdateColliders()
     {
-        // you shouldn't have to give it the topLevelNodes parameter
-
         foreach (BoxCollider collider in _colliders)
         {
             Destroy(collider);
@@ -54,7 +52,7 @@ public class CardInput : MonoBehaviour
 
         _colliders.Clear();
 
-        foreach (CardNode node in topLevelNodes)
+        foreach (CardNode node in _cardManager.GetTopLevelNodes())
         {
             BoxCollider collider = gameObject.AddComponent<BoxCollider>();
 

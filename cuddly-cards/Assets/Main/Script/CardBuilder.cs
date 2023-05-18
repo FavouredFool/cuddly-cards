@@ -5,10 +5,6 @@ public class CardBuilder : MonoBehaviour
     [SerializeField]
     GameObject _cardBlueprint;
 
-    [SerializeField]
-    Transform _cardFolder;
-
-
     public void BuildAllCards(CardNode rootNode)
     {
         rootNode.TraverseContext(
@@ -23,7 +19,7 @@ public class CardBuilder : MonoBehaviour
 
     public CardBody BuildCard(CardContext cardContext)
     {
-        CardBody body = Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, _cardFolder).GetComponent<CardBody>();
+        CardBody body = Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity).GetComponent<CardBody>();
         body.SetLabel(cardContext.GetLabel());
         body.gameObject.name = "Card: \"" + cardContext.GetLabel() + "\"";
         return body;
