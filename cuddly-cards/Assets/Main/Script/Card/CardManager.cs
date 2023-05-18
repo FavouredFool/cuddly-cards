@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class CardManager : MonoBehaviour
 {
-    public enum CardType { PLACE }
-
     CardBuilder _cardBuilder;
     CardMover _cardMover;
     CardInput _cardInput;

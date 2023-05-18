@@ -1,8 +1,9 @@
 using static CardManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using static CardInfo;
 
-public class SerializedObjectElement
+public class DeserializedObjectElement
 {
     public string Label { get; set; }
     public string Description { get; set; }

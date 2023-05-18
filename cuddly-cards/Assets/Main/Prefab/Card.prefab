@@ -79,7 +79,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textField: {fileID: 7811054855992256772}
-  _excludeName: CardContents
+  _meshRenderer: {fileID: 8822104389601333008}
+  _image: {fileID: 7811054856107293988}
 --- !u!1 &7811054855745619492
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,6 +466,12 @@ PrefabInstance:
 --- !u!4 &7776811093922816918 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6a4d2fc2a36badf4fab83b7fb801766c,
+    type: 3}
+  m_PrefabInstance: {fileID: 7811054856791868541}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8822104389601333008 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7635826562936255635, guid: 6a4d2fc2a36badf4fab83b7fb801766c,
     type: 3}
   m_PrefabInstance: {fileID: 7811054856791868541}
   m_PrefabAsset: {fileID: 0}

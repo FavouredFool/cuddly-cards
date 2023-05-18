@@ -719,6 +719,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardBlueprint: {fileID: 7811054855538319273, guid: 8411cf3157daa06478020f204e0e5d3b,
     type: 3}
+  _types:
+  - {fileID: 11400000, guid: 1b447421ceedace499ffa648df0b1e58, type: 2}
+  - {fileID: 11400000, guid: 544215356df8c9141b57517ba913874c, type: 2}
 --- !u!114 &1221586268
 MonoBehaviour:
   m_ObjectHideFlags: 0

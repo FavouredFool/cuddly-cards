@@ -11,8 +11,8 @@ public class CardReader : MonoBehaviour
 
     public CardNode ReadCards()
     {
-        SerializedObject serializedObject = JsonConvert.DeserializeObject<SerializedObject>(_textBlueprint.text);
-        SerializedObjectElement activeElement = serializedObject.elements[0];
+        DeserializedObject serializedObject = JsonConvert.DeserializeObject<DeserializedObject>(_textBlueprint.text);
+        DeserializedObjectElement activeElement = serializedObject.elements[0];
 
         CardNode rootNode = new(new(activeElement.Label, activeElement.Description, activeElement.Type));
         rootNode.Parent = null;
@@ -20,7 +20,7 @@ public class CardReader : MonoBehaviour
         _count = 1;
         int recursionDepth = 1;
 
-        List<SerializedObjectElement> elementList = serializedObject.elements;
+        List<DeserializedObjectElement> elementList = serializedObject.elements;
         while (_count < elementList.Count && elementList[_count].Depth == recursionDepth)
         {
             rootNode.AddChild(InitNodes(elementList, recursionDepth + 1));
@@ -29,9 +29,9 @@ public class CardReader : MonoBehaviour
         return rootNode;
     }
 
-    public CardNode InitNodes(List<SerializedObjectElement> elementList, int recursionDepth)
+    public CardNode InitNodes(List<DeserializedObjectElement> elementList, int recursionDepth)
     {
-        SerializedObjectElement activeElement = elementList[_count];
+        DeserializedObjectElement activeElement = elementList[_count];
         CardContext context = new(activeElement.Label, activeElement.Description, activeElement.Type);
         CardNode node = new(context);
 

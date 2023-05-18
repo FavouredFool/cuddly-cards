@@ -1,10 +1,11 @@
 using static CardManager;
+using static CardInfo;
 
 public class CardContext
 {
     string _label;
     string _description;
-    CardType _cardType;   
+    CardType _cardType;
 
 
     public CardContext(string label, string description, CardType cardType)
@@ -17,6 +18,11 @@ public class CardContext
     public string GetLabel()
     {
         return _label;
+    }
+
+    public CardType GetCardType()
+    {
+        return _cardType;
     }
 
 }
