@@ -56,7 +56,6 @@ public class CardInput : MonoBehaviour
         {
             BoxCollider collider = gameObject.AddComponent<BoxCollider>();
 
-
             float totalHeight = node.NodeCount() * CardInfo.CARDHEIGHT;
 
             collider.center = node.Body.transform.position - new Vector3(0, totalHeight / 2f, 0);

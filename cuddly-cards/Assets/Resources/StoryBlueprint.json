@@ -1,0 +1,41 @@
+{
+    "elements" : [
+        {
+            "label": "test",
+            "description": "Dies ist ein Test",
+            "type": "PLACE",
+            "depth": "0"
+        },
+        {
+            "label": "test2",
+            "description": "Dies ist ein Test",
+            "type": "PLACE",
+            "depth": "1"
+        },
+        {
+            "label": "test5",
+            "description": "Dies ist ein Test",
+            "type": "PLACE",
+            "depth": "2"
+        },
+        {
+            "label": "test6",
+            "description": "Dies ist ein Test",
+            "type": "PLACE",
+            "depth": "3"
+        },
+        {
+            "label": "test3",
+            "description": "Dies ist ein Test",
+            "type": "PLACE",
+            "depth": "1"
+        },
+        {
+            "label": "test4",
+            "description": "Dies ist ein Test",
+            "type": "PLACE",
+            "depth": "1"
+        }
+
+    ]
+}

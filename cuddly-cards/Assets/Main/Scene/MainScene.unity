@@ -678,6 +678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c904a1708ec60a24e9dab8cf9d659dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textBlueprint: {fileID: 4900000, guid: f9e822b8bbba98549ab3786cd6d87587, type: 3}
 --- !u!114 &1221586265
 MonoBehaviour:
   m_ObjectHideFlags: 0

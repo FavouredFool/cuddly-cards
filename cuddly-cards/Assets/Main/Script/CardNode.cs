@@ -12,7 +12,7 @@ public class CardNode
 	private readonly CardContext _context;
 	private CardBody _body;
 	
-	private readonly int _level;
+	private int _level;
 
 	private CardNode _parent;
 	private List<CardNode> _children;
@@ -32,7 +32,7 @@ public class CardNode
 		_level = _parent != null ? _parent.Level + 1 : 0;
 	}
 
-	public int Level { get { return _level; } }
+	public int Level { set { _level = value; } get { return _level; } }
 	public CardContext Context { get { return _context; } }
 	public CardBody Body { set { _body = value; } get { return _body; } }
 	public CardNode Parent { set { _parent = value; } get { return _parent; } }
@@ -49,12 +49,12 @@ public class CardNode
 		_children.Clear();
 	}
 
-	public CardNode AddChild(CardContext context)
+	public void AddChild(CardNode node)
 	{
-		CardNode node = new CardNode(context, this);
-		_children.Add(node);
+		node.Parent = this;
+        node.Level = Level + 1;
 
-		return node;
+		_children.Add(node);
 	}
 
 	public void TraverseContext(TraversalNodeDelegate handler)

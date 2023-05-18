@@ -1,8 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.IO;
 
 public class CardManager : MonoBehaviour
 {
+
+    [SerializeField]
+    TextAsset _textBlueprint;
     public enum CardType { PLACE }
 
     CardBuilder _cardBuilder;
@@ -12,6 +17,10 @@ public class CardManager : MonoBehaviour
     CardNode _rootNode;
 
     List<CardNode> _topLevelNodes;
+
+    JsonTextReader _jsonReader;
+
+    int _count;
 
     public void Awake()
     {
@@ -24,18 +33,24 @@ public class CardManager : MonoBehaviour
 
     public void Start()
     {
-        _rootNode = new(new("Se Beginning", CardType.PLACE));
-        _rootNode.AddChild(new("Level 1, first", CardType.PLACE));
-        _rootNode.AddChild(new("Level 1, second", CardType.PLACE));
-        _rootNode.AddChild(new("Level 1, third", CardType.PLACE));
-        _rootNode[1].AddChild(new("Level 2, second_first", CardType.PLACE));
-        _rootNode[1][0].AddChild(new("Level 3, first", CardType.PLACE));
-        _rootNode[1][0].AddChild(new("Level 3, second", CardType.PLACE));
-        _rootNode[1][0].AddChild(new("Level 3, third", CardType.PLACE));
+        ParsedObject parsedObject = JsonConvert.DeserializeObject<ParsedObject>(_textBlueprint.text);
 
-        for (int i = 0; i < 100; i++)
+        _count = 0;
+
+        ParsedObjectElement activeElement = parsedObject.elements[0];
+        CardContext context = new(activeElement.Label, activeElement.Description, activeElement.Type);
+
+        _rootNode = new(context);
+        _rootNode.Parent = null;
+
+        _count += 1;
+        int recursionDepth = 1;
+
+        List<ParsedObjectElement> elementList = parsedObject.elements;
+
+        while (_count < elementList.Count && elementList[_count].Depth == recursionDepth)
         {
-            _rootNode[1].AddChild(new("Extra", CardType.PLACE));
+            _rootNode.AddChild(InitNodes(elementList, recursionDepth + 1));
         }
 
         _cardBuilder.BuildAllCards(_rootNode);
@@ -43,6 +58,21 @@ public class CardManager : MonoBehaviour
         SetLayout(_rootNode);
     }
 
+    public CardNode InitNodes(List<ParsedObjectElement> elementList, int recursionDepth)
+    {
+        ParsedObjectElement activeElement = elementList[_count];
+        CardContext context = new(activeElement.Label, activeElement.Description, activeElement.Type);
+        CardNode node = new(context);
+
+        _count += 1;
+
+        while (_count < elementList.Count && elementList[_count].Depth == recursionDepth)
+        {
+            node.AddChild(InitNodes(elementList, recursionDepth + 1));
+        }
+
+        return node;
+    }
 
     public void SetLayout(CardNode mainNode)
     {
