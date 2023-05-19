@@ -2,7 +2,7 @@
 
 public static class CardInfo
 {
-    public enum CardType { PLACE, DIALOGUE }
+    public enum CardType { COVER, PLACE, THING, PERSON, DIALOGUE, CLUE, LOCK }
 
     public static readonly float CARDHEIGHT = 0.005f;
 

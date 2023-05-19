@@ -720,8 +720,13 @@ MonoBehaviour:
   _cardBlueprint: {fileID: 7811054855538319273, guid: 8411cf3157daa06478020f204e0e5d3b,
     type: 3}
   _types:
-  - {fileID: 11400000, guid: 1b447421ceedace499ffa648df0b1e58, type: 2}
+  - {fileID: 11400000, guid: 9230882b3eab1ef45aecb5d9fa86cec7, type: 2}
   - {fileID: 11400000, guid: 544215356df8c9141b57517ba913874c, type: 2}
+  - {fileID: 11400000, guid: 00932cef1b971ac4f82203e26efbabf6, type: 2}
+  - {fileID: 11400000, guid: d4924b3a39fbae84684b2380cbcb0831, type: 2}
+  - {fileID: 11400000, guid: 1b447421ceedace499ffa648df0b1e58, type: 2}
+  - {fileID: 11400000, guid: 088c0514043b9504ba3e1fbc28670316, type: 2}
+  - {fileID: 11400000, guid: 35de73f05cd0a0e459f3e2cf9d3c8f64, type: 2}
 --- !u!114 &1221586268
 MonoBehaviour:
   m_ObjectHideFlags: 0

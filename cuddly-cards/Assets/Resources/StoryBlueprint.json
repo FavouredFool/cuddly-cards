@@ -1,41 +1,100 @@
 {
     "elements" : [
         {
-            "label": "test",
+            "label": "A Masked Murder",
             "description": "Dies ist ein Test",
-            "type": "PLACE",
+            "type": "COVER",
             "depth": "0"
         },
         {
-            "label": "test2",
+            "label": "The Porch",
             "description": "Dies ist ein Test",
             "type": "PLACE",
             "depth": "1"
         },
         {
-            "label": "test5",
+            "label": "A Trail",
             "description": "Dies ist ein Test",
-            "type": "PLACE",
+            "type": "THING",
             "depth": "2"
         },
         {
-            "label": "test6",
+            "label": "The Garden",
             "description": "Dies ist ein Test",
             "type": "PLACE",
             "depth": "3"
         },
         {
-            "label": "test3",
+            "label": "A Gathering",
             "description": "Dies ist ein Test",
-            "type": "PLACE",
-            "depth": "1"
+            "type": "THING",
+            "depth": "4"
         },
         {
-            "label": "test4",
+            "label": "Miss Berringhow",
             "description": "Dies ist ein Test",
-            "type": "PLACE",
-            "depth": "1"
+            "type": "PERSON",
+            "depth": "5"
+        },
+        {
+            "label": "Mister Berringhow",
+            "description": "Dies ist ein Test",
+            "type": "PERSON",
+            "depth": "5"
+        },
+        {
+            "label": "The Physician",
+            "description": "Dies ist ein Test",
+            "type": "PERSON",
+            "depth": "5"
+        },
+        {
+            "label": "Who Is It?",
+            "description": "Dies ist ein Test",
+            "type": "DIALOGUE",
+            "depth": "6"
+        },
+        {
+            "label": "What Happend?",
+            "description": "Dies ist ein Test",
+            "type": "DIALOGUE",
+            "depth": "6"
+        },
+        {
+            "label": "Who Did This?",
+            "description": "Dies ist ein Test",
+            "type": "DIALOGUE",
+            "depth": "6"
+        },
+        {
+            "label": "A Corpse",
+            "description": "Dies ist ein Test",
+            "type": "THING",
+            "depth": "5"
+        },
+        {
+            "label": "A Statue",
+            "description": "Dies ist ein Test",
+            "type": "THING",
+            "depth": "4"
+        },
+        {
+            "label": "A Bloodstain",
+            "description": "Dies ist ein Test",
+            "type": "CLUE",
+            "depth": "5"
+        },
+        {
+            "label": "The Front Door",
+            "description": "Dies ist ein Test",
+            "type": "THING",
+            "depth": "2"
+        },
+        {
+            "label": "The Keyhole (locked)",
+            "description": "Dies ist ein Test",
+            "type": "LOCK",
+            "depth": "3"
         }
-
     ]
 }

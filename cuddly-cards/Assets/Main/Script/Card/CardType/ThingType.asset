@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc28c93cb15b3e54399f482c1293dad4, type: 3}
-  m_Name: PlaceType
+  m_Name: ThingType
   m_EditorClassIdentifier: 
-  _cardType: 1
-  _cardIcon: {fileID: 21300000, guid: 9f63e4a90d01e10478ca80c2bcca4dfb, type: 3}
-  _cardColor: {r: 0.69803923, g: 0.6431373, b: 1, a: 0}
+  _cardType: 2
+  _cardIcon: {fileID: 21300000, guid: c2f4e3f7788ce944a8cfbfb41fbb471b, type: 3}
+  _cardColor: {r: 0.78039217, g: 0.9137255, b: 0.6901961, a: 0}

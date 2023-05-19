@@ -34,7 +34,7 @@ public class CardBuilder : MonoBehaviour
 
         if (type == null)
         {
-            Debug.LogError("Found no fitting type for card");
+            Debug.LogError("Found no fitting type for card: " + cardContext.GetCardType());
         }
 
         body.SetColor(type.GetCardColor());
