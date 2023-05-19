@@ -7,10 +7,15 @@ public class CardManager : MonoBehaviour
     CardMover _cardMover;
     CardInput _cardInput;
     CardReader _cardReader;
+    CardCloseUpManager _cardCloseUpManager;
 
     CardNode _rootNode;
 
+    CardNode _activeNode;
+
     List<CardNode> _topLevelNodes;
+
+    bool _isCloseUp = false;
 
     public void Awake()
     {
@@ -20,6 +25,7 @@ public class CardManager : MonoBehaviour
         _cardMover = GetComponent<CardMover>();
         _cardInput = GetComponent<CardInput>();
         _cardReader = GetComponent<CardReader>();
+        _cardCloseUpManager = GetComponent<CardCloseUpManager>();
     }
 
     public void Start()
@@ -33,15 +39,31 @@ public class CardManager : MonoBehaviour
 
     public void SetLayout(CardNode mainNode)
     {
+        _activeNode = mainNode;
+
         ClearTopLevelNodes();
 
-        SetTopNodes(mainNode);
+        SetTopNodes(_activeNode);
 
         UpdatePiles();
 
-        _cardMover.MoveCardsForLayout(mainNode, _rootNode);
+        _cardMover.MoveCardsForLayout(_activeNode, _rootNode);
 
         _cardInput.UpdateColliders();
+    }
+
+    public void EnterCloseUp(CardNode closeUpNode)
+    {
+        _isCloseUp = true;
+        _cardCloseUpManager.EnterCloseUp(closeUpNode);
+    }
+
+    public void ExitCloseUp()
+    {
+        _isCloseUp = false;
+        _cardCloseUpManager.ExitCloseUp();
+
+        SetLayout(_activeNode);
     }
 
     void SetTopNodes(CardNode mainNode)
@@ -73,10 +95,10 @@ public class CardManager : MonoBehaviour
     {
         _rootNode.TraverseContext(
             delegate (CardNode node)
-            {
-                node.IsTopLevel = _topLevelNodes.Contains(node);
-                return true;
-            });
+        {
+            node.IsTopLevel = _topLevelNodes.Contains(node);
+            return true;
+        });
     }
 
     void UpdatePiles()
@@ -101,6 +123,16 @@ public class CardManager : MonoBehaviour
     public CardNode GetRootNode()
     {
         return _rootNode;
+    }
+
+    public CardNode GetActiveNode()
+    {
+        return _activeNode;
+    }
+
+    public bool GetIsCloseUp()
+    {
+        return _isCloseUp;
     }
 
 }

@@ -42,5 +42,4 @@ public class CardBuilder : MonoBehaviour
 
         return body;
     }
-
 }

@@ -22,22 +22,44 @@ public class CardInput : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray shotRay = _camera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(shotRay, out hit))
+            if (_cardManager.GetIsCloseUp())
             {
-                if (hit.collider == null)
-                {
-                    return;
-                }
+                _cardManager.ExitCloseUp();
+            }
+            else
+            {
+                EvaluateClickedCard();
+            }
 
-                if (!_colliders.Contains(hit.collider))
-                {
-                    return;
-                }
 
-                CardNode hitNode = _cardManager.GetTopLevelNodes()[_colliders.IndexOf(hit.collider)];
+        }
+    }
+
+    public void EvaluateClickedCard()
+    {
+        Ray shotRay = _camera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(shotRay, out hit))
+        {
+            if (hit.collider == null)
+            {
+                return;
+            }
+
+            if (!_colliders.Contains(hit.collider))
+            {
+                return;
+            }
+
+            CardNode hitNode = _cardManager.GetTopLevelNodes()[_colliders.IndexOf(hit.collider)];
+
+            if (hitNode == _cardManager.GetActiveNode())
+            {
+                _cardManager.EnterCloseUp(hitNode);
+            }
+            else
+            {
                 _cardManager.SetLayout(hitNode);
             }
         }
