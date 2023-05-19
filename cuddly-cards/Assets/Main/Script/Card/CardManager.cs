@@ -20,6 +20,8 @@ public class CardManager : MonoBehaviour
 
     bool _isCloseUp = false;
 
+    bool _inputLocked = false;
+
     public void Awake()
     {
         _topLevelNodes = new();
@@ -39,6 +41,20 @@ public class CardManager : MonoBehaviour
         SetLayout();
     }
 
+    public void SetNodeActive(CardNode node)
+    {
+        _activeNode = node;
+
+        if (_activeNode.Context.GetHasBeenSeen())
+        {
+            SetLayout();
+        }
+        else
+        {
+            EnterCloseUp();
+        }
+    }
+
     public void SetLayout()
     {
         ClearTopLevelNodes();
@@ -52,16 +68,39 @@ public class CardManager : MonoBehaviour
         _cardInput.UpdateColliders();
     }
 
-    public void EnterCloseUp(CardNode closeUpNode)
+    public void EnterCloseUp()
     {
         _isCloseUp = true;
-        _closeUpManager.EnterCloseUp(closeUpNode);
+        _inputLocked = true;
+
+        foreach (CardNode child in _activeNode.Children)
+        {
+            child.Body.transform.parent = null;
+        }
+
+        _closeUpManager.EnterCloseUp(_activeNode);
     }
 
     public void ExitCloseUp()
     {
-        _isCloseUp = false;
         _closeUpManager.ExitCloseUp();
+    }
+
+    public void CloseUpFinished(Vector3 originalPosition)
+    {
+        _isCloseUp = false;
+        _inputLocked = false;
+
+        _activeNode.Body.transform.position = originalPosition;
+
+        foreach (CardNode child in _activeNode.Children)
+        {
+            child.Body.transform.parent = _activeNode.Body.transform;
+        }
+
+        _cardMover.PileFromParenting(_activeNode);
+
+        SetLayout();
     }
 
     void SetTopNodes(CardNode mainNode)
@@ -128,14 +167,19 @@ public class CardManager : MonoBehaviour
         return _activeNode;
     }
 
-    public void SetActiveNode(CardNode activeNode)
-    {
-        _activeNode = activeNode;
-    }
-
     public bool GetIsCloseUp()
     {
         return _isCloseUp;
+    }
+
+    public bool GetInputLocked()
+    {
+        return _inputLocked;
+    }
+
+    public void SetInputLocked(bool inputLocked)
+    {
+        _inputLocked = inputLocked;
     }
 
 

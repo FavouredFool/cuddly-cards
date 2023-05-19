@@ -6,7 +6,7 @@ public class CardMover : MonoBehaviour
     [SerializeField]
     Transform _cardFolder;
 
-    readonly float JITTERAMOUNT = 0.01f;
+    //readonly float JITTERAMOUNT = 0.01f;
 
     public void ParentCards(CardNode rootNode, List<CardNode> topLevelNodes)
     {
@@ -35,14 +35,6 @@ public class CardMover : MonoBehaviour
 
         topLevelNode.SetHeightRecursive(0);
         topLevelNode.Body.SetHeight(topLevelNode.NodeCount());
-
-        // This might be performance-intensive due to being heavily nested
-        topLevelNode.TraverseBody(delegate (CardNode node)
-        {
-            Vector2 jitter = Random.insideUnitCircle;
-            node.Body.transform.localPosition = new Vector3(jitter.x * JITTERAMOUNT, node.Body.transform.localPosition.y, jitter.y * JITTERAMOUNT);
-            return true;
-        });
     }
 
 

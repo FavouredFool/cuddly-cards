@@ -20,6 +20,11 @@ public class CardInput : MonoBehaviour
 
     public void Update()
     {
+        if (_cardManager.GetInputLocked())
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             if (_cardManager.GetIsCloseUp())
@@ -30,8 +35,6 @@ public class CardInput : MonoBehaviour
             {
                 EvaluateClickedCard();
             }
-
-
         }
     }
 
@@ -56,12 +59,11 @@ public class CardInput : MonoBehaviour
 
             if (hitNode == _cardManager.GetActiveNode())
             {
-                _cardManager.EnterCloseUp(hitNode);
+                _cardManager.EnterCloseUp();
             }
             else
             {
-                _cardManager.SetActiveNode(hitNode);
-                _cardManager.SetLayout();
+                _cardManager.SetNodeActive(hitNode);
             }
         }
     }

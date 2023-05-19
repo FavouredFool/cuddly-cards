@@ -14,11 +14,11 @@ public class CameraMovement : MonoBehaviour
 
     public void SetCardTableRotation(float transitionTime, Ease easing)
     {
-        transform.DORotate(new Vector3(_cardTableRotation, 0, 0), transitionTime, RotateMode.Fast).SetEase(easing).OnComplete(() => { _closeUpManager.CloseUpFinished(); });
+        transform.DORotate(new Vector3(_cardTableRotation, 0, 0), transitionTime, RotateMode.Fast).SetEase(easing);
     }
 
     public void SetCloseUpRotation(float closeUpRotation, float transitionTime, Ease easing)
     {
-        transform.DORotate(new Vector3(closeUpRotation, 0, 0), transitionTime, RotateMode.Fast).SetEase(easing).OnComplete(() => { _closeUpManager.DisplayElements(); });
+        transform.DORotate(new Vector3(closeUpRotation, 0, 0), transitionTime, RotateMode.Fast).SetEase(easing);
     }
 }

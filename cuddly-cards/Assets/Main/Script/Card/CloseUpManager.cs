@@ -32,6 +32,8 @@ public class CloseUpManager : MonoBehaviour
 
     CardNode _currentNode;
 
+    Vector3 _originalPosition;
+
     public void Start()
     {
         _closeUpCanvas.SetActive(false);
@@ -39,41 +41,41 @@ public class CloseUpManager : MonoBehaviour
 
     public void EnterCloseUp(CardNode closeUpNode)
     {
+        _originalPosition = closeUpNode.Body.transform.position;
+
         _currentNode = closeUpNode;
+
+        _currentNode.Context.SetHasBeenSeen(true);
+
         _cameraMovement.SetCloseUpRotation(_closeUpRotation, _transitionTime, _easing);
 
-        
+        Vector3 endPosition = _cardCloseUpTransform.position;
+        Quaternion endRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(_closeUpRotation, 0, 0) * Quaternion.Euler(-90, 0, 0);
 
-        Vector3 goalPosition = _cardCloseUpTransform.position;
-        Quaternion goalRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(_closeUpRotation, 0, 0) * Quaternion.Euler(-90, 0, 0);
-
-        _currentNode.Body.transform.DOMove(goalPosition, _transitionTime).SetEase(_easing);
-        _currentNode.Body.transform.DORotateQuaternion(goalRotation, _transitionTime).SetEase(_easing);
-
+        _currentNode.Body.transform.DOMove(endPosition, _transitionTime).SetEase(_easing).OnComplete(() => { DisplayElements(); });
+        _currentNode.Body.transform.DORotateQuaternion(endRotation, _transitionTime).SetEase(_easing);
     }
 
     public void DisplayElements()
     {
-        //_currentNode.Body.transform.SetPositionAndRotation(_cardCloseUpTransform.position, Quaternion.identity);
-        //_currentNode.Body.transform.rotation = Quaternion.Euler(180, 180, 180) * _cameraMovement.transform.rotation * Quaternion.Euler(-90, 0, 0);
 
+        _cardManager.SetInputLocked(false);
         _closeUpCanvas.SetActive(true);
         _descriptionText.text = _currentNode.Context.GetDescription();
     }
 
     public void ExitCloseUp()
     {
+        _cardManager.SetInputLocked(true);
         _closeUpCanvas.SetActive(false);
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
 
-        // Make position dynamic
-        _currentNode.Body.transform.DOMove(new Vector3(-2.5f, 0, 0), _transitionTime).SetEase(_easing);
+        _currentNode.Body.transform.DOMove(_originalPosition, _transitionTime).SetEase(_easing).OnComplete(() => { CloseUpFinished(); });
         _currentNode.Body.transform.DORotateQuaternion(Quaternion.identity, _transitionTime).SetEase(_easing);
     }
 
     public void CloseUpFinished()
     {
-        
-        _cardManager.SetLayout();
+        _cardManager.CloseUpFinished(_originalPosition);
     }
 }
