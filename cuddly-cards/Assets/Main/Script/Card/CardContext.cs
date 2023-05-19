@@ -20,9 +20,13 @@ public class CardContext
         return _label;
     }
 
+    public string GetDescription()
+    {
+        return _description;
+    }
+
     public CardType GetCardType()
     {
         return _cardType;
     }
-
 }

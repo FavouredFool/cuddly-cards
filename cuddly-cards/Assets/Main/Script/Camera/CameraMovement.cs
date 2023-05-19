@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 
 public class CameraMovement : MonoBehaviour
@@ -6,21 +7,18 @@ public class CameraMovement : MonoBehaviour
     [SerializeField, Range(-45, 45)]
     float _cardTableRotation = 0;
 
-    [SerializeField, Range(-45, 45)]
-    float _closeUpRotation = 0;
+    [SerializeField]
+    CloseUpManager _closeUpManager;
 
-    public void Start()
+
+
+    public void SetCardTableRotation(float transitionTime, Ease easing)
     {
-        SetCardTableRotation();
+        transform.DORotate(new Vector3(_cardTableRotation, 0, 0), transitionTime, RotateMode.Fast).SetEase(easing).OnComplete(() => { _closeUpManager.CloseUpFinished(); });
     }
 
-    public void SetCardTableRotation()
+    public void SetCloseUpRotation(float closeUpRotation, float transitionTime, Ease easing)
     {
-        transform.localRotation = Quaternion.Euler(_cardTableRotation, 0, 0);
-    }
-
-    public void SetCloseUpRotation()
-    {
-        transform.localRotation = Quaternion.Euler(_closeUpRotation, 0, 0);
+        transform.DORotate(new Vector3(closeUpRotation, 0, 0), transitionTime, RotateMode.Fast).SetEase(easing).OnComplete(() => { _closeUpManager.DisplayElements(); });
     }
 }

@@ -44,7 +44,7 @@
         },
         {
             "label": "The Physician",
-            "description": "Dies ist ein Test",
+            "description": "A strange fellow.\n\nNervous tick in his right hand.\n\nYou wouldn't trust him with a scalpel but he holds one anyway.",
             "type": "PERSON",
             "depth": "5"
         },

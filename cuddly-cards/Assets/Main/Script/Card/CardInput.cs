@@ -60,7 +60,8 @@ public class CardInput : MonoBehaviour
             }
             else
             {
-                _cardManager.SetLayout(hitNode);
+                _cardManager.SetActiveNode(hitNode);
+                _cardManager.SetLayout();
             }
         }
     }

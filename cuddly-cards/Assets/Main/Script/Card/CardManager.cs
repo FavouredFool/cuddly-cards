@@ -3,11 +3,14 @@ using System.Collections.Generic;
 
 public class CardManager : MonoBehaviour
 {
+    [SerializeField]
+    CloseUpManager _closeUpManager;
+
     CardBuilder _cardBuilder;
     CardMover _cardMover;
     CardInput _cardInput;
     CardReader _cardReader;
-    CardCloseUpManager _cardCloseUpManager;
+    
 
     CardNode _rootNode;
 
@@ -25,22 +28,19 @@ public class CardManager : MonoBehaviour
         _cardMover = GetComponent<CardMover>();
         _cardInput = GetComponent<CardInput>();
         _cardReader = GetComponent<CardReader>();
-        _cardCloseUpManager = GetComponent<CardCloseUpManager>();
     }
 
     public void Start()
     {
-        _rootNode = _cardReader.ReadCards();
+        _activeNode = _rootNode = _cardReader.ReadCards();
 
         _cardBuilder.BuildAllCards(_rootNode);
 
-        SetLayout(_rootNode);
+        SetLayout();
     }
 
-    public void SetLayout(CardNode mainNode)
+    public void SetLayout()
     {
-        _activeNode = mainNode;
-
         ClearTopLevelNodes();
 
         SetTopNodes(_activeNode);
@@ -55,15 +55,13 @@ public class CardManager : MonoBehaviour
     public void EnterCloseUp(CardNode closeUpNode)
     {
         _isCloseUp = true;
-        _cardCloseUpManager.EnterCloseUp(closeUpNode);
+        _closeUpManager.EnterCloseUp(closeUpNode);
     }
 
     public void ExitCloseUp()
     {
         _isCloseUp = false;
-        _cardCloseUpManager.ExitCloseUp();
-
-        SetLayout(_activeNode);
+        _closeUpManager.ExitCloseUp();
     }
 
     void SetTopNodes(CardNode mainNode)
@@ -130,9 +128,15 @@ public class CardManager : MonoBehaviour
         return _activeNode;
     }
 
+    public void SetActiveNode(CardNode activeNode)
+    {
+        _activeNode = activeNode;
+    }
+
     public bool GetIsCloseUp()
     {
         return _isCloseUp;
     }
+
 
 }
