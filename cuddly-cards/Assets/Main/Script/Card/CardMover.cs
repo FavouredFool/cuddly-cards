@@ -7,16 +7,27 @@ public class CardMover : MonoBehaviour
     [SerializeField]
     Transform _cardFolder;
 
-    CardManager _cardManager;
+    [Header("CardMovement")]
+    [SerializeField, Range(0f, 1)]
+    float _verticalTime = 0.5f;
 
-    //readonly float JITTERAMOUNT = 0.01f;
+    [SerializeField, Range(0.1f, 2)]
+    float _horizontalTime = 1f;
+
+    [SerializeField, Range(0f, 2)]
+    float _waitTime = 1f;
+
+    [SerializeField]
+    Ease _easing;
+
+    CardManager _cardManager;
 
     public void Awake()
     {
         _cardManager = GetComponent<CardManager>();
     }
 
-    public void ParentCards(CardNode rootNode, List<CardNode> topLevelNodes)
+    public void ParentCards(CardNode rootNode)
     {
         rootNode.TraverseContext(
             delegate (CardNode cardNode)
@@ -24,7 +35,7 @@ public class CardMover : MonoBehaviour
                 CardNode parent = cardNode.Parent;
 
                 // If the node is top level, cut off any parenting
-                if (topLevelNodes.Contains(cardNode)) parent = null;
+                if (cardNode.IsTopLevel) parent = null;
 
                 cardNode.Body.transform.parent = parent?.Body.transform;
                 cardNode.Body.transform.parent ??= _cardFolder;
@@ -34,16 +45,18 @@ public class CardMover : MonoBehaviour
         );
     }
 
-    public void PileFromParenting(CardNode topLevelNode)
+    public void PileFromParenting(List<CardNode> topLevelNodes)
     {
-        if (!topLevelNode.IsTopLevel)
+        foreach (CardNode node in topLevelNodes)
         {
-            Debug.LogError("Tried to create pile from non-topLevel cardBody");
+            if (!node.IsTopLevel)
+            {
+                Debug.LogError("Tried to create pile from non-topLevel cardBody");
+            }
+
+            node.SetHeightRecursive(0);
+            node.Body.SetHeight(node.NodeCountBody());
         }
-
-
-        topLevelNode.SetHeightRecursive(0);
-        topLevelNode.Body.SetHeight(topLevelNode.NodeCountBody());
     }
 
     public void MoveCardOld(CardNode card, Vector2 position)
@@ -98,28 +111,28 @@ public class CardMover : MonoBehaviour
             cardAmount += newChild.NodeCountBody();
 
             // Vertikal nach oben
-            newChild.Body.transform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, 0.5f)
+            newChild.Body.transform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing)
                 // Zusammen mit der OldMainCard reinfahren
-                .OnComplete(() => { newChild.Body.transform.DOMoveX(-2.5f, 1f)
+                .OnComplete(() => { newChild.Body.transform.DOMoveX(-2.5f, _horizontalTime).SetEase(_easing)
                     // Warten
-                    .OnComplete(()=> { newChild.Body.transform.DOMove(newChild.Body.transform.position, 0.5f)
+                    .OnComplete(()=> { newChild.Body.transform.DOMove(newChild.Body.transform.position, _waitTime).SetEase(_easing)
                         // Rausfahren
-                        .OnComplete(()=> { newChild.Body.transform.DOMoveX( newChild.Parent.Children.IndexOf(newChild) * 1.125f - 1f, 1f)
+                        .OnComplete(()=> { newChild.Body.transform.DOMoveX( newChild.Parent.Children.IndexOf(newChild) * 1.125f - 1f, _horizontalTime).SetEase(_easing)
                              // Runterlassen
-                             .OnComplete(() =>{ newChild.Body.transform.DOMoveY(newChild.NodeCountBody() * CardInfo.CARDHEIGHT, 0.5f);
+                             .OnComplete(() =>{ newChild.Body.transform.DOMoveY(newChild.NodeCountBody() * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing);
                 }); }); }); });
         }
 
         cardAmount += mainNode.NodeCountBody();
 
         // Vertikal nach oben
-        mainNode.Body.transform.DOMove(new Vector3(mainNode.Body.transform.position.x, cardAmount * CardInfo.CARDHEIGHT, mainNode.Body.transform.position.z), 0.5f)
+        mainNode.Body.transform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing)
             // Zusammen mit Children reinfahren
-            .OnComplete(() => { mainNode.Body.transform.DOMove(new Vector3(-2.5f, mainNode.Body.transform.position.y, 0), 1f)
+            .OnComplete(() => { mainNode.Body.transform.DOMoveX(-2.5f, _horizontalTime).SetEase(_easing)
                // Warten
-               .OnComplete(() => { mainNode.Body.transform.DOMove(mainNode.Body.transform.position, 1.5f)
+               .OnComplete(() => { mainNode.Body.transform.DOMove(mainNode.Body.transform.position, _waitTime + _horizontalTime).SetEase(_easing)
                     // Runter
-                    .OnComplete(() => { mainNode.Body.transform.DOMove(new Vector3(mainNode.Body.transform.position.x, CardInfo.CARDHEIGHT, mainNode.Body.transform.position.z), 0.5f);
+                    .OnComplete(() => { mainNode.Body.transform.DOMoveY(CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing);
             }); }); });
 
         mainCardsAmount = cardAmount;
@@ -136,51 +149,28 @@ public class CardMover : MonoBehaviour
             cardAmount += oldChild.NodeCountBody();
 
             // Vertikal nach oben
-            oldChild.Body.transform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, 0.5f)
+            oldChild.Body.transform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing)
                 // Reinfahren
-                .OnComplete(() => { oldChild.Body.transform.DOMoveX(-2.5f, 1f)
+                .OnComplete(() => { oldChild.Body.transform.DOMoveX(-2.5f, _horizontalTime).SetEase(_easing)
                     // Neu parenten
                     .OnComplete(()=> { oldChild.Body.transform.parent = oldActiveNode.Body.transform;
             }); });
         }
 
         // Vertikal nach oben
-        oldActiveNode.Body.transform.DOMoveY((cardAmount + 1) * CardInfo.CARDHEIGHT, 0.5f)
+        oldActiveNode.Body.transform.DOMoveY((cardAmount + 1) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing)
             // warten
-            .OnComplete(()=> { oldActiveNode.Body.transform.DOMove(oldActiveNode.Body.transform.position, 1f)
+            .OnComplete(()=> { oldActiveNode.Body.transform.DOMove(oldActiveNode.Body.transform.position, _horizontalTime + _waitTime).SetEase(_easing)
                 // nach hinten
-                .OnComplete(() => { oldActiveNode.Body.transform.DOMoveZ(2.5f, 1)
+                .OnComplete(() => { oldActiveNode.Body.transform.DOMoveZ(2.5f, _horizontalTime).SetEase(_easing)
                     // vertikal nach unten
-                    .OnComplete(() => {  oldActiveNode.Body.transform.DOMoveY(oldActiveNode.Body.transform.position.y - mainCardsAmount * CardInfo.CARDHEIGHT, 0.5f);
+                    .OnComplete(() => {  oldActiveNode.Body.transform.DOMoveY(oldActiveNode.Body.transform.position.y - mainCardsAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing);
             }); }); });
 
 
-
-
-
-        /*
-        MoveCard(mainNode, new Vector2(-2.5f, 0));
-
-        if (mainNode != rootNode)
-        {
-            MoveCard(mainNode.Parent, new Vector2(-2.5f, 2.5f));
-
-            if (mainNode.Parent != rootNode)
-            {
-                MoveCard(rootNode, new Vector2(2.875f, 2.5f));
-            }
-        }
-
-        for (int i = 0; i < mainNode.Children.Count; i++)
-        {
-            MoveCard(mainNode.Children[i], new Vector2(i * 1.125f - 1f, 0));
-        }
-
-        */
-
         // Timer over one second
         // MAKE SURE THAT THE TIMER IS A BIT LONGER THAN THE MAXIMUM TWEENING TIME
-        transform.DOMove(transform.position, 4).OnComplete(() => { _cardManager.MoveCardsFinished(); });
+        transform.DOMove(transform.position, _horizontalTime*2 + _verticalTime*2 + _waitTime + 0.1f).OnComplete(() => { _cardManager.FinishLayout(); });
     }
 
     public void HandleDiscard(CardNode oldDiscardNode, CardNode oldBackNode)
@@ -189,39 +179,22 @@ public class CardMover : MonoBehaviour
 
         if (oldDiscardNode != null)
         {
-            // Back-Card gets integrated into Root-Cards if there is already a root-card
-            // Therefore, the next sibling of the back-card in the node-tree needs to be a topnode
-
-            // for each later sibling, add the sibling to top level
-
-            // thsi does not work: What would work is if this goes recursivly to the parents and checks if there are children of the parent in the right-hand side. If so, make them toplevel. This goes rekursively if you're at the top. Then everything that's "deeper" than the Node is toplevel and will therefore not move when the rootnode moves. In a similar way the cards will need to be counted too. Just apply the counting function recursivly to the siblings to the right until the root is reached.
-            /*
-                oldBackNode.TraverseBodyRightSide(
-                    delegate (CardNode node)
-                    {
-                        if (node != oldBackNode)
-                        {
-                            node.Body.transform.parent = null;
-                        }
-
-                        return true;
-                    });
-            */
             oldBackNode.TraverseBodyUnparent();
 
 
             // vertikal nach oben
-            oldDiscardNode.Body.transform.DOMoveY((oldDiscardNode.NodeCountBody() + oldBackNode.NodeCountBody()) * CardInfo.CARDHEIGHT, 0.5f);
+            oldDiscardNode.Body.transform.DOMoveY((oldDiscardNode.NodeCountBody() + oldBackNode.NodeCountBody()) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing);
 
             int cardAmount = oldBackNode.NodeCountBodyRightSide() + oldBackNode.NodeCountBody();
 
 
             // vertikal nach oben
-            oldBackNode.Body.transform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, 0.5f)
-                // nach rechts
-                .OnComplete(() => {
-                    oldBackNode.Body.transform.DOMoveX(2.875f, 1);
-                });
+            oldBackNode.Body.transform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_easing)
+                // wait
+                .OnComplete(() => { oldBackNode.Body.transform.DOMove(oldBackNode.Body.transform.position, _horizontalTime + _waitTime).SetEase(_easing)
+                    // horizontal
+                    .OnComplete(() => { oldBackNode.Body.transform.DOMoveX(2.875f, _horizontalTime).SetEase(_easing);
+                    }); });
             
 
         }
@@ -229,22 +202,23 @@ public class CardMover : MonoBehaviour
         {
             if (oldBackNode != null)
             {
-                oldBackNode.Body.transform.DOMoveX(2.875f, 1);
+                // Wait
+                oldBackNode.Body.transform.DOMove(oldBackNode.Body.transform.position, _verticalTime + _horizontalTime + _waitTime)
+                    // horizontal
+                    .OnComplete(() => { oldBackNode.Body.transform.DOMoveX(2.875f, _horizontalTime).SetEase(_easing);
+                    });
+
+                
             }
             
         }
-
- 
-        
-
-
     }
 
-    public void ResetPositionAndRotation(CardNode rootNode)
+    public void ResetPosition(CardNode rootNode)
     {
         rootNode.TraverseContext(delegate (CardNode node)
         {
-            node.Body.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            node.Body.transform.position = Vector3.zero;
             return true;
         });
     }

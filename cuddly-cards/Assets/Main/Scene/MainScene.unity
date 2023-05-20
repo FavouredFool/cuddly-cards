@@ -783,6 +783,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardFolder: {fileID: 35637509}
+  _verticalTime: 0.2
+  _horizontalTime: 0.35
+  _waitTime: 0.1
+  _easing: 10
 --- !u!114 &1221586267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -824,7 +828,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh26738
+  m_Name: pb_Mesh26748
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

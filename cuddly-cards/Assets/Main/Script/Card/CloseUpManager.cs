@@ -34,6 +34,10 @@ public class CloseUpManager : MonoBehaviour
 
     Vector3 _originalPosition;
 
+    bool _enterAnimationFinished;
+
+    bool _initialCloseUp;
+
     public void Start()
     {
         _closeUpCanvas.SetActive(false);
@@ -41,11 +45,18 @@ public class CloseUpManager : MonoBehaviour
 
     public void EnterCloseUp(CardNode closeUpNode)
     {
+        _enterAnimationFinished = false;
+
         _originalPosition = closeUpNode.Body.transform.position;
 
         _currentNode = closeUpNode;
-
+        _initialCloseUp = !_currentNode.Context.GetHasBeenSeen();
         _currentNode.Context.SetHasBeenSeen(true);
+
+        foreach (CardNode child in _currentNode.Children)
+        {
+            child.Body.transform.parent = null;
+        }
 
         _cameraMovement.SetCloseUpRotation(_closeUpRotation, _transitionTime, _easing);
 
@@ -58,15 +69,13 @@ public class CloseUpManager : MonoBehaviour
 
     public void DisplayElements()
     {
-
-        _cardManager.SetInputLocked(false);
+        _enterAnimationFinished = true;
         _closeUpCanvas.SetActive(true);
         _descriptionText.text = _currentNode.Context.GetDescription();
     }
 
     public void ExitCloseUp()
     {
-        _cardManager.SetInputLocked(true);
         _closeUpCanvas.SetActive(false);
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
 
@@ -76,6 +85,18 @@ public class CloseUpManager : MonoBehaviour
 
     public void CloseUpFinished()
     {
-        _cardManager.CloseUpFinished(_originalPosition);
+        _currentNode.Body.transform.position = _originalPosition;
+
+        foreach (CardNode child in _currentNode.Children)
+        {
+            child.Body.transform.parent = _currentNode.Body.transform;
+        }
+
+        _cardManager.CloseUpFinished(_initialCloseUp);
+    }
+
+    public bool GetEnterAnimationFinished()
+    {
+        return _enterAnimationFinished;
     }
 }

@@ -20,21 +20,15 @@ public class CardInput : MonoBehaviour
 
     public void Update()
     {
-        if (_cardManager.GetInputLocked())
-        {
-            return;
-        }
-
         if (Input.GetMouseButtonDown(0))
         {
             if (_cardManager.GetIsCloseUp())
             {
                 _cardManager.ExitCloseUp();
             }
-            else
-            {
-                EvaluateClickedCard();
-            }
+
+            // there shouldn't be any colliders around when up close, therefore no guard
+            EvaluateClickedCard();
         }
     }
 
@@ -68,15 +62,8 @@ public class CardInput : MonoBehaviour
         }
     }
 
-    public void UpdateColliders()
+    public void SetColliders()
     {
-        foreach (BoxCollider collider in _colliders)
-        {
-            Destroy(collider);
-        }
-
-        _colliders.Clear();
-
         foreach (CardNode node in _cardManager.GetTopLevelNodes())
         {
             BoxCollider collider = gameObject.AddComponent<BoxCollider>();
@@ -88,5 +75,15 @@ public class CardInput : MonoBehaviour
 
             _colliders.Add(collider);
         }
+    }
+
+    public void RemoveColliders()
+    {
+        foreach (BoxCollider collider in _colliders)
+        {
+            Destroy(collider);
+        }
+
+        _colliders.Clear();
     }
 }

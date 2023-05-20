@@ -21,8 +21,6 @@ public class CardManager : MonoBehaviour
 
     bool _isCloseUp = false;
 
-    bool _inputLocked = false;
-
     public void Awake()
     {
         _topLevelNodes = new();
@@ -35,11 +33,12 @@ public class CardManager : MonoBehaviour
 
     public void Start()
     {
-        _activeNode = _rootNode = _cardReader.ReadCards();
+        _activeNode = _oldActiveNode = _rootNode = _cardReader.ReadCards();
 
         _cardBuilder.BuildAllCards(_rootNode);
 
-        MoveCardsFinished();
+        FinishLayout();
+        _activeNode.Context.SetHasBeenSeen(true);
     }
 
     public void SetNodeActive(CardNode node)
@@ -49,7 +48,7 @@ public class CardManager : MonoBehaviour
 
         if (_activeNode.Context.GetHasBeenSeen())
         {
-            SetLayout();
+            PrepareLayout();
         }
         else
         {
@@ -63,64 +62,64 @@ public class CardManager : MonoBehaviour
         {
             _topLevelNodes.Add(childNode);
         }
-
     }
 
-    public void SetLayout()
+    public void PrepareLayout()
     {
         AddTopNodesForMovement();
+        RefreshTopLevelForAllNodes();
 
-        UpdatePiles();
+        _cardMover.ParentCards(_rootNode);
 
         _cardMover.MoveCardsForLayout(_activeNode, _oldActiveNode, _rootNode);
+
+        _cardInput.RemoveColliders();
     }
 
-    public void MoveCardsFinished()
+    public void FinishLayout()
     {
         ClearTopLevelNodes();
-
         SetTopNodes();
+        RefreshTopLevelForAllNodes();
+        _cardMover.ResetPosition(_rootNode);
 
-        UpdatePilesOld();
+        _cardMover.ParentCards(_rootNode);
+        _cardMover.PileFromParenting(_topLevelNodes);
 
         _cardMover.MoveCardsForLayoutOld(_activeNode, _rootNode);
 
-        _cardInput.UpdateColliders();
+        _cardInput.SetColliders();
     }
 
     public void EnterCloseUp()
     {
-        _isCloseUp = true;
-        _inputLocked = true;
-
-        foreach (CardNode child in _activeNode.Children)
-        {
-            child.Body.transform.parent = null;
-        }
-
         _closeUpManager.EnterCloseUp(_activeNode);
+
+        _isCloseUp = true;
+        _cardInput.RemoveColliders();
     }
 
     public void ExitCloseUp()
     {
+        if (!_closeUpManager.GetEnterAnimationFinished())
+        {
+            return;
+        }
+
+        _isCloseUp = false;
         _closeUpManager.ExitCloseUp();
     }
 
-    public void CloseUpFinished(Vector3 originalPosition)
+    public void CloseUpFinished(bool initialCloseUp)
     {
-        _isCloseUp = false;
-        _inputLocked = false;
-
-        _activeNode.Body.transform.position = originalPosition;
-
-        foreach (CardNode child in _activeNode.Children)
+        if (initialCloseUp)
         {
-            child.Body.transform.parent = _activeNode.Body.transform;
+            PrepareLayout();
         }
-
-        _cardMover.PileFromParenting(_activeNode);
-
-        SetLayout();
+        else
+        {
+            _cardInput.SetColliders();
+        }
     }
 
     void SetTopNodes()
@@ -158,36 +157,6 @@ public class CardManager : MonoBehaviour
         });
     }
 
-    void UpdatePiles()
-    {
-        // Necessary for animation transition?
-        RefreshTopLevelForAllNodes();
-
-        _cardMover.ParentCards(_rootNode, _topLevelNodes);
-
-        //_cardMover.ResetPositionAndRotation(_rootNode);
-
-        foreach (CardNode node in _topLevelNodes)
-        {
-            _cardMover.PileFromParenting(node);
-        }
-    }
-
-    void UpdatePilesOld()
-    {
-        // Necessary for animation transition?
-        RefreshTopLevelForAllNodes();
-
-        _cardMover.ParentCards(_rootNode, _topLevelNodes);
-
-        _cardMover.ResetPositionAndRotation(_rootNode);
-
-        foreach (CardNode node in _topLevelNodes)
-        {
-            _cardMover.PileFromParenting(node);
-        }
-    }
-
     public List<CardNode> GetTopLevelNodes()
     {
         return _topLevelNodes;
@@ -207,16 +176,4 @@ public class CardManager : MonoBehaviour
     {
         return _isCloseUp;
     }
-
-    public bool GetInputLocked()
-    {
-        return _inputLocked;
-    }
-
-    public void SetInputLocked(bool inputLocked)
-    {
-        _inputLocked = inputLocked;
-    }
-
-
 }
