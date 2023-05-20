@@ -15,6 +15,7 @@ public class CardManager : MonoBehaviour
     CardNode _rootNode;
 
     CardNode _activeNode;
+    CardNode _oldActiveNode;
 
     List<CardNode> _topLevelNodes;
 
@@ -38,11 +39,12 @@ public class CardManager : MonoBehaviour
 
         _cardBuilder.BuildAllCards(_rootNode);
 
-        SetLayout();
+        MoveCardsFinished();
     }
 
     public void SetNodeActive(CardNode node)
     {
+        _oldActiveNode = _activeNode;
         _activeNode = node;
 
         if (_activeNode.Context.GetHasBeenSeen())
@@ -55,15 +57,33 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    public void AddTopNodesForMovement()
+    {
+        foreach (CardNode childNode in _activeNode.Children)
+        {
+            _topLevelNodes.Add(childNode);
+        }
+
+    }
+
     public void SetLayout()
     {
-        ClearTopLevelNodes();
-
-        SetTopNodes(_activeNode);
+        AddTopNodesForMovement();
 
         UpdatePiles();
 
-        _cardMover.MoveCardsForLayout(_activeNode, _rootNode);
+        _cardMover.MoveCardsForLayout(_activeNode, _oldActiveNode, _rootNode);
+    }
+
+    public void MoveCardsFinished()
+    {
+        ClearTopLevelNodes();
+
+        SetTopNodes();
+
+        UpdatePilesOld();
+
+        _cardMover.MoveCardsForLayoutOld(_activeNode, _rootNode);
 
         _cardInput.UpdateColliders();
     }
@@ -103,21 +123,21 @@ public class CardManager : MonoBehaviour
         SetLayout();
     }
 
-    void SetTopNodes(CardNode mainNode)
+    void SetTopNodes()
     {
         _topLevelNodes.Add(_rootNode);
 
-        if (mainNode != _rootNode)
+        if (_activeNode != _rootNode)
         {
-            _topLevelNodes.Add(mainNode);
+            _topLevelNodes.Add(_activeNode);
 
-            if (mainNode.Parent != _rootNode)
+            if (_activeNode.Parent != _rootNode)
             {
-                _topLevelNodes.Add(mainNode.Parent);
+                _topLevelNodes.Add(_activeNode.Parent);
             }
         }
 
-        foreach (CardNode childNode in mainNode.Children)
+        foreach (CardNode childNode in _activeNode.Children)
         {
             _topLevelNodes.Add(childNode);
         }
@@ -140,6 +160,22 @@ public class CardManager : MonoBehaviour
 
     void UpdatePiles()
     {
+        // Necessary for animation transition?
+        RefreshTopLevelForAllNodes();
+
+        _cardMover.ParentCards(_rootNode, _topLevelNodes);
+
+        //_cardMover.ResetPositionAndRotation(_rootNode);
+
+        foreach (CardNode node in _topLevelNodes)
+        {
+            _cardMover.PileFromParenting(node);
+        }
+    }
+
+    void UpdatePilesOld()
+    {
+        // Necessary for animation transition?
         RefreshTopLevelForAllNodes();
 
         _cardMover.ParentCards(_rootNode, _topLevelNodes);

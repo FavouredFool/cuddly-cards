@@ -88,7 +88,77 @@ public class CardNode
 		}
 	}
 
-	public int NodeCount()
+	public void TraverseBodyRightSide(TraversalNodeDelegate handler)
+	{
+		if (!handler(this))
+		{
+			return;
+		}
+
+		if (_parent == null)
+        {
+			return;
+        }
+
+		for(int i = _parent._children.IndexOf(this)+1; i < _parent._children.Count; i++)
+        {
+			if (_parent._children[i].IsTopLevel)
+			{
+				continue;
+			}
+		}
+
+		_parent.TraverseBodyRightSide(handler);
+	}
+
+	public void TraverseBodyUnparent()
+    {
+		if (_parent == null)
+		{
+			return;
+		}
+
+		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
+		{
+			if (_parent._children[i].IsTopLevel)
+			{
+				continue;
+			}
+
+			_parent._children[i].Body.transform.parent = null;
+		}
+
+		_parent.TraverseBodyUnparent();
+
+	}
+
+
+	public int NodeCountBodyRightSide()
+	{
+		int nodeCount = 0;
+
+		if (_parent == null)
+		{
+			return nodeCount;
+		}
+
+		for (int i = _parent._children.IndexOf(this)+1; i < _parent._children.Count; i++)
+		{
+			if (_parent._children[i].IsTopLevel)
+			{
+				continue;
+			}
+
+			nodeCount = _parent._children[i].NodeCountBody();
+		}
+
+		nodeCount += _parent.NodeCountBodyRightSide();
+
+		return nodeCount;
+	}
+
+
+	public int NodeCountBody()
     {
 		int nodeCount = 1;
 
@@ -99,7 +169,7 @@ public class CardNode
 				continue;
 			}
 
-			nodeCount += child.NodeCount();
+			nodeCount += child.NodeCountBody();
         }
 
 		return nodeCount;
