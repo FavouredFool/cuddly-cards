@@ -245,6 +245,51 @@ public class CardMover : MonoBehaviour
         */
     }
 
+    public int CardAmountBelowNodeThroughList(CardNode activeNode, CardNode topOfPile)
+    {
+        List<CardNode> cardList = new();
+
+        // Turn pile into a list
+        topOfPile.TraverseContext(delegate (CardNode node)
+        {
+            cardList.Add(node);
+            return true;
+        });
+
+        cardList.Reverse();
+        return cardList.IndexOf(activeNode)+1;
+    }
+
+    public int CardAmountBelowNodeInPile(CardNode activeNode, CardNode topOfPile)
+    {
+        // The amount of cards that are below the cardbody that is provided inside of the cardstack that is provided.
+        // I cant believe this works
+
+        int cardAmount = 0;
+
+        for (int i = topOfPile.Children.Count - 1; i >= 0; i--)
+        {
+            if (activeNode == topOfPile.Children[i])
+            {
+                return -cardAmount;
+            }
+
+            int result = CardAmountBelowNodeInPile(activeNode, topOfPile.Children[i]);
+
+            if (result >= 0)
+            {
+                return -cardAmount + result;
+            }
+
+            cardAmount += result;
+        }
+
+        // Important! Add this at the END
+        cardAmount -= 1;
+
+        return cardAmount;
+    }
+
 
     public void ChildClickedAnimated()
     {
@@ -255,7 +300,9 @@ public class CardMover : MonoBehaviour
             Transform childTransform = newChild.Body.transform;
             childTransform.parent = null;
 
-            int cardHeight = newChild.NodeCountBodyRightSide(newChild.Parent) + newChild.NodeCountBody();
+            // Three Versions of doing the exact same thing. Could the List be kept in memory?
+
+            int cardHeight = newChild.NodeCountBodyRightSide(_oldMainNode) + newChild.NodeCountBody();
 
             Sequence childSequence = DOTween.Sequence()
                 .Append(childTransform.DOMoveY(cardHeight * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
@@ -268,7 +315,8 @@ public class CardMover : MonoBehaviour
 
 
         // NEW MAIN
-        int cardAmountMain = _mainNode.NodeCountBodyRightSide(_mainNode) + _mainNode.NodeCountBody();
+
+        int cardAmountMain = _mainNode.NodeCountBodyRightSide(_oldMainNode) + _mainNode.NodeCountBody();
 
         Transform mainTransform = _mainNode.Body.transform;
         Sequence mainSequence = DOTween.Sequence()
@@ -288,8 +336,12 @@ public class CardMover : MonoBehaviour
             {
                 continue;
             }
+            Debug.Log("----");
+            Debug.Log(CardAmountBelowNodeThroughList(oldChild, oldChild.Parent));
+            Debug.Log(CardAmountBelowNodeInPile(oldChild, oldChild.Parent) + oldChild.NodeCountBody());
+            Debug.Log(oldChild.NodeCountBodyRightSide(_oldMainNode) + oldChild.NodeCountBody());
 
-            int cardAmountOldChild = oldChild.NodeCountBodyRightSide(oldChild) + oldChild.NodeCountBody();
+            int cardAmountOldChild = oldChild.NodeCountBodyRightSide(_oldMainNode) + oldChild.NodeCountBody();
 
             Sequence oldChildSequence = DOTween.Sequence()
                 .Append(oldChildTransform.DOMoveY(cardAmountOldChild * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))

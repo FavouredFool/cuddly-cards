@@ -129,30 +129,23 @@ public class CardNode
 		}
 
 		_parent.TraverseBodyUnparent();
-
 	}
 
-
-	public int NodeCountBodyRightSide(CardNode maximumParent)
+	public int NodeCountBodyRightSide(CardNode pileParent)
 	{
-		int nodeCount = 0;
-
-		if (_parent == null)
+		if (this == pileParent)
 		{
-			return nodeCount;
+			return 0;
 		}
+
+		int nodeCount = 0;
 
 		for (int i = _parent._children.IndexOf(this)+1; i < _parent._children.Count; i++)
 		{
 			nodeCount += _parent._children[i].NodeCountBody();
 		}
 
-		if (this != maximumParent)
-        {
-			nodeCount += _parent.NodeCountBodyRightSide(maximumParent);
-		}
-
-		
+		nodeCount += _parent.NodeCountBodyRightSide(pileParent);
 
 		return nodeCount;
 	}
