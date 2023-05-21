@@ -11,10 +11,10 @@ public class CardMover : MonoBehaviour
     [SerializeField, Range(0f, 1)]
     float _verticalTime = 0.5f;
 
-    [SerializeField, Range(0.1f, 2)]
+    [SerializeField, Range(0.1f, 210)]
     float _horizontalTime = 1f;
 
-    [SerializeField, Range(0f, 2)]
+    [SerializeField, Range(0f, 210)]
     float _waitTime = 1f;
 
     [SerializeField]
@@ -124,6 +124,10 @@ public class CardMover : MonoBehaviour
         {
             ChildClickedAnimated();
         }
+        else if (_oldBackNode == _mainNode)
+        {
+            BackClickedAnimated();
+        }
 
         // MAKE SURE THAT THE TIMER IS A BIT LONGER THAN THE MAXIMUM TWEENING TIME
         Sequence timerSequence = DOTween.Sequence()
@@ -131,33 +135,60 @@ public class CardMover : MonoBehaviour
             .OnComplete(() => { _cardManager.FinishLayout(); });
     }
 
-    public void ChildClickedAnimated()
+    public void BackClickedAnimated()
     {
-        int cardAmount = 0;
-        int mainCardsAmount;
+        return;
 
         // NEW CHILDREN
         for (int i = _newChildNodes.Count - 1; i >= 0; i--)
         {
             CardNode newChild = _newChildNodes[i];
+
+            Sequence childSequence = DOTween.Sequence();
+
             Transform childTransform = newChild.Body.transform;
 
-            cardAmount += newChild.NodeCountBody();
+            if (_oldMainNode == newChild)
+            {
+                Transform oldMainTransform = childTransform;
 
-            Sequence childSequence = DOTween.Sequence()
-                .Append(childTransform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
-                .Append(childTransform.DOMoveX(-2.5f, _horizontalTime).SetEase(_horizontalEasing))
-                .AppendInterval(_waitTime)
+                int oldChildrenCount = 0;
+                foreach (CardNode oldChild in _oldChildNodes)
+                {
+                    oldChildrenCount += oldChild.NodeCountBody();
+                }
+
+                int cardAmountOldMain = 1 + oldChildrenCount;
+                // temporary for fixes
+                //int cardAmountParents = _oldMainNode.NodeCountBodyRightSide();
+                int cardAmountParents = 0;
+                
+
+                childSequence.Append(oldMainTransform.DOMoveY((cardAmountOldMain + cardAmountParents) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+                    .AppendInterval(_horizontalTime + _waitTime)
+                    .Append(oldMainTransform.DOMoveX(newChild.Parent.Children.IndexOf(newChild) * 1.125f - 1f, _horizontalTime).SetEase(_horizontalEasing))
+                    .Append(childTransform.DOMoveY(cardAmountOldMain * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
+            }
+            else
+            {
+                // other new Child stuff -> MMove down from back-position together with the top card (seperately)
+
+                // they need to increase in Y too IF they are above the oldMain
+                //childSequence.Append(childTransform.DoMove)
+                childSequence.AppendInterval(_waitTime)
                 .Append(childTransform.DOMoveX(newChild.Parent.Children.IndexOf(newChild) * 1.125f - 1f, _horizontalTime).SetEase(_horizontalEasing))
                 .Append(childTransform.DOMoveY(newChild.NodeCountBody() * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
-        }
 
+            }
+        }
+        /*
         cardAmount += _mainNode.NodeCountBody();
         mainCardsAmount = cardAmount;
 
 
         // NEW MAIN
         Transform mainTransform = _mainNode.Body.transform;
+
         Sequence mainSequence = DOTween.Sequence()
             .Append(mainTransform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
             .Append(mainTransform.DOMoveX(-2.5f, _horizontalTime).SetEase(_horizontalEasing))
@@ -184,14 +215,6 @@ public class CardMover : MonoBehaviour
             cardAmount += oldChild.NodeCountBody();
         }
 
-        Transform oldMainTransform = _oldMainNode.Body.transform;
-
-        Sequence oldMainSequence = DOTween.Sequence()
-            .Append(oldMainTransform.DOMoveY((cardAmount + 1) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
-            .AppendInterval(_horizontalTime + _waitTime)
-            .Append(oldMainTransform.DOMoveZ(2.5f, _horizontalTime).SetEase(_horizontalEasing))
-            .Append(oldMainTransform.DOMoveY((cardAmount + 1 - mainCardsAmount) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
-
 
         if (_oldDiscardNode != null)
         {
@@ -205,6 +228,122 @@ public class CardMover : MonoBehaviour
             // OLD BACK
             Transform oldBackTransform = _oldBackNode.Body.transform;
             int cardAmountOldBack = _oldBackNode.NodeCountBodyRightSide() + _oldBackNode.NodeCountBody();
+
+            Sequence oldBackSequence = DOTween.Sequence()
+                .Append(oldBackTransform.DOMoveY(cardAmountOldBack * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+                .AppendInterval(_horizontalTime + _waitTime)
+                .Append(oldBackTransform.DOMoveX(2.875f, _horizontalTime).SetEase(_horizontalEasing));
+        }
+        else if (_oldBackNode != null)
+        {
+            // OLD BACK WITHOUT DISCARD
+            Transform oldBackTransform = _oldBackNode.Body.transform;
+            Sequence oldBackSequence = DOTween.Sequence()
+                .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
+                .Append(oldBackTransform.DOMoveX(2.875f, _horizontalTime).SetEase(_horizontalEasing));
+        }
+        */
+    }
+
+
+    public void ChildClickedAnimated()
+    {
+        // NEW CHILDREN
+        for (int i = _newChildNodes.Count - 1; i >= 0; i--)
+        {
+            CardNode newChild = _newChildNodes[i];
+            Transform childTransform = newChild.Body.transform;
+            childTransform.parent = null;
+
+            int cardHeight = newChild.NodeCountBodyRightSide(newChild.Parent) + newChild.NodeCountBody();
+
+            Sequence childSequence = DOTween.Sequence()
+                .Append(childTransform.DOMoveY(cardHeight * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+                .Append(childTransform.DOMoveX(-2.5f, _horizontalTime).SetEase(_horizontalEasing))
+                .AppendInterval(_waitTime)
+                .Append(childTransform.DOMoveX(newChild.Parent.Children.IndexOf(newChild) * 1.125f - 1f, _horizontalTime).SetEase(_horizontalEasing))
+                .Append(childTransform.DOMoveY(newChild.NodeCountBody() * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
+        }
+
+
+
+        // NEW MAIN
+        int cardAmountMain = _mainNode.NodeCountBodyRightSide(_mainNode) + _mainNode.NodeCountBody();
+
+        Transform mainTransform = _mainNode.Body.transform;
+        Sequence mainSequence = DOTween.Sequence()
+            .Append(mainTransform.DOMoveY(cardAmountMain * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+            .Append(mainTransform.DOMoveX(-2.5f, _horizontalTime).SetEase(_horizontalEasing))
+            .AppendInterval(_waitTime + _horizontalTime)
+            .Append(mainTransform.DOMoveY(CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
+
+
+        // OLD CHILDREN
+        for (int i = _oldChildNodes.Count - 1; i >= 0; i--)
+        {
+            CardNode oldChild = _oldChildNodes[i];
+            Transform oldChildTransform = oldChild.Body.transform;
+
+            if (oldChild == _mainNode)
+            {
+                continue;
+            }
+
+            int cardAmountOldChild = oldChild.NodeCountBodyRightSide(oldChild) + oldChild.NodeCountBody();
+
+            Sequence oldChildSequence = DOTween.Sequence()
+                .Append(oldChildTransform.DOMoveY(cardAmountOldChild * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+                .Append(oldChildTransform.DOMoveX(-2.5f, _horizontalTime).SetEase(_horizontalEasing))
+                .AppendInterval(_waitTime)
+                .Append(oldChildTransform.DOMoveZ(2.5f, _horizontalTime).SetEase(_horizontalEasing))
+                .OnComplete(() => {
+                    if (_oldChildNodes.IndexOf(oldChild) < _oldChildNodes.IndexOf(_mainNode))
+                    {
+                        oldChild.Body.transform.parent = _oldMainNode.Body.transform;
+                    }
+                });
+        }
+
+        Transform oldMainTransform = _oldMainNode.Body.transform;
+
+        int upwardsCount = 1;
+
+        foreach (CardNode child in _oldMainNode.Children)
+        {
+            upwardsCount += child.NodeCountBody();
+        }
+
+        int remainingCount = 1;
+
+        foreach (CardNode child in _oldMainNode.Children)
+        {
+            if (child == _mainNode)
+            {
+                continue;
+            }
+
+            remainingCount += child.NodeCountBody();
+        }
+
+        Sequence oldMainSequence = DOTween.Sequence()
+            .Append(oldMainTransform.DOMoveY(upwardsCount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+            .AppendInterval(_horizontalTime + _waitTime)
+            .Append(oldMainTransform.DOMoveZ(2.5f, _horizontalTime).SetEase(_horizontalEasing))
+            .Append(oldMainTransform.DOMoveY(remainingCount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
+
+
+        if (_oldDiscardNode != null)
+        {
+            // OLD DISCARD
+            Transform discardTransform = _oldDiscardNode.Body.transform;
+            _oldBackNode.TraverseBodyUnparent();
+
+            Sequence oldDiscardSequence = DOTween.Sequence()
+                .Append(discardTransform.DOMoveY((_oldDiscardNode.NodeCountBody() + _oldBackNode.NodeCountBody()) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
+
+            // OLD BACK
+            Transform oldBackTransform = _oldBackNode.Body.transform;
+            int cardAmountOldBack = _oldBackNode.NodeCountBodyRightSide(_oldDiscardNode) + _oldBackNode.NodeCountBody();
 
             Sequence oldBackSequence = DOTween.Sequence()
                 .Append(oldBackTransform.DOMoveY(cardAmountOldBack * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))

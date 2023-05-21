@@ -133,7 +133,7 @@ public class CardNode
 	}
 
 
-	public int NodeCountBodyRightSide()
+	public int NodeCountBodyRightSide(CardNode maximumParent)
 	{
 		int nodeCount = 0;
 
@@ -144,15 +144,15 @@ public class CardNode
 
 		for (int i = _parent._children.IndexOf(this)+1; i < _parent._children.Count; i++)
 		{
-			if (_parent._children[i].IsTopLevel)
-			{
-				continue;
-			}
-
-			nodeCount = _parent._children[i].NodeCountBody();
+			nodeCount += _parent._children[i].NodeCountBody();
 		}
 
-		nodeCount += _parent.NodeCountBodyRightSide();
+		if (this != maximumParent)
+        {
+			nodeCount += _parent.NodeCountBodyRightSide(maximumParent);
+		}
+
+		
 
 		return nodeCount;
 	}

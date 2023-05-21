@@ -58,15 +58,17 @@ public class CardManager : MonoBehaviour
     {
         foreach (CardNode childNode in _activeNode.Children)
         {
+            if (_oldActiveNode == childNode)
+            {
+                continue;
+            }
+
             _topLevelNodes.Add(childNode);
         }
     }
 
     public void PrepareLayout()
     {
-        AddChildTopNodes();
-        RefreshTopLevelForAllNodes();
-
         _cardMover.ParentCards(_rootNode);
 
         _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode);
