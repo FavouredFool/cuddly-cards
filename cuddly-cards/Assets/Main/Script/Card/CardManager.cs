@@ -11,9 +11,7 @@ public class CardManager : MonoBehaviour
     CardInput _cardInput;
     CardReader _cardReader;
     
-
     CardNode _rootNode;
-
     CardNode _activeNode;
     CardNode _oldActiveNode;
 
@@ -34,11 +32,11 @@ public class CardManager : MonoBehaviour
     public void Start()
     {
         _activeNode = _oldActiveNode = _rootNode = _cardReader.ReadCards();
+        _activeNode.Context.SetHasBeenSeen(true);
 
         _cardBuilder.BuildAllCards(_rootNode);
 
         FinishLayout();
-        _activeNode.Context.SetHasBeenSeen(true);
     }
 
     public void SetNodeActive(CardNode node)
@@ -56,7 +54,7 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void AddTopNodesForMovement()
+    public void AddChildTopNodes()
     {
         foreach (CardNode childNode in _activeNode.Children)
         {
@@ -66,12 +64,12 @@ public class CardManager : MonoBehaviour
 
     public void PrepareLayout()
     {
-        AddTopNodesForMovement();
+        AddChildTopNodes();
         RefreshTopLevelForAllNodes();
 
         _cardMover.ParentCards(_rootNode);
 
-        _cardMover.MoveCardsForLayout(_activeNode, _oldActiveNode, _rootNode);
+        _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode);
 
         _cardInput.RemoveColliders();
     }
@@ -86,7 +84,7 @@ public class CardManager : MonoBehaviour
         _cardMover.ParentCards(_rootNode);
         _cardMover.PileFromParenting(_topLevelNodes);
 
-        _cardMover.MoveCardsForLayoutOld(_activeNode, _rootNode);
+        _cardMover.MoveCardsForLayoutStatic(_activeNode, _rootNode);
 
         _cardInput.SetColliders();
     }
