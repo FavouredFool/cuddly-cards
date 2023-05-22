@@ -51,7 +51,7 @@ public class CardInput : MonoBehaviour
 
             CardNode hitNode = _cardManager.GetTopLevelNodes()[_colliders.IndexOf(hit.collider)];
 
-            if (hitNode == _cardManager.GetActiveNode())
+            if (hitNode == _cardManager.GetActiveNode() && !_cardManager.GetIsStartLayout())
             {
                 _cardManager.EnterCloseUp();
             }

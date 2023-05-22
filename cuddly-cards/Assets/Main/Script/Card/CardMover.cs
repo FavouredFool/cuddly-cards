@@ -91,33 +91,76 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void MoveCardsForLayoutStatic(CardNode mainNode, CardNode rootNode)
+    public void MoveCardsForStartLayoutStatic(CardNode rootNode)
     {
-        MoveCard(mainNode, _playSpaceBottomLeft);
+        MoveCard(rootNode, new Vector2(_playSpaceBottomLeft.x  + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _playSpaceBottomLeft.y));
+    }
 
-        if (mainNode != rootNode)
+    public void MoveCardsForLayoutStatic(CardNode pressedNode, CardNode previousNode, CardNode rootNode)
+    {
+        MoveCard(pressedNode, _playSpaceBottomLeft);
+
+        if (pressedNode != rootNode)
         {
-            MoveCard(mainNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
+            MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
 
-            if (mainNode.Parent != rootNode)
+            if (pressedNode.Parent != rootNode)
             {
                 MoveCard(rootNode, _playSpaceTopRight);
             }
         }
 
-        for (int i = 0; i < mainNode.Children.Count; i++)
+        for (int i = 0; i < pressedNode.Children.Count; i++)
         {
-            MoveCard(mainNode.Children[i], new Vector2(i * _childrenDistance - _childrenStartOffset, _playSpaceBottomLeft.y));
+            MoveCard(pressedNode.Children[i], new Vector2(i * _childrenDistance - _childrenStartOffset, _playSpaceBottomLeft.y));
         }
     }
 
-    public void MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode)
+    public void MoveCardsForStartLayoutAnimated(CardNode rootNode)
+    {
+        // HIER ANIMATION ZUM ZUSAMMENFÜGEN DES GESAMTEN PILES ANFÜGEN
+
+
+        Sequence timerSequence = DOTween.Sequence()
+            .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
+            .OnComplete(() => { _cardManager.FinishStartLayout(); });
+    }
+
+    public void StartLayoutExitedAnimated(CardNode rootNode)
+    {
+        Transform rootTransform = rootNode.Body.transform;
+
+        Sequence rootSequence = DOTween.Sequence()
+            .AppendInterval(_verticalTime)
+            .Append(rootTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime))
+            .AppendInterval(_waitTime + _horizontalTime)
+            .Append(rootTransform.DOMoveY(CardInfo.CARDHEIGHT, _verticalTime));
+
+        for (int i = 0; i < rootNode.Children.Count; i++)
+        {
+            Transform childTransform = rootNode.Children[i].Body.transform;
+            childTransform.parent = null;
+
+            Sequence childSequence = DOTween.Sequence()
+                .AppendInterval(_verticalTime)
+                .Append(childTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime))
+                .AppendInterval(_waitTime)
+                .Append(childTransform.DOMoveX(i * _childrenDistance - _childrenStartOffset, _horizontalTime))
+                .Append(childTransform.DOMoveY(rootNode.Children[i].NodeCountBody() * CardInfo.CARDHEIGHT, _verticalTime));
+        }
+    }
+
+    public void MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode, bool isStartLayout)
     {
         // we dont know what the new main node is relative to the old main node. Could be a child, could be back, could be root.
 
         float timeTotal = 0;
-
-        if (previousMain.Children.Contains(mainToBe))
+        if (isStartLayout)
+        {
+            StartLayoutExitedAnimated(rootNode);
+            timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
+        }
+        else if (previousMain.Children.Contains(mainToBe))
         {
             ChildClickedAnimated(mainToBe, previousMain, previousMain.Parent, rootNode, mainToBe.Children, previousMain.Children);
             timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
@@ -127,6 +170,8 @@ public class CardMover : MonoBehaviour
             BackClickedAnimated(mainToBe, mainToBe.Parent, previousMain, rootNode, previousMain.Children, mainToBe.Children);
             timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
         }
+
+        
 
         // MAKE SURE THAT THE TIMER IS A BIT LONGER THAN THE MAXIMUM TWEENING TIME
         Sequence timerSequence = DOTween.Sequence()
@@ -219,8 +264,6 @@ public class CardMover : MonoBehaviour
 
             // OLD BACK
             Transform oldBackTransform = backToBe.Body.transform;
-
-            Debug.Log(backToBe.NodeCountUpToCardInPile(discard));
 
             Sequence oldBackSequence = DOTween.Sequence()
                 .AppendInterval(_verticalTime)

@@ -783,9 +783,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardFolder: {fileID: 35637509}
-  _mainPosition: {x: -2.5, y: 0}
-  _backPosition: {x: -2.5, y: 2.5}
-  _discardPosition: {x: 2.875, y: 2.5}
+  _playSpaceBottomLeft: {x: -2.5, y: 0}
+  _playSpaceTopRight: {x: 2.875, y: 2.5}
   _childrenDistance: 1.125
   _childrenStartOffset: 1
   _verticalTime: 0.2
@@ -2048,5 +2047,5 @@ MonoBehaviour:
   _cardManager: {fileID: 1221586264}
   _descriptionText: {fileID: 1642152226}
   _closeUpRotation: -25
-  _transitionTime: 0.6
+  _transitionTime: 0.5
   _easing: 13

@@ -19,6 +19,8 @@ public class CardManager : MonoBehaviour
 
     bool _isCloseUp = false;
 
+    bool _isStartLayout = false;
+
     public void Awake()
     {
         _topLevelNodes = new();
@@ -32,11 +34,10 @@ public class CardManager : MonoBehaviour
     public void Start()
     {
         _activeNode = _oldActiveNode = _rootNode = _cardReader.ReadCards();
-        _activeNode.Context.SetHasBeenSeen(true);
 
         _cardBuilder.BuildAllCards(_rootNode);
 
-        FinishLayout();
+        FinishStartLayout();
     }
 
     public void SetNodeActive(CardNode node)
@@ -54,30 +55,30 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void AddChildTopNodes()
-    {
-        foreach (CardNode childNode in _activeNode.Children)
-        {
-            if (_oldActiveNode == childNode)
-            {
-                continue;
-            }
-
-            _topLevelNodes.Add(childNode);
-        }
-    }
-
     public void PrepareLayout()
     {
+        _cardInput.RemoveColliders();
+
         _cardMover.ParentCards(_rootNode);
 
-        _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode);
+        // Extra for initial layout
+        if (_activeNode == _rootNode)
+        {
+            // aber nur wenn's vorher nicht rootnode war!!
+            if (_rootNode != _oldActiveNode && _rootNode != _oldActiveNode.Parent)
+            {
+                PrepareStartLayout();
+                return;
+            }
+        }
 
-        _cardInput.RemoveColliders();
+        _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, _isStartLayout);
     }
 
     public void FinishLayout()
     {
+        _isStartLayout = false;
+
         ClearTopLevelNodes();
         SetTopNodes();
         RefreshTopLevelForAllNodes();
@@ -86,7 +87,32 @@ public class CardManager : MonoBehaviour
         _cardMover.ParentCards(_rootNode);
         _cardMover.PileFromParenting(_topLevelNodes);
 
-        _cardMover.MoveCardsForLayoutStatic(_activeNode, _rootNode);
+        _cardMover.MoveCardsForLayoutStatic(_activeNode, _oldActiveNode, _rootNode);
+
+        _cardInput.SetColliders();
+    }
+
+    public void PrepareStartLayout()
+    {
+        _cardMover.MoveCardsForStartLayoutAnimated(_rootNode);
+    }
+
+    public void FinishStartLayout()
+    {
+        _isStartLayout = true;
+
+        Debug.Log("StartView");
+
+        ClearTopLevelNodes();
+        // children are not top-level in this one!
+        _topLevelNodes.Add(_rootNode);
+        RefreshTopLevelForAllNodes();
+        _cardMover.ResetPosition(_rootNode);
+
+        _cardMover.ParentCards(_rootNode);
+        _cardMover.PileFromParenting(_topLevelNodes);
+
+        _cardMover.MoveCardsForStartLayoutStatic(_rootNode);
 
         _cardInput.SetColliders();
     }
@@ -170,6 +196,16 @@ public class CardManager : MonoBehaviour
     public CardNode GetActiveNode()
     {
         return _activeNode;
+    }
+
+    public CardNode GetOldActiveNode()
+    {
+        return _oldActiveNode;
+    }
+
+    public bool GetIsStartLayout()
+    {
+        return _isStartLayout;
     }
 
     public bool GetIsCloseUp()
