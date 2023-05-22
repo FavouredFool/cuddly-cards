@@ -94,14 +94,12 @@ public class CardManager : MonoBehaviour
 
     public void PrepareStartLayout()
     {
-        _cardMover.MoveCardsForStartLayoutAnimated(_rootNode);
+        _cardMover.MoveCardsForStartLayoutAnimated(_rootNode, _oldActiveNode);
     }
 
     public void FinishStartLayout()
     {
         _isStartLayout = true;
-
-        Debug.Log("StartView");
 
         ClearTopLevelNodes();
         // children are not top-level in this one!

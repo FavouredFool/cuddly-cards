@@ -116,13 +116,82 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void MoveCardsForStartLayoutAnimated(CardNode rootNode)
+    public void MoveCardsForStartLayoutAnimated(CardNode rootNode, CardNode oldMain)
     {
-        // HIER ANIMATION ZUM ZUSAMMENFÜGEN DES GESAMTEN PILES ANFÜGEN
+        // Children
+
+        List<CardNode> previousChilds = oldMain.Children;
+
+        for (int i = previousChilds.Count - 1; i >= 0; i--)
+        {
+            CardNode previousChild = previousChilds[i];
+            Transform oldChildTransform = previousChild.Body.transform;
+
+            Sequence oldChildSequence = DOTween.Sequence()
+                .Append(oldChildTransform.DOMoveY(previousChild.NodeCountUpToCardInPile(rootNode) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+                .Append(oldChildTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime).SetEase(_horizontalEasing))
+                .OnComplete(() => {
+                    previousChild.Body.transform.parent = oldMain.Body.transform;
+                });
+        }
+
+        // old Main
+        Transform oldMainTransform = oldMain.Body.transform;
+
+        int heightAmount = oldMain.NodeCountContext() + oldMain.NodeCountBelowCardBodyInPile(rootNode);
+
+        Sequence oldMainSequence = DOTween.Sequence()
+            .Append(oldMainTransform.DOMoveY(heightAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+            .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
+            .OnComplete(() => { oldMainTransform.parent = oldMain.Parent.Body.transform; });
+
+        // old parent
+
+        Transform oldParentTransform = oldMain.Parent.Body.transform;
+        List<CardNode> unparentedCards = oldMain.UnparentCardBodiesBelowCardInPile(oldMain.Parent);
+        // I need all unparented elements here (can be more than one, are right next to each other probably)
+        // then i can move them seperately by NodeCountCardBodyInPile(rootNode)
+
+        foreach (CardNode card in unparentedCards)
+        {
+            card.Body.transform.DOMoveY(card.NodeCountUpToCardInPile(rootNode) * CardInfo.CARDHEIGHT, _verticalTime);
+        }
+
+
+        oldParentTransform.DOMoveY((oldMain.Parent.NodeCountContext() + oldMain.Parent.NodeCountBelowCardBodyInPile(rootNode)) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing)
+            .OnComplete(() =>
+            {
+                oldMain.ReparentCardBodiesBelowCardInPile(oldMain.Parent);
+                oldParentTransform.DOMoveX(oldParentTransform.position.x, _horizontalTime)
+                .OnComplete(() => { oldParentTransform.parent = rootNode.Body.transform;
+                }); });
+
+
+        // rootNode
+
+        Transform rootNodeTransform = rootNode.Body.transform;
+
+        oldMain.Parent.UnparentCardBodiesBelowCardInPile(rootNode);
+
+
+        //Sequence rootNodeSequence = DOTween.Sequence()
+        //.Append(rootNodeTransform.DOMoveY(rootNode.NodeCountBody(), _verticalTime).SetEase(_verticalEasing)).OnComplete>
+        //.Append(rootNodeTransform.DoMoveX())
+
+        rootNodeTransform.DOMoveY(rootNode.NodeCountContext() * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing)
+            .OnComplete(() =>
+            {
+                oldMain.Parent.ReparentCardBodiesBelowCardInPile(rootNode);
+                rootNodeTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime)
+                .OnComplete(()=> { rootNodeTransform.DOMoveX(rootNodeTransform.position.x, _waitTime)
+                     .OnComplete(() => { rootNodeTransform.DOMoveZ(_playSpaceBottomLeft.y, _horizontalTime)
+                          .OnComplete(() => { rootNodeTransform.DOMoveX(rootNodeTransform.position.x, _waitTime)
+                              .OnComplete(() => { rootNodeTransform.DOMoveX(_playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _horizontalTime);
+                                  }); }); }); }); });
 
 
         Sequence timerSequence = DOTween.Sequence()
-            .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
+            .AppendInterval(_verticalTime * 2 + _horizontalTime * 3 +  2 * _waitTime + 0.01f)
             .OnComplete(() => { _cardManager.FinishStartLayout(); });
     }
 
@@ -247,7 +316,7 @@ public class CardMover : MonoBehaviour
 
             Sequence oldChildSequence = DOTween.Sequence()
                 .Append(oldChildTransform.DOMoveY(cardAmount * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
-                .Append(oldChildTransform.DOMoveX(-2.5f, _horizontalTime).SetEase(_horizontalEasing))
+                .Append(oldChildTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime).SetEase(_horizontalEasing))
                 .OnComplete(() => { oldChild.Body.transform.parent = previousMain.Body.transform; });
         }
 

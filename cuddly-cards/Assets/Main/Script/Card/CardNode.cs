@@ -88,8 +88,8 @@ public class CardNode
 		}
 	}
 
-	public void UnparentCardBodiesBelowCardInPile(CardNode topOfPile)
-    {
+	public void ReparentCardBodiesBelowCardInPile(CardNode topOfPile)
+	{
 		// this is only used for splitting the discard pile at the correct position so a new cardblock can be inserted
 		// Note that this stops at topLevel children
 
@@ -105,10 +105,37 @@ public class CardNode
 				continue;
 			}
 
-			_parent._children[i].Body.transform.parent = null;
+			_parent._children[i].Body.transform.parent = _parent.Body.transform;
 		}
 
-		_parent.UnparentCardBodiesBelowCardInPile(topOfPile);
+		_parent.ReparentCardBodiesBelowCardInPile(topOfPile);
+	}
+
+	public List<CardNode> UnparentCardBodiesBelowCardInPile(CardNode topOfPile)
+    {
+		// this is only used for splitting the discard pile at the correct position so a new cardblock can be inserted
+		// Note that this stops at topLevel children
+		List<CardNode> unparentedCards = new();
+
+		if (this == topOfPile)
+		{
+			return unparentedCards;
+		}
+
+		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
+		{
+			if (_parent._children[i].IsTopLevel)
+			{
+				continue;
+			}
+
+			_parent._children[i].Body.transform.parent = null;
+			unparentedCards.Add(_parent._children[i]);
+		}
+
+		unparentedCards.AddRange(_parent.UnparentCardBodiesBelowCardInPile(topOfPile));
+
+		return unparentedCards;
 	}
 
 	public int NodeCountUpToCardInPile(CardNode topOfPile)
