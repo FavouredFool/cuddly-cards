@@ -153,6 +153,18 @@ public class CardNode
 		return nodeCount;
     }
 
+	public int NodeCountContext()
+	{
+		int nodeCount = 1;
+
+		foreach (CardNode child in _children)
+		{
+			nodeCount += child.NodeCountContext();
+		}
+
+		return nodeCount;
+	}
+
 
 	public int SetHeightRecursive(int height)
 	{
