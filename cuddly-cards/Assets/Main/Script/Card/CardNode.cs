@@ -88,32 +88,12 @@ public class CardNode
 		}
 	}
 
-	public void TraverseBodyRightSide(TraversalNodeDelegate handler)
-	{
-		if (!handler(this))
-		{
-			return;
-		}
-
-		if (_parent == null)
-        {
-			return;
-        }
-
-		for(int i = _parent._children.IndexOf(this)+1; i < _parent._children.Count; i++)
-        {
-			if (_parent._children[i].IsTopLevel)
-			{
-				continue;
-			}
-		}
-
-		_parent.TraverseBodyRightSide(handler);
-	}
-
-	public void TraverseBodyUnparent()
+	public void UnparentCardBodiesBelowCardInPile(CardNode topOfPile)
     {
-		if (_parent == null)
+		// this is only used for splitting the discard pile at the correct position so a new cardblock can be inserted
+		// Note that this stops at topLevel children
+
+		if (this == topOfPile)
 		{
 			return;
 		}
@@ -128,12 +108,17 @@ public class CardNode
 			_parent._children[i].Body.transform.parent = null;
 		}
 
-		_parent.TraverseBodyUnparent();
+		_parent.UnparentCardBodiesBelowCardInPile(topOfPile);
 	}
 
-	public int NodeCountBodyRightSide(CardNode pileParent)
+	public int NodeCountUpToCardInPile(CardNode topOfPile)
+    {
+		return NodeCountBody() + NodeCountBelowCardBodyInPile(topOfPile);
+    }
+
+	public int NodeCountBelowCardBodyInPile(CardNode topOfPile)
 	{
-		if (this == pileParent)
+		if (this == topOfPile)
 		{
 			return 0;
 		}
@@ -145,7 +130,7 @@ public class CardNode
 			nodeCount += _parent._children[i].NodeCountBody();
 		}
 
-		nodeCount += _parent.NodeCountBodyRightSide(pileParent);
+		nodeCount += _parent.NodeCountBelowCardBodyInPile(topOfPile);
 
 		return nodeCount;
 	}
