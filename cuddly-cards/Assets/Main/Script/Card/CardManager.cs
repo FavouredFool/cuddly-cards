@@ -59,7 +59,11 @@ public class CardManager : MonoBehaviour
     {
         _cardInput.RemoveColliders();
 
-        _cardMover.ParentCards(_rootNode);
+        ClearTopLevelNodes();
+        SetTopNodes();
+        RefreshTopLevelForAllNodes();
+
+        _cardMover.RemoveParenting(_rootNode);
 
         // Extra for initial layout
         if (_activeNode == _rootNode)
@@ -67,7 +71,7 @@ public class CardManager : MonoBehaviour
             // aber nur wenn's vorher nicht rootnode war!!
             if (_rootNode != _oldActiveNode && _rootNode != _oldActiveNode.Parent)
             {
-                PrepareStartLayout();
+                _cardMover.MoveCardsForStartLayoutAnimated(_rootNode, _oldActiveNode);
                 return;
             }
         }
@@ -90,11 +94,6 @@ public class CardManager : MonoBehaviour
         _cardMover.MoveCardsForLayoutStatic(_activeNode, _oldActiveNode, _rootNode);
 
         _cardInput.SetColliders();
-    }
-
-    public void PrepareStartLayout()
-    {
-        _cardMover.MoveCardsForStartLayoutAnimated(_rootNode, _oldActiveNode);
     }
 
     public void FinishStartLayout()
@@ -209,5 +208,17 @@ public class CardManager : MonoBehaviour
     public bool GetIsCloseUp()
     {
         return _isCloseUp;
+    }
+
+    public void AddToTopLevel(CardNode cardNode)
+    {
+        _topLevelNodes.Add(cardNode);
+        cardNode.IsTopLevel = true;
+    }
+
+    public void RemoveFromTopLevel(CardNode cardNode)
+    {
+        _topLevelNodes.Remove(cardNode);
+        cardNode.IsTopLevel = false;
     }
 }
