@@ -58,11 +58,6 @@ public class CardManager : MonoBehaviour
     public void PrepareLayout()
     {
         _cardInput.RemoveColliders();
-
-        ClearTopLevelNodes();
-        SetTopNodes();
-        RefreshTopLevelForAllNodes();
-
         _cardMover.RemoveParenting(_rootNode);
 
         // Extra for initial layout
@@ -75,6 +70,10 @@ public class CardManager : MonoBehaviour
                 return;
             }
         }
+
+        ClearTopLevelNodes();
+        SetTopNodes();
+        RefreshTopLevelForAllNodes();
 
         _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, _isStartLayout);
     }

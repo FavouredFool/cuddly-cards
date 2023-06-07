@@ -67,7 +67,6 @@ public class CardNode
         }
 
 		Body.transform.position = new Vector3(Parent.Body.transform.position.x, Parent.Body.transform.position.y - cardsBelowCardAndParent * CardInfo.CARDHEIGHT, Parent.Body.transform.position.z);
-		
 
 		cardsBelowCardAndParent = 1;
 
@@ -110,14 +109,15 @@ public class CardNode
 		}
 	}
 
-	public void ReparentCardBodiesBelowCardInPile(CardNode topOfPile)
+	public List<CardNode> GetTopMostCardBodiesBelowCardInPile(CardNode topOfPile)
 	{
 		// this is only used for splitting the discard pile at the correct position so a new cardblock can be inserted
 		// Note that this stops at topLevel children
+		List<CardNode> addedCards = new();
 
 		if (this == topOfPile)
 		{
-			return;
+			return addedCards;
 		}
 
 		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
@@ -127,57 +127,13 @@ public class CardNode
 				continue;
 			}
 
-			_parent._children[i].Body.transform.parent = _parent.Body.transform;
+			addedCards.Add(_parent._children[i]);
 		}
 
-		_parent.ReparentCardBodiesBelowCardInPile(topOfPile);
+		addedCards.AddRange(_parent.GetTopMostCardBodiesBelowCardInPile(topOfPile));
+
+		return addedCards;
 	}
-
-	public List<CardNode> UnparentCardBodiesBelowCardInPile(CardNode topOfPile)
-    {
-		// this is only used for splitting the discard pile at the correct position so a new cardblock can be inserted
-		// Note that this stops at topLevel children
-		List<CardNode> unparentedCards = new();
-
-		if (this == topOfPile)
-		{
-			return unparentedCards;
-		}
-
-		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
-		{
-			if (_parent._children[i].IsTopLevel)
-			{
-				continue;
-			}
-
-			_parent._children[i].Body.transform.parent = null;
-			unparentedCards.Add(_parent._children[i]);
-		}
-
-		unparentedCards.AddRange(_parent.UnparentCardBodiesBelowCardInPile(topOfPile));
-
-		return unparentedCards;
-	}
-
-	public void MakeTopCardBodiesBelowCardInPile(CardNode topOfPile, CardManager cardManager)
-	{
-		if (this == topOfPile)
-		{
-			return;
-		}
-
-		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
-		{
-			if (_parent._children[i].IsTopLevel)
-			{
-				continue;
-			}
-
-			cardManager.AddToTopLevel(_parent._children[i]);
-		}
-	}
-
 
 	public CardNode GetTopLevelNode()
     {
@@ -200,7 +156,7 @@ public class CardNode
 
 		for (int i = _parent._children.IndexOf(this)+1; i < _parent._children.Count; i++)
 		{
-			nodeCount += _parent._children[i].NodeCountBody();
+			nodeCount += _parent._children[i].NodeCountContext();
 		}
 
 		nodeCount += _parent.NodeCountBelowCardBodyInPile(topOfPile);
