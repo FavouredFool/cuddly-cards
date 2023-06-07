@@ -153,8 +153,6 @@ public class CardMover : MonoBehaviour
     {
         _isAnimating = true;
 
-        // we dont know what the new main node is relative to the old main node. Could be a child, could be back, could be root.
-
         float timeTotal = 0;
         if (isStartLayout)
         {
@@ -193,7 +191,7 @@ public class CardMover : MonoBehaviour
             CardNode child = children[i];
             Transform childTransform = child.Body.transform;
 
-            Sequence oldChildSequence = DOTween.Sequence()
+            DOTween.Sequence()
                 .Append(childTransform.DOMoveY(child.NodeCountUpToCardInPile(rootNode) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
                 .Append(childTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime).SetEase(_horizontalEasing))
                 .AppendInterval(2 * _waitTime + _horizontalTime)
@@ -203,7 +201,7 @@ public class CardMover : MonoBehaviour
         // -------------- MAIN ---------------------
 
         Transform mainTransform = mainNode.Body.transform;
-        Sequence oldMainSequence = DOTween.Sequence()
+        DOTween.Sequence()
             .Append(mainTransform.DOMoveY(mainNode.NodeCountUpToCardInPile(rootNode) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
             .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
             .Append(mainTransform.DOMoveX(_playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _horizontalTime).SetEase(_horizontalEasing));
@@ -270,7 +268,7 @@ public class CardMover : MonoBehaviour
     {
         Transform rootTransform = rootNode.Body.transform;
 
-        Sequence rootSequence = DOTween.Sequence()
+        DOTween.Sequence()
             .AppendInterval(_verticalTime)
             .Append(rootTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime))
             .AppendInterval(_waitTime + _horizontalTime)
@@ -278,15 +276,15 @@ public class CardMover : MonoBehaviour
 
         for (int i = 0; i < rootNode.Children.Count; i++)
         {
-            Transform childTransform = rootNode.Children[i].Body.transform;
-            childTransform.parent = null;
+            CardNode childNode = rootNode.Children[i];
+            Transform childTransform = childNode.Body.transform;
 
-            Sequence childSequence = DOTween.Sequence()
+            DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(childTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime))
                 .AppendInterval(_waitTime)
                 .Append(childTransform.DOMoveX(i * _childrenDistance - _childrenStartOffset, _horizontalTime))
-                .Append(childTransform.DOMoveY(rootNode.Children[i].NodeCountBody() * CardInfo.CARDHEIGHT, _verticalTime));
+                .Append(childTransform.DOMoveY(childNode.NodeCountContext() * CardInfo.CARDHEIGHT, _verticalTime));
         }
     }
 
@@ -386,6 +384,7 @@ public class CardMover : MonoBehaviour
     {
         CardNode discard = discardToBe != null && discardToBe != rootNode ? rootNode : null;
 
+        /*
         // Childs to be
         for (int i = childsToBe.Count - 1; i >= 0; i--)
         {
@@ -445,34 +444,34 @@ public class CardMover : MonoBehaviour
             .Append(oldMainTransform.DOMoveZ(_playSpaceTopRight.y, _horizontalTime).SetEase(_horizontalEasing))
             .Append(oldMainTransform.DOMoveY((backToBe.NodeCountContext() - mainToBe.NodeCountContext()) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
 
-
+        */
         if (discard != null)
         {
-            // discard
-            Transform discardTransform = discard.Body.transform;
-
             _cardManager.AddToTopLevel(discardToBe);
 
-            // TODO LOOK INTO THIS
-            //discardToBe.MakeTopCardBodiesBelowCardInPile(discard, _cardManager);
+            // height needs to be calculated before the deck is split in two, because otherwise new top-levels would be overlooked (this is a bit ugly)
+            int discardHeight = discard.NodeCountBody() + discardToBe.NodeCountBody();
+            int discardToBeHeight = discardToBe.NodeCountUpToCardInPileCardBodySensitive(rootNode);
 
-            discardTransform.DOMoveY(discard.NodeCountContext() * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
+            List<CardNode> lowerTopMostCardsRoot = discardToBe.GetTopMostCardBodiesBelowCardInPile(rootNode);
 
-            // discard to be
-            Transform oldBackTransform = discardToBe.Body.transform;
+            foreach (CardNode node in lowerTopMostCardsRoot)
+            {
+                _cardManager.AddToTopLevel(node);
+            }
 
-            Sequence oldBackSequence = DOTween.Sequence()
-                .Append(oldBackTransform.DOMoveY(discardToBe.NodeCountUpToCardInPile(discard) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+            rootNode.Body.transform.DOMoveY(discardHeight * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
+
+            DOTween.Sequence()
+                .Append(discardToBe.Body.transform.DOMoveY(discardToBeHeight * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
                 .AppendInterval(_horizontalTime + _waitTime)
-                .Append(oldBackTransform.DOMoveX(_playSpaceTopRight.x, _horizontalTime).SetEase(_horizontalEasing));
+                .Append(discardToBe.Body.transform.DOMoveX(_playSpaceTopRight.x, _horizontalTime).SetEase(_horizontalEasing));
         }
         else if (discardToBe != null)
         {
-            // discard to be without discord
-            Transform oldBackTransform = discardToBe.Body.transform;
-            Sequence oldBackSequence = DOTween.Sequence()
+            DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
-                .Append(oldBackTransform.DOMoveX(_playSpaceTopRight.x, _horizontalTime).SetEase(_horizontalEasing));
+                .Append(discardToBe.Body.transform.DOMoveX(_playSpaceTopRight.x, _horizontalTime).SetEase(_horizontalEasing));
         }
 
     }

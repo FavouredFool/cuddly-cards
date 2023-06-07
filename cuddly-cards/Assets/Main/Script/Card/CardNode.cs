@@ -164,10 +164,39 @@ public class CardNode
 		return nodeCount;
 	}
 
+	public int NodeCountBelowCardBodyInPileCardBodySensitive(CardNode topOfPile)
+	{
+		if (this == topOfPile)
+		{
+			return 0;
+		}
+
+		int nodeCount = 0;
+
+		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
+		{
+			if (_parent._children[i].IsTopLevel)
+            {
+				continue;
+            }
+
+			nodeCount += _parent._children[i].NodeCountContext();
+		}
+
+		nodeCount += _parent.NodeCountBelowCardBodyInPile(topOfPile);
+
+		return nodeCount;
+	}
+
 	public int NodeCountUpToCardInPile(CardNode topOfPile)
     {
 		return NodeCountContext() + NodeCountBelowCardBodyInPile(topOfPile);
     }
+
+	public int NodeCountUpToCardInPileCardBodySensitive(CardNode topOfPile)
+	{
+		return NodeCountBody() + NodeCountBelowCardBodyInPileCardBodySensitive(topOfPile);
+	}
 
 
 	public int NodeCountBody()
