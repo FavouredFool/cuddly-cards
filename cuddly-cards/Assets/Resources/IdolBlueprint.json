@@ -1,0 +1,394 @@
+{
+    "elements" : [
+        {
+            "label": "Murder at the Little Mermaid",
+            "description": "It is the twelfth of October in 1786 and darkness shrouds the land.\n\nA man's corpse lies dormant inside of the Little Mermaid tavern.\n\nWhat happend?",
+            "type": "COVER",
+            "depth": "0"
+        },
+        {
+            "label": "A Guardsman",
+            "description": "\"Alarm! Alarm! A break-in!\"\n\nHis voice is high-pitched, he did not expect the evening to become eventful.\n\nHe raises his lantern up to a shattered window in the hopes of seeing something inside. Movement, light, anything.",
+            "type": "PERSON",
+            "depth": "1"
+        },
+        {
+            "label": "The Little Mermaid",
+            "description": "A beacon of light, sound, and life in a desolate-seeming town.",
+            "type": "PLACE",
+            "depth": "1"
+        },
+        {
+            "label": "The Door",
+            "description": "Strong oak. Locked from the inside with a latch.",
+            "type": "THING",
+            "depth": "2"
+        },
+        {
+            "label": "Inside the Tavern",
+            "description": "People play cards, a musician plays the violin, a bartender peels a lemon. An evening like any other. A good evening.",
+            "type": "PLACE",
+            "depth": "3"
+        },
+        {
+            "label": "The Stairs",
+            "description": "A narrow walkway, moving upwards in a U-turn and ending in a tight corridor.",
+            "type": "PLACE",
+            "depth": "4"
+        },
+        {
+            "label": "The Corridor",
+            "description": "Long, but barely wide enough for one person of average size. There are two doors. One on the left, one on the right.",
+            "type": "PLACE",
+            "depth": "5"
+        },
+        {
+            "label": "The Left Door",
+            "description": "The door is locked. A bronze key is inserted from the inside.",
+            "type": "THING",
+            "depth": "6"
+        },
+        {
+            "label": "The Left Room",
+            "description": "Cold air fills the place. \n}nThe room buzzles with things. The bed frame is being used as a drying rack. The table is being used to it's fullest capacity. One boot has fallen to the floor.\n\nAnd of course; the corpse.",
+            "type": "PLACE",
+            "depth": "7"
+        },
+        {
+            "label": "Near the Bed",
+            "description": "A small free space between the bed and the corner.",
+            "type": "PLACE",
+            "depth": "8"
+        },
+        {
+            "label": "A trapdoor",
+            "description": "On the ceiling is a trapdoor, seven feet above the ground. It is closed.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "The Attic",
+            "description": "Filled with barrels, crates and spiders. The room is accessible only by two trapdoors on opposite ends of the room. All but the spiders are labelled. The crates hold food, the barrels hold drink.",
+            "type": "PLACE",
+            "depth": "10"
+        },
+        {
+            "label": "A Painting",
+            "description": "A round frame. Inside are two dandelions that meet at their stems. One is a full-grown yellow. The other is a fluffed up white.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "A Stool",
+            "description": "A round stool with 4 legs sits below a trapdoor.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "The Table",
+            "description": "Various things sit on and next to the neat wooden table.",
+            "type": "THING",
+            "depth": "8"
+        },
+        {
+            "label": "A Suit",
+            "description": "A folded formal suit is placed at the edge of the table. It is sprinkled with blood. \n\nA napkin sticks out that has the words \"Williard Wright\" engraved. The two \"W\"'s are of exquisitely ornate design.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "A Case",
+            "description": "A black case sits under the table. It has been pushed over and it's contents are laying at its base.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "A Casket",
+            "description": "A small casket with fine fabric laid out inside. The fabric's shape hints at a spherical object that should be in the casket. It isn't there.",
+            "type": "THING",
+            "depth": "10"
+        },
+        {
+            "label": "A Pocket Watch",
+            "description": "A silver pocketwatch of fine craftsmanship. An engraving on the inside says:\n\n\"to my dear Maurice\"",
+            "type": "THING",
+            "depth": "10"
+        },
+        {
+            "label": "A Washing Bowl",
+            "description": "A small bowl filled with slightly bloody water.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "A Letter",
+            "description": "The letter is handwritten in an extraordinarily cursive handwriting.\n\nIt reads:\n\n\"Dear Proudbeast Master,\n\nI have attended our departed brother's send-off and accepted the gemstone that he bestowed upon our Brotherhood in his will. I do not feel comfortable to travel alone with this smooth marvel much longer, so I hope to see you s-\"\n\nA single line trails from the \"s\" down the rest of the paper before abruptly stopping.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "The Window",
+            "description": "The window-frame is made from two parts, split vertically. Each part holds a glass pane. Both parts are opened inward. The right glass-pane is shattered. Only a few bits-and-pieces of glass still cling to the frame. A guardsman shouts below, surrounded by the rest of the glass.",
+            "type": "THING",
+            "depth": "8"
+        },
+        {
+            "label": "The Corpse",
+            "description": "The corpse lies on the floor in a blue nightgown with a few red tints around the neck.",
+            "type": "THING",
+            "depth": "8"
+        },
+        {
+            "label": "The Neck",
+            "description": "A sharp weapon has worked itself into the lung with one single cut. Blood runs down the side of the throat and mixes with blue fabric.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "A Ring",
+            "description": "A red ring with an embedded jewel sits tight around the middle finger of the left hand.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "The Right Door",
+            "description": "The lock is locked.",
+            "type": "THING",
+            "depth": "6"
+        },
+        {
+            "label": "The Right Room",
+            "description": "Neat and orderly. A cold bed with a folded jacket on it. The table is empty. One pair of boots in the corner. It does not feel lived in.",
+            "type": "PLACE",
+            "depth": "7"
+        },
+        {
+            "label": "A trapdoor",
+            "description": "On the ceiling right next to the bed is a trapdoor, seven feet above the ground. It is closed.",
+            "type": "THING",
+            "depth": "8"
+        },
+        {
+            "label": "The Attic",
+            "description": "Filled with barrels, crates and spiders. The room is accessible only by two trapdoors on opposite ends of the room. All but the spiders are labelled. The crates hold food, the barrels hold drink.",
+            "type": "PLACE",
+            "depth": "9"
+        },
+        {
+            "label": "A Painting",
+            "description": "A round frame. Inside is a solidary forget-me-not with small blue petals and two sprouting leaves.",
+            "type": "THING",
+            "depth": "8"
+        },
+        {
+            "label": "A Stool",
+            "description": "A round stool with 4 legs sits neatly below the table.",
+            "type": "THING",
+            "depth": "8"
+        },
+        {
+            "label": "A Window",
+            "description": "The window-frame is made from two parts, split vertically. Each part holds a glass pane. It could be opened inward, but it is not.",
+            "type": "THING",
+            "depth": "8"
+        },
+        {
+            "label": "A Picture",
+            "description": "A thick bronze frame. Trapped inside is a ship on the high seas, battling a terrible weather.",
+            "type": "THING",
+            "depth": "6"
+        },
+        {
+            "label": "The Bar Counter",
+            "description": "Countless bottles of strange liquids construct the wall behind the barkeeper. A single candle lights small bits of peeled lemon skin.",
+            "type": "PLACE",
+            "depth": "4"
+        },
+        {
+            "label": "A Poster",
+            "description": "It reads:\n\n\"At the Little Mermail Inn! Amazing Evan's musical performance. On September 9 Event shall commence circa 11pm\"",
+            "type": "THING",
+            "depth": "5"
+        },
+        {
+            "label": "An Open Book",
+            "description": "Terrible handwriting corrupts the yellow pages.\n\n\"September 9. Dandelion room: Willard Wright - 1 night. Forget-me-not room: Ash Blair - 1 night.\"",
+            "type": "THING",
+            "depth": "5"
+        },
+        {
+            "label": "The Barkeep",
+            "description": "A man with neither neck nor hair. He stands at the same spot he stood ten years ago and wears the same apron he wore ten years ago.\n\nHe is peeling an already perfectly peeled lemon. ",
+            "type": "PERSON",
+            "depth": "5"
+        },
+        {
+            "label": "A Letter",
+            "description": "The letter is typewritten.\n\nIt reads:\n\n\"September 8.\n\nDear Oscar Boyton, \n\na representative of our company will come in three days to collect the agreed upon barrels of gin. We thank you for the successful trade and hope that you will find our payment sufficient.\"",
+            "type": "THING",
+            "depth": "6"
+        },
+        {
+            "label": "Keyring",
+            "description": "A ring of bronze keys.",
+            "type": "THING",
+            "depth": "6"
+        },
+        {
+            "label": "Group of Players",
+            "description": "Two man, one woman. They aren't really players. They are people who play. Cards. They know the rules.\n\nThe musician plays the violin behind them with unfocussed, red eyes.",
+            "type": "THING",
+            "depth": "4"
+        },
+        {
+            "label": "Musician",
+            "description": "He puts on a happy face to a happy show, but he is in agony.\n\n\"Oh mother, forgive he.\" he thinks, \"Never will I gamble with something so dear to me again.\"",
+            "type": "PERSON",
+            "depth": "5"
+        },
+        {
+            "label": "A Key",
+            "description": "A silver key.",
+            "type": "THING",
+            "depth": "6"
+        },
+        {
+            "label": "A Blade",
+            "description": "A navaja folding blade.",
+            "type": "THING",
+            "depth": "6"
+        },
+        {
+            "label": "The People",
+            "description": "They are all rough around the edges, but they seem to be having a good time. What else could one want?",
+            "type": "THING",
+            "depth": "5"
+        },
+        {
+            "label": "The Amused Woman",
+            "description": "With a a slight smile she says\n\n\"Be calm, John! He was a perfect gentleman; he bought me a drink and the retired upstairs.\"",
+            "type": "PERSON",
+            "depth": "6"
+        },
+        {
+            "label": "A Key",
+            "description": "A small and silver key.",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "A Note",
+            "description": "Handwritten, lightly perfumed.\n\nIt reads:\n\n\"To Annie!\n\nYou are beautiful like a rose For you will I take any blows.\n\nAnni you are like a glass of wine Your hair is very fine.\n\nI will find gold in a mine If that makes you forever mine.\n\nYour Piglet full of love\"",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "Coins",
+            "description": "2 shillings, 4 pence",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "A Blade",
+            "description": "A rusty stiletto blade which ends in a pointy tip.",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "The Drinking Man",
+            "description": "He holds a glass of wine with one hand and plays cards with the other.",
+            "type": "PERSON",
+            "depth": "6"
+        },
+        {
+            "label": "A Dagger",
+            "description": "It has a sturdy wooden handle.",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "A Note",
+            "description": "Typewritten & thick. It says:\n\n\"Remember you as an agent of our trading company have to reflect its values to the fullest.\n\n1. Never be late - the client leaves the port on the 10th.\n\n2. Be persuasive - do not take no for an answer. We must get the client's product.\n\n3. Reward yourself - after the job, help yourself to a glass or a barrel of gin. It is paid for by the company.\"",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "Coins",
+            "description": "3 shillings, 2 pence",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "A Key",
+            "description": "A bronze key.",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "The Loud Man",
+            "description": "He babbles without much control of what comes out of his mouth:\n\n\"Tell me, what does that man have that I lack?\"",
+            "type": "PERSON",
+            "depth": "6"
+        },
+        {
+            "label": "A Sword",
+            "description": "A smallsword with a handle made of sheet gold.",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "Coins",
+            "description": "7 pence.",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "A Key",
+            "description": "It's thin and spindly, looking more like a lockpick than a key.",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "The Table",
+            "description": "Three glasses of wine, one candle, two cards, and one piece of paper that has been scribbled on.\n\nThe table shakes dangerously everytime somebody stomps their foot. It has done so for years - it wont fall.",
+            "type": "THING",
+            "depth": "5"
+        },
+        {
+            "label": "The Piece of Paper",
+            "description": "A collection of letters and numbers in quick and dirty handwriting, collected in three separate columns.",
+            "type": "THING",
+            "depth": "6"
+        },
+        {
+            "label": "Column Three",
+            "description": "A.G.\n2\n3\n\nJ.B.\n0\n1\n\nA.B.\n-2\n-4",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "Column Two",
+            "description": "It says:\n\nA.G\n2\n3\n2\n-1\n3\n2\n\nJ.B.\n-4\n-2\n-3\n2\n-4\n-3\n\nO.B.\n2\n-1\n1\n-1\n1\n1",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "Column One",
+            "description": "It says:\n\nA.G\n4\n2\n4\n0\n\nW.W.\n2\n6\n4\n10\n\nM.E.\n-6\n-8\n-8\n-10",
+            "type": "THING",
+            "depth": "7"
+        },
+        {
+            "label": "Music",
+            "description": "Loud and rhythmic violin-music fills the room. It makes one want to dance and drink.\n\nA man's voice tries to pierce through the music, to no avail. It comes out muffled and barely audible.",
+            "type": "THING",
+            "depth": "4"
+        },
+        {
+            "label": "A Shattered Window",
+            "description": "It is placed on one of tavern's two short side, centered, but with a slight offset to the left.\n\nThe window-frame is made from two parts, split vertically. Both parts are opened inward. The left glass-pane is shattered. Only a few bits-and-pieces of glass still cling to the frame. The others surround a guardsman.",
+            "type": "THING",
+            "depth": "2"
+        }
+    ]
+}
