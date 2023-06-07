@@ -1202,7 +1202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1835e0dd86b846498c1ec4453f52d32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textBlueprint: {fileID: 4900000, guid: f9e822b8bbba98549ab3786cd6d87587, type: 3}
+  _textBlueprint: {fileID: 4900000, guid: 35f8e08b2bd96fe49af689711df8ac9d, type: 3}
 --- !u!43 &1277535843
 Mesh:
   m_ObjectHideFlags: 0
