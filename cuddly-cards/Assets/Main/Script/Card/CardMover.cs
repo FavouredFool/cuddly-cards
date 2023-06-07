@@ -435,7 +435,7 @@ public class CardMover : MonoBehaviour
             .Append(oldChildTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime).SetEase(_horizontalEasing))
             .AppendInterval(_waitTime)
             .Append(oldChildTransform.DOMoveZ(_playSpaceTopRight.y, _horizontalTime).SetEase(_horizontalEasing))
-            .Append(oldChildTransform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_horizontalEasing));
+            .Append(oldChildTransform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
 
         }
 
