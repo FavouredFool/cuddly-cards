@@ -403,32 +403,28 @@ public class CardMover : MonoBehaviour
     {
         CardNode discard = discardToBe != null && discardToBe != rootNode ? rootNode : null;
 
-
         // ------------- CHILDS TO BE ----------------
 
         for (int i = childsToBe.Count - 1; i >= 0; i--)
         {
             CardNode newChild = childsToBe[i];
-            Transform childTransform = newChild.Body.transform;
 
             DOTween.Sequence()
-                .Append(childTransform.DOMoveY(newChild.NodeCountUpToCardInPile(backToBe) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
-                .Append(childTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime).SetEase(_horizontalEasing))
+                .Append(TweenY(newChild, newChild.NodeCountUpToCardInPile(backToBe)))
+                .Append(TweenX(newChild, _playSpaceBottomLeft.x))
                 .AppendInterval(_waitTime)
-                .Append(childTransform.DOMoveX(newChild.Parent.Children.IndexOf(newChild) * _childrenDistance - _childrenStartOffset, _horizontalTime).SetEase(_horizontalEasing))
-                .Append(childTransform.DOMoveY(newChild.NodeCountContext() * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
+                .Append(TweenX(newChild, newChild.Parent.Children.IndexOf(newChild) * _childrenDistance - _childrenStartOffset))
+                .Append(TweenY(newChild, newChild.NodeCountContext()));
         }
 
         
         // ------------- MAIN TO BE ----------------
 
-        Transform mainTransform = mainToBe.Body.transform;
-
         DOTween.Sequence()
-            .Append(mainTransform.DOMoveY(mainToBe.NodeCountUpToCardInPile(backToBe) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
-            .Append(mainTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime).SetEase(_horizontalEasing))
+            .Append(TweenY(mainToBe, mainToBe.NodeCountUpToCardInPile(backToBe)))
+            .Append(TweenX(mainToBe, _playSpaceBottomLeft.x))
             .AppendInterval(_waitTime + _horizontalTime)
-            .Append(mainTransform.DOMoveY(CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
+            .Append(TweenY(mainToBe, 1));
 
 
         // ------------- Previous Children ----------------
@@ -438,7 +434,6 @@ public class CardMover : MonoBehaviour
         for (int i = previousChilds.Count - 1; i >= 0; i--)
         {
             CardNode previousChild = previousChilds[i];
-            Transform oldChildTransform = previousChild.Body.transform;
 
             if (previousChild == mainToBe)
             {
@@ -450,24 +445,23 @@ public class CardMover : MonoBehaviour
             height += previousChild.NodeCountContext();
 
             DOTween.Sequence()
-            .Append(oldChildTransform.DOMoveY(previousChild.NodeCountUpToCardInPile(backToBe) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
-            .Append(oldChildTransform.DOMoveX(_playSpaceBottomLeft.x, _horizontalTime).SetEase(_horizontalEasing))
-            .AppendInterval(_waitTime)
-            .Append(oldChildTransform.DOMoveZ(_playSpaceTopRight.y, _horizontalTime).SetEase(_horizontalEasing))
-            .Append(oldChildTransform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
+                .Append(TweenY(previousChild, previousChild.NodeCountUpToCardInPile(backToBe)))
+                .Append(TweenX(previousChild, _playSpaceBottomLeft.x))
+                .AppendInterval(_waitTime)
+                .Append(TweenZ(previousChild, _playSpaceTopRight.y))
+                .Append(TweenY(previousChild, height));
 
         }
 
         // ------------- BackToBe ----------------
 
-        Transform backToBeTransform = backToBe.Body.transform;
-
+        
         DOTween.Sequence()
-            .Append(backToBeTransform.DOMoveY(backToBe.NodeCountContext() * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+            .Append(TweenY(backToBe, backToBe.NodeCountContext()))
             .AppendInterval(_horizontalTime + _waitTime)
-            .Append(backToBeTransform.DOMoveZ(_playSpaceTopRight.y, _horizontalTime).SetEase(_horizontalEasing))
-            .Append(backToBeTransform.DOMoveY((backToBe.NodeCountContext() - mainToBe.NodeCountContext()) * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing));
-
+            .Append(TweenZ(backToBe, _playSpaceTopRight.y))
+            .Append(TweenY(backToBe, backToBe.NodeCountContext() - mainToBe.NodeCountContext()));
+        
 
         // ------------- Discard & DiscardToBe ----------------
 
@@ -486,21 +480,35 @@ public class CardMover : MonoBehaviour
                 _cardManager.AddToTopLevel(node);
             }
 
-            rootNode.Body.transform.DOMoveY(discardHeight * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
+            TweenY(rootNode, discardHeight);
 
             DOTween.Sequence()
-                .Append(discardToBe.Body.transform.DOMoveY(discardToBeHeight * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing))
+                .Append(TweenY(discardToBe, discardToBeHeight))
                 .AppendInterval(_horizontalTime + _waitTime)
-                .Append(discardToBe.Body.transform.DOMoveX(_playSpaceTopRight.x, _horizontalTime).SetEase(_horizontalEasing));
+                .Append(TweenX(discardToBe, _playSpaceTopRight.x));
         }
         else if (discardToBe != null)
         {
             DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
-                .Append(discardToBe.Body.transform.DOMoveX(_playSpaceTopRight.x, _horizontalTime).SetEase(_horizontalEasing));
+                .Append(TweenX(discardToBe, _playSpaceTopRight.x));
         }
-
-
-
     }
+
+    private Tween TweenX(CardNode main, float posX)
+    {
+        return main.Body.transform.DOMoveX(posX, _horizontalTime).SetEase(_horizontalEasing);
+    }
+
+    private Tween TweenY(CardNode main, int height)
+    {
+        return main.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
+    }
+
+    private Tween TweenZ(CardNode main, float posZ)
+    {
+        return main.Body.transform.DOMoveZ(posZ, _horizontalTime).SetEase(_horizontalEasing);
+    }
+
+
 }
