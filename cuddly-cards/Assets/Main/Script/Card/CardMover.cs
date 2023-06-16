@@ -92,7 +92,7 @@ public class CardMover : MonoBehaviour
     {
         foreach (CardNode node in _cardManager.GetTopLevelNodes())
         {
-            node.Body.SetHeight(node.NodeCount(CardInfo.CardTraversal.BODY));
+            node.Body.SetHeight(node.GetNodeCount(CardInfo.CardTraversal.BODY));
         }
     }
 
@@ -257,7 +257,7 @@ public class CardMover : MonoBehaviour
                 .Append(TweenX(childNode, _playSpaceBottomLeft.x))
                 .AppendInterval(_waitTime)
                 .Append(TweenX(childNode, i * _childrenDistance - _childrenStartOffset))
-                .Append(TweenY(childNode, childNode.NodeCount(CardTraversal.CONTEXT)));
+                .Append(TweenY(childNode, childNode.GetNodeCount(CardTraversal.CONTEXT)));
         }
     }
 
@@ -307,7 +307,7 @@ public class CardMover : MonoBehaviour
                     .Append(TweenZ(newChild, _playSpaceBottomLeft.y))
                     .AppendInterval(_waitTime)
                     .Append(TweenX(newChild, newChild.Parent.Children.IndexOf(newChild) * _childrenDistance - _childrenStartOffset))
-                    .Append(TweenY(newChild, newChild.NodeCount(CardTraversal.CONTEXT)));
+                    .Append(TweenY(newChild, newChild.GetNodeCount(CardTraversal.CONTEXT)));
             }
         }
 
@@ -315,7 +315,7 @@ public class CardMover : MonoBehaviour
 
         _cardManager.AddToTopLevel(mainToBe);
         DOTween.Sequence()
-            .Append(TweenY(mainToBe, mainToBe.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
+            .Append(TweenY(mainToBe, mainToBe.GetNodeCount(CardTraversal.CONTEXT)))
             .Append(TweenZ(mainToBe, _playSpaceBottomLeft.y))
             .AppendInterval(_waitTime + _horizontalTime)
             .Append(TweenY(mainToBe, 1));
@@ -328,7 +328,7 @@ public class CardMover : MonoBehaviour
 
             // ------------- DISCARD ----------------
 
-            int discardHeight = discard.NodeCount(CardTraversal.BODY);
+            int discardHeight = discard.GetNodeCount(CardTraversal.BODY);
 
             List<CardNode> lowerTopMostCardsRoot = backToBe.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
 
@@ -348,7 +348,7 @@ public class CardMover : MonoBehaviour
                 .AppendInterval(_verticalTime)
                 .Append(TweenX(backToBe, _playSpaceBottomLeft.x))
                 .AppendInterval(_waitTime + _horizontalTime)
-                .Append(TweenY(backToBe, backToBe.NodeCount(CardTraversal.BODY)));
+                .Append(TweenY(backToBe, backToBe.GetNodeCount(CardTraversal.BODY)));
         }
         else if (backToBe != null)
         {
@@ -378,7 +378,7 @@ public class CardMover : MonoBehaviour
                 .Append(TweenX(newChild, _playSpaceBottomLeft.x))
                 .AppendInterval(_waitTime)
                 .Append(TweenX(newChild, newChild.Parent.Children.IndexOf(newChild) * _childrenDistance - _childrenStartOffset))
-                .Append(TweenY(newChild, newChild.NodeCount(CardTraversal.CONTEXT)));
+                .Append(TweenY(newChild, newChild.GetNodeCount(CardTraversal.CONTEXT)));
         }
 
 
@@ -407,7 +407,7 @@ public class CardMover : MonoBehaviour
 
             _cardManager.AddToTopLevel(previousChild);
 
-            height += previousChild.NodeCount(CardTraversal.CONTEXT);
+            height += previousChild.GetNodeCount(CardTraversal.CONTEXT);
 
             DOTween.Sequence()
                 .Append(TweenY(previousChild, previousChild.GetNodeCountUpToNodeInPile(backToBe, CardTraversal.CONTEXT)))
@@ -422,10 +422,10 @@ public class CardMover : MonoBehaviour
 
         _cardManager.AddToTopLevel(backToBe);
         DOTween.Sequence()
-            .Append(TweenY(backToBe, backToBe.NodeCount(CardTraversal.CONTEXT)))
+            .Append(TweenY(backToBe, backToBe.GetNodeCount(CardTraversal.CONTEXT)))
             .AppendInterval(_horizontalTime + _waitTime)
             .Append(TweenZ(backToBe, _playSpaceTopRight.y))
-            .Append(TweenY(backToBe, backToBe.NodeCount(CardTraversal.CONTEXT) - mainToBe.NodeCount(CardTraversal.CONTEXT)));
+            .Append(TweenY(backToBe, backToBe.GetNodeCount(CardTraversal.CONTEXT) - mainToBe.GetNodeCount(CardTraversal.CONTEXT)));
         
 
         // ------------- Discard & DiscardToBe ----------------
@@ -436,7 +436,7 @@ public class CardMover : MonoBehaviour
             _cardManager.AddToTopLevel(discardToBe);
 
             // height needs to be calculated before the deck is split in two, because otherwise new top-levels would be overlooked (this is a bit ugly)
-            int discardHeight = discard.NodeCount(CardTraversal.BODY) + discardToBe.NodeCount(CardTraversal.BODY);
+            int discardHeight = discard.GetNodeCount(CardTraversal.BODY) + discardToBe.GetNodeCount(CardTraversal.BODY);
             int discardToBeHeight = discardToBe.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.BODY);
 
             List<CardNode> lowerTopMostCardsRoot = discardToBe.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);

@@ -134,7 +134,7 @@ public class CardNode
 
 		foreach (CardNode node in nodes)
         {
-			nodeCount += node.NodeCount(traversal);
+			nodeCount += node.GetNodeCount(traversal);
         }
 
 		return nodeCount;
@@ -142,10 +142,10 @@ public class CardNode
 
 	public int GetNodeCountUpToNodeInPile(CardNode topOfPile, CardTraversal traversal)
     {
-		return NodeCount(traversal) + GetNodeCountBelowNodeInPile(topOfPile, traversal);
+		return GetNodeCount(traversal) + GetNodeCountBelowNodeInPile(topOfPile, traversal);
     }
 
-	public int NodeCount(CardTraversal traversal)
+	public int GetNodeCount(CardTraversal traversal)
 	{
 		int nodeCount = 1;
 
@@ -156,7 +156,7 @@ public class CardNode
 				continue;
             } 
 
-			nodeCount += child.NodeCount(traversal);
+			nodeCount += child.GetNodeCount(traversal);
 		}
 
 		return nodeCount;
