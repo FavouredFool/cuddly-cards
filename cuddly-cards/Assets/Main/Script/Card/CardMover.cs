@@ -37,10 +37,11 @@ public class CardMover : MonoBehaviour
     [SerializeField]
     Ease _verticalEasing;
 
-    CardManager _cardManager;
-
     bool _isAnimating = false;
 
+    public bool IsAnimatingFlag { get { return _isAnimating; } set { _isAnimating = value; } }
+
+    CardManager _cardManager;
 
     public void Awake()
     {
@@ -50,7 +51,7 @@ public class CardMover : MonoBehaviour
     public void LateUpdate()
     {
         // Move Cards with custom parenting structure per frame
-        if (!_isAnimating)
+        if (!IsAnimatingFlag)
         {
             return;
         }
@@ -60,8 +61,6 @@ public class CardMover : MonoBehaviour
 
     public void SetCardsRelativeToParent()
     {
-        // Einmal durchgehen, alle setzen. Die Height wird runtergerechnet
-        // simuliert parenting structure
         List<CardNode> topLevelNodes = _cardManager.GetTopLevelNodes();
         foreach (CardNode topLevel in topLevelNodes)
         {
@@ -110,7 +109,7 @@ public class CardMover : MonoBehaviour
         MoveCard(rootNode, new Vector2(_playSpaceBottomLeft.x  + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _playSpaceBottomLeft.y));
     }
 
-    public void MoveCardsForLayoutStatic(CardNode pressedNode, CardNode previousNode, CardNode rootNode)
+    public void MoveCardsForLayoutStatic(CardNode pressedNode, CardNode rootNode)
     {
         _cardManager.AddToTopLevel(pressedNode);
         MoveCard(pressedNode, _playSpaceBottomLeft);
@@ -134,36 +133,43 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode, bool isStartLayout)
+    public void MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode, bool isStartLayout, bool activateStartLayout)
     {
-        _isAnimating = true;
-
         float timeTotal = 0;
-        if (isStartLayout)
+        IsAnimatingFlag = true;
+
+        if (activateStartLayout)
         {
-            StartLayoutExitedAnimated(rootNode);
-            timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
+            StartLayoutEnteredAnimated(rootNode, previousMain);
+            timeTotal = _verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime;
         }
-        else if (previousMain.Children.Contains(mainToBe))
+        else
         {
-            ChildClickedAnimated(mainToBe, previousMain, previousMain.Parent, rootNode, mainToBe.Children, previousMain.Children);
-            timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
-        }
-        else if (previousMain.Parent == mainToBe)
-        {
-            BackClickedAnimated(mainToBe, mainToBe.Parent, previousMain, rootNode, previousMain.Children, mainToBe.Children);
-            timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
+            if (isStartLayout)
+            {
+                StartLayoutExitedAnimated(rootNode);
+                timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
+            }
+            else if (previousMain.Children.Contains(mainToBe))
+            {
+                ChildClickedAnimated(mainToBe, previousMain, previousMain.Parent, rootNode, mainToBe.Children, previousMain.Children);
+                timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
+            }
+            else if (previousMain.Parent == mainToBe)
+            {
+                BackClickedAnimated(mainToBe, mainToBe.Parent, previousMain, rootNode, previousMain.Children, mainToBe.Children);
+                timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
+            }
         }
 
         // MAKE SURE THAT THE TIMER IS A BIT LONGER THAN THE MAXIMUM TWEENING TIME
         Sequence timerSequence = DOTween.Sequence()
             .AppendInterval(timeTotal + 0.01f)
-            .OnComplete(() => { _isAnimating = false; _cardManager.FinishLayout(false); });
+            .OnComplete(() => { IsAnimatingFlag = false; _cardManager.FinishLayout(activateStartLayout); });
     }
 
-    public void MoveCardsForStartLayoutAnimated(CardNode rootNode, CardNode mainNode)
+    public void StartLayoutEnteredAnimated(CardNode rootNode, CardNode mainNode)
     {
-        _isAnimating = true;
 
         // -------------- CHILDREN ---------------------
 
@@ -230,8 +236,6 @@ public class CardMover : MonoBehaviour
 
         foreach (CardNode node in animatingNodesRoot)
         {
-            Transform nodeTransform = node.Body.transform;
-
             DOTween.Sequence()
                 .Append(TweenY(node, node.NodeCountUpToCardInPile(rootNode)))
                 .Append(TweenX(node, _playSpaceBottomLeft.x))
@@ -240,11 +244,6 @@ public class CardMover : MonoBehaviour
                 .AppendInterval(_waitTime)
                 .Append(TweenX(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
         }
-
-
-        Sequence timerSequence = DOTween.Sequence()
-            .AppendInterval(_verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime + 0.01f)
-            .OnComplete(() => { _isAnimating = false; _cardManager.FinishLayout(true); });
     }
 
     public void StartLayoutExitedAnimated(CardNode rootNode)

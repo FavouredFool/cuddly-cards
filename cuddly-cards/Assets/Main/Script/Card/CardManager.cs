@@ -60,19 +60,20 @@ public class CardManager : MonoBehaviour
         _cardInput.RemoveColliders();
         _cardMover.RemoveParenting(_rootNode);
 
+        bool activateStartLayout = false;
+
         // Extra Logic that enables having a "cover" cardpile, to which cards can be moved back
         if (_activeNode == _rootNode)
         {
             if (_rootNode != _oldActiveNode && _rootNode != _oldActiveNode.Parent)
             {
-                _cardMover.MoveCardsForStartLayoutAnimated(_rootNode, _oldActiveNode);
-                return;
+                activateStartLayout = true;
             }
         }
 
         ClearAndRefreshTopLevelNodes();
 
-        _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, _isStartLayout);
+        _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, _isStartLayout, activateStartLayout);
     }
 
     public void FinishLayout(bool isStartLayout)
@@ -90,7 +91,7 @@ public class CardManager : MonoBehaviour
         }
         else
         {
-            _cardMover.MoveCardsForLayoutStatic(_activeNode, _oldActiveNode, _rootNode);
+            _cardMover.MoveCardsForLayoutStatic(_activeNode, _rootNode);
         }
 
         _cardMover.SetHeightOfTopLevelNodes();
@@ -130,8 +131,6 @@ public class CardManager : MonoBehaviour
             _cardInput.SetColliders();
         }
     }
-
-
 
     void ClearAndRefreshTopLevelNodes()
     {
@@ -188,11 +187,5 @@ public class CardManager : MonoBehaviour
     {
         _topLevelNodes.Add(cardNode);
         cardNode.IsTopLevel = true;
-    }
-
-    public void RemoveFromTopLevel(CardNode cardNode)
-    {
-        _topLevelNodes.Remove(cardNode);
-        cardNode.IsTopLevel = false;
     }
 }
