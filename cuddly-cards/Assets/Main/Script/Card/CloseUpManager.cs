@@ -34,7 +34,8 @@ public class CloseUpManager : MonoBehaviour
 
     Vector3 _originalPosition;
 
-    bool _enterAnimationFinished;
+    bool _introAnimationFinished;
+    public bool IntroAnimationFinishedFlag { get { return _introAnimationFinished; } set { _introAnimationFinished = value; } }
 
     bool _initialCloseUp;
 
@@ -45,7 +46,7 @@ public class CloseUpManager : MonoBehaviour
 
     public void EnterCloseUp(CardNode closeUpNode)
     {
-        _enterAnimationFinished = false;
+        _introAnimationFinished = false;
 
         _originalPosition = closeUpNode.Body.transform.position;
 
@@ -53,18 +54,23 @@ public class CloseUpManager : MonoBehaviour
         _initialCloseUp = !_currentNode.Context.GetHasBeenSeen();
         _currentNode.Context.SetHasBeenSeen(true);
 
+        IntroAnimationStart();
+    }
+
+    public void IntroAnimationStart()
+    {
         _cameraMovement.SetCloseUpRotation(_closeUpRotation, _transitionTime, _easing);
 
         Vector3 endPosition = _cardCloseUpTransform.position;
         Quaternion endRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(_closeUpRotation, 0, 0) * Quaternion.Euler(-90, 0, 0);
 
-        _currentNode.Body.transform.DOMove(endPosition, _transitionTime).SetEase(_easing).OnComplete(() => { DisplayElements(); });
+        _currentNode.Body.transform.DOMove(endPosition, _transitionTime).SetEase(_easing).OnComplete(() => { IntroAnimationEnd(); });
         _currentNode.Body.transform.DORotateQuaternion(endRotation, _transitionTime).SetEase(_easing);
     }
 
-    public void DisplayElements()
+    public void IntroAnimationEnd()
     {
-        _enterAnimationFinished = true;
+        _introAnimationFinished = true;
         _closeUpCanvas.SetActive(true);
         _descriptionText.text = _currentNode.Context.GetDescription();
     }
@@ -74,19 +80,19 @@ public class CloseUpManager : MonoBehaviour
         _closeUpCanvas.SetActive(false);
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
 
-        _currentNode.Body.transform.DOMove(_originalPosition, _transitionTime).SetEase(_easing).OnComplete(() => { CloseUpFinished(); });
+        ExitAnimationStart();
+    }
+
+    public void ExitAnimationStart()
+    {
+        _currentNode.Body.transform.DOMove(_originalPosition, _transitionTime).SetEase(_easing).OnComplete(() => { ExitAnimationEnd(); });
         _currentNode.Body.transform.DORotateQuaternion(Quaternion.identity, _transitionTime).SetEase(_easing);
     }
 
-    public void CloseUpFinished()
+    public void ExitAnimationEnd()
     {
         _currentNode.Body.transform.position = _originalPosition;
 
         _cardManager.CloseUpFinished(_initialCloseUp);
-    }
-
-    public bool GetEnterAnimationFinished()
-    {
-        return _enterAnimationFinished;
     }
 }

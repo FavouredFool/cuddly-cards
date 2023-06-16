@@ -125,7 +125,7 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode, bool isStartLayout, bool activateStartLayout)
+    public void MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode, bool activateStartLayout)
     {
         float timeTotal = 0;
         IsAnimatingFlag = true;
@@ -137,7 +137,7 @@ public class CardMover : MonoBehaviour
         }
         else
         {
-            if (isStartLayout)
+            if (_cardManager.IsStartLayoutFlag)
             {
                 StartLayoutExitedAnimated(rootNode);
                 timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;

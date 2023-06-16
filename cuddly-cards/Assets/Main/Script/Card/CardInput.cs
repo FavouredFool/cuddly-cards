@@ -10,8 +10,6 @@ public class CardInput : MonoBehaviour
 
     CardManager _cardManager;
 
-
-
     public void Awake()
     {
         _colliders = new();
@@ -22,12 +20,11 @@ public class CardInput : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (_cardManager.GetIsCloseUp())
+            if (_cardManager.IsCloseUpFlag)
             {
                 _cardManager.ExitCloseUp();
             }
 
-            // there shouldn't be any colliders around when up close, therefore no guard
             EvaluateClickedCard();
         }
     }
@@ -35,9 +32,8 @@ public class CardInput : MonoBehaviour
     public void EvaluateClickedCard()
     {
         Ray shotRay = _camera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
 
-        if (Physics.Raycast(shotRay, out hit))
+        if (Physics.Raycast(shotRay, out RaycastHit hit))
         {
             if (hit.collider == null)
             {
@@ -51,14 +47,7 @@ public class CardInput : MonoBehaviour
 
             CardNode hitNode = _cardManager.GetTopLevelNodes()[_colliders.IndexOf(hit.collider)];
 
-            if (hitNode == _cardManager.GetActiveNode() && !_cardManager.GetIsStartLayout())
-            {
-                _cardManager.EnterCloseUp();
-            }
-            else
-            {
-                _cardManager.SetNodeActive(hitNode);
-            }
+            _cardManager.NodeClicked(hitNode);
         }
     }
 

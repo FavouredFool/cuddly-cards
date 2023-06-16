@@ -18,8 +18,10 @@ public class CardManager : MonoBehaviour
     List<CardNode> _topLevelNodes;
 
     bool _isCloseUp = false;
+    public bool IsCloseUpFlag { get { return _isCloseUp; } set { _isCloseUp = value; } }
 
     bool _isStartLayout = false;
+    public bool IsStartLayoutFlag { get { return _isStartLayout; } set { _isStartLayout = value; } }
 
     public void Awake()
     {
@@ -40,18 +42,61 @@ public class CardManager : MonoBehaviour
         FinishLayout(true);
     }
 
+    public void NodeClicked(CardNode clickedNode)
+    {
+        if (clickedNode == _activeNode && !IsStartLayoutFlag)
+        {
+            EnterCloseUp();
+        }
+        else
+        {
+            SetNodeActive(clickedNode);
+        }
+    }
+
     public void SetNodeActive(CardNode node)
     {
         _oldActiveNode = _activeNode;
         _activeNode = node;
 
-        if (_activeNode.Context.GetHasBeenSeen())
+        if (!_activeNode.Context.GetHasBeenSeen())
+        {
+            EnterCloseUp();
+        }
+        else
+        {
+            PrepareLayout();
+        }
+    }
+
+    public void EnterCloseUp()
+    {
+        _closeUpManager.EnterCloseUp(_activeNode);
+
+        IsCloseUpFlag = true;
+        _cardInput.RemoveColliders();
+    }
+
+    public void ExitCloseUp()
+    {
+        if (!_closeUpManager.IntroAnimationFinishedFlag)
+        {
+            return;
+        }
+
+        _closeUpManager.ExitCloseUp();
+        _isCloseUp = false;
+    }
+
+    public void CloseUpFinished(bool initialCloseUp)
+    {
+        if (initialCloseUp)
         {
             PrepareLayout();
         }
         else
         {
-            EnterCloseUp();
+            _cardInput.SetColliders();
         }
     }
 
@@ -59,9 +104,10 @@ public class CardManager : MonoBehaviour
     {
         _cardInput.RemoveColliders();
 
+        ClearTopLevelNodes();
+
         bool activateStartLayout = false;
 
-        // Extra Logic that enables having a "cover" cardpile, to which cards can be moved back
         if (_activeNode == _rootNode)
         {
             if (_rootNode != _oldActiveNode && _rootNode != _oldActiveNode.Parent)
@@ -70,14 +116,12 @@ public class CardManager : MonoBehaviour
             }
         }
 
-        ClearTopLevelNodes();
-
-        _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, _isStartLayout, activateStartLayout);
+        _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, activateStartLayout);
     }
 
     public void FinishLayout(bool isStartLayout)
     {
-        _isStartLayout = isStartLayout;
+        IsStartLayoutFlag = isStartLayout;
 
         ClearTopLevelNodes();
 
@@ -100,37 +144,6 @@ public class CardManager : MonoBehaviour
         _cardInput.SetColliders();
     }
 
-    public void EnterCloseUp()
-    {
-        _closeUpManager.EnterCloseUp(_activeNode);
-
-        _isCloseUp = true;
-        _cardInput.RemoveColliders();
-    }
-
-    public void ExitCloseUp()
-    {
-        if (!_closeUpManager.GetEnterAnimationFinished())
-        {
-            return;
-        }
-
-        _isCloseUp = false;
-        _closeUpManager.ExitCloseUp();
-    }
-
-    public void CloseUpFinished(bool initialCloseUp)
-    {
-        if (initialCloseUp)
-        {
-            PrepareLayout();
-        }
-        else
-        {
-            _cardInput.SetColliders();
-        }
-    }
-
     void ClearTopLevelNodes()
     {
         _topLevelNodes.Clear();
@@ -141,6 +154,12 @@ public class CardManager : MonoBehaviour
             node.IsTopLevel = _topLevelNodes.Contains(node);
             return true;
         });
+    }
+
+    public void AddToTopLevel(CardNode cardNode)
+    {
+        _topLevelNodes.Add(cardNode);
+        cardNode.IsTopLevel = true;
     }
 
     public List<CardNode> GetTopLevelNodes()
@@ -161,21 +180,5 @@ public class CardManager : MonoBehaviour
     public CardNode GetOldActiveNode()
     {
         return _oldActiveNode;
-    }
-
-    public bool GetIsStartLayout()
-    {
-        return _isStartLayout;
-    }
-
-    public bool GetIsCloseUp()
-    {
-        return _isCloseUp;
-    }
-
-    public void AddToTopLevel(CardNode cardNode)
-    {
-        _topLevelNodes.Add(cardNode);
-        cardNode.IsTopLevel = true;
     }
 }
