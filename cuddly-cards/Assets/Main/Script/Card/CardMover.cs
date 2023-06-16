@@ -55,6 +55,11 @@ public class CardMover : MonoBehaviour
             return;
         }
 
+        SetCardsRelativeToParent();
+    }
+
+    public void SetCardsRelativeToParent()
+    {
         // Einmal durchgehen, alle setzen. Die Height wird runtergerechnet
         // simuliert parenting structure
         List<CardNode> topLevelNodes = _cardManager.GetTopLevelNodes();
@@ -92,34 +97,10 @@ public class CardMover : MonoBehaviour
         card.Body.transform.localPosition = new Vector3(position.x, card.Body.transform.localPosition.y, position.y);
     }
 
-    public void ParentCards(CardNode rootNode)
+    public void SetHeightOfTopLevelNodes()
     {
-        rootNode.TraverseContext(
-            delegate (CardNode cardNode)
-            {
-                CardNode parent = cardNode.Parent;
-
-                // If the node is top level, cut off any parenting
-                if (cardNode.IsTopLevel) parent = null;
-
-                cardNode.Body.transform.parent = parent?.Body.transform;
-                cardNode.Body.transform.parent = cardNode.Body.transform.parent != null ? cardNode.Body.transform.parent : _cardFolder;
-
-                return true;
-            }
-        );
-    }
-
-    public void PileFromParenting(List<CardNode> topLevelNodes)
-    {
-        foreach (CardNode node in topLevelNodes)
+        foreach (CardNode node in _cardManager.GetTopLevelNodes())
         {
-            if (!node.IsTopLevel)
-            {
-                Debug.LogError("Tried to create pile from non-topLevel cardBody");
-            }
-
-            node.SetHeightRecursive(0);
             node.Body.SetHeight(node.NodeCountBody());
         }
     }
@@ -131,20 +112,24 @@ public class CardMover : MonoBehaviour
 
     public void MoveCardsForLayoutStatic(CardNode pressedNode, CardNode previousNode, CardNode rootNode)
     {
+        _cardManager.AddToTopLevel(pressedNode);
         MoveCard(pressedNode, _playSpaceBottomLeft);
 
         if (pressedNode != rootNode)
         {
+            _cardManager.AddToTopLevel(pressedNode.Parent);
             MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
 
             if (pressedNode.Parent != rootNode)
             {
+                _cardManager.AddToTopLevel(rootNode);
                 MoveCard(rootNode, _playSpaceTopRight);
             }
         }
 
         for (int i = 0; i < pressedNode.Children.Count; i++)
         {
+            _cardManager.AddToTopLevel(pressedNode.Children[i]);
             MoveCard(pressedNode.Children[i], new Vector2(i * _childrenDistance - _childrenStartOffset, _playSpaceBottomLeft.y));
         }
     }
@@ -170,12 +155,10 @@ public class CardMover : MonoBehaviour
             timeTotal = _verticalTime * 2 + _horizontalTime * 2 + _waitTime;
         }
 
-        
-
         // MAKE SURE THAT THE TIMER IS A BIT LONGER THAN THE MAXIMUM TWEENING TIME
         Sequence timerSequence = DOTween.Sequence()
             .AppendInterval(timeTotal + 0.01f)
-            .OnComplete(() => { _isAnimating = false; _cardManager.FinishLayout(); });
+            .OnComplete(() => { _isAnimating = false; _cardManager.FinishLayout(false); });
     }
 
     public void MoveCardsForStartLayoutAnimated(CardNode rootNode, CardNode mainNode)
@@ -261,7 +244,7 @@ public class CardMover : MonoBehaviour
 
         Sequence timerSequence = DOTween.Sequence()
             .AppendInterval(_verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime + 0.01f)
-            .OnComplete(() => { _isAnimating = false; _cardManager.FinishStartLayout(); });
+            .OnComplete(() => { _isAnimating = false; _cardManager.FinishLayout(true); });
     }
 
     public void StartLayoutExitedAnimated(CardNode rootNode)
@@ -502,6 +485,4 @@ public class CardMover : MonoBehaviour
     {
         return main.Body.transform.DOMoveZ(posZ, _horizontalTime).SetEase(_horizontalEasing);
     }
-
-
 }
