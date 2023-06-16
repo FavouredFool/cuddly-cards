@@ -53,11 +53,6 @@ public class CloseUpManager : MonoBehaviour
         _initialCloseUp = !_currentNode.Context.GetHasBeenSeen();
         _currentNode.Context.SetHasBeenSeen(true);
 
-        foreach (CardNode child in _currentNode.Children)
-        {
-            child.Body.transform.parent = null;
-        }
-
         _cameraMovement.SetCloseUpRotation(_closeUpRotation, _transitionTime, _easing);
 
         Vector3 endPosition = _cardCloseUpTransform.position;
@@ -86,11 +81,6 @@ public class CloseUpManager : MonoBehaviour
     public void CloseUpFinished()
     {
         _currentNode.Body.transform.position = _originalPosition;
-
-        foreach (CardNode child in _currentNode.Children)
-        {
-            child.Body.transform.parent = _currentNode.Body.transform;
-        }
 
         _cardManager.CloseUpFinished(_initialCloseUp);
     }

@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using static CardInfo;
 
 public class CardNode
 {
@@ -46,11 +47,6 @@ public class CardNode
 		get { return _children[key]; }
 	}
 
-	public void Clear()
-	{
-		_children.Clear();
-	}
-
 	public void AddChild(CardNode node)
 	{
 		node.Parent = this;
@@ -78,7 +74,7 @@ public class CardNode
 		return cardsBelowCardAndParent;
 	}
 
-	public void TraverseContext(TraversalNodeDelegate handler)
+	public void TraverseChildren(CardTraversal traversal, TraversalNodeDelegate handler)
 	{
 		if (!handler(this))
 		{
@@ -87,32 +83,17 @@ public class CardNode
 
 		foreach (CardNode child in _children)
 		{
-			child.TraverseContext(handler);
-		}
-	}
-
-	public void TraverseBody(TraversalNodeDelegate handler)
-	{
-		if (!handler(this))
-		{
-			return;
-		}
-
-		foreach (CardNode child in _children)
-		{
-			if (child.IsTopLevel)
-			{
+			if (traversal == CardTraversal.BODY && child.IsTopLevel)
+            {
 				continue;
-			}
+            }
 
-			child.TraverseBody(handler);
+			child.TraverseChildren(traversal, handler);
 		}
 	}
 
-	public List<CardNode> GetTopMostCardBodiesBelowCardInPile(CardNode topOfPile)
+	public List<CardNode> GetTopNodesBelowNodeInPile(CardNode topOfPile, CardTraversal traversal)
 	{
-		// this is only used for splitting the discard pile at the correct position so a new cardblock can be inserted
-		// Note that this stops at topLevel children
 		List<CardNode> addedCards = new();
 
 		if (this == topOfPile)
@@ -122,15 +103,15 @@ public class CardNode
 
 		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
 		{
-			if (_parent._children[i].IsTopLevel)
-			{
+			if (traversal == CardTraversal.BODY && _parent._children[i].IsTopLevel)
+            {
 				continue;
-			}
+            }
 
 			addedCards.Add(_parent._children[i]);
 		}
 
-		addedCards.AddRange(_parent.GetTopMostCardBodiesBelowCardInPile(topOfPile));
+		addedCards.AddRange(_parent.GetTopNodesBelowNodeInPile(topOfPile, traversal));
 
 		return addedCards;
 	}
@@ -145,108 +126,39 @@ public class CardNode
 		return this;
     }
 
-	public int NodeCountBelowCardBodyInPile(CardNode topOfPile)
+	public int GetNodeCountBelowNodeInPile(CardNode topOfPile, CardTraversal traversal)
 	{
-		if (this == topOfPile)
-		{
-			return 0;
-		}
+		List<CardNode> nodes = GetTopNodesBelowNodeInPile(topOfPile, traversal);
 
 		int nodeCount = 0;
 
-		for (int i = _parent._children.IndexOf(this)+1; i < _parent._children.Count; i++)
-		{
-			nodeCount += _parent._children[i].NodeCountContext();
-		}
-
-		nodeCount += _parent.NodeCountBelowCardBodyInPile(topOfPile);
-
-		return nodeCount;
-	}
-
-	public int NodeCountBelowCardBodyInPileCardBodySensitive(CardNode topOfPile)
-	{
-		if (this == topOfPile)
-		{
-			return 0;
-		}
-
-		int nodeCount = 0;
-
-		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
-		{
-			if (_parent._children[i].IsTopLevel)
-            {
-				continue;
-            }
-
-			nodeCount += _parent._children[i].NodeCountContext();
-		}
-
-		nodeCount += _parent.NodeCountBelowCardBodyInPile(topOfPile);
-
-		return nodeCount;
-	}
-
-	public int NodeCountUpToCardInPile(CardNode topOfPile)
-    {
-		return NodeCountContext() + NodeCountBelowCardBodyInPile(topOfPile);
-    }
-
-	public int NodeCountUpToCardInPileCardBodySensitive(CardNode topOfPile)
-	{
-		return NodeCountBody() + NodeCountBelowCardBodyInPileCardBodySensitive(topOfPile);
-	}
-
-
-	public int NodeCountBody()
-    {
-		int nodeCount = 1;
-
-		foreach (CardNode child in _children)
+		foreach (CardNode node in nodes)
         {
-			if (child.IsTopLevel)
-			{
-				continue;
-			}
-
-			nodeCount += child.NodeCountBody();
+			nodeCount += node.NodeCount(traversal);
         }
 
 		return nodeCount;
+	}
+
+	public int GetNodeCountUpToNodeInPile(CardNode topOfPile, CardTraversal traversal)
+    {
+		return NodeCount(traversal) + GetNodeCountBelowNodeInPile(topOfPile, traversal);
     }
 
-	public int NodeCountContext()
+	public int NodeCount(CardTraversal traversal)
 	{
 		int nodeCount = 1;
 
 		foreach (CardNode child in _children)
 		{
-			nodeCount += child.NodeCountContext();
+			if (traversal == CardTraversal.BODY && child.IsTopLevel)
+            {
+				continue;
+            } 
+
+			nodeCount += child.NodeCount(traversal);
 		}
 
 		return nodeCount;
 	}
-
-
-	public int SetHeightRecursive(int height)
-	{
-		Body.SetHeight(height);
-
-		height = 0;
-
-		foreach (CardNode child in Children)
-		{
-			if (child.IsTopLevel)
-			{
-				continue;
-			}
-
-			height -= 1;
-			height += child.SetHeightRecursive(height);
-		}
-
-		return height;
-	}
-
 }
