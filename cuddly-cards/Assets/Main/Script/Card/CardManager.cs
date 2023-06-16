@@ -63,7 +63,7 @@ public class CardManager : MonoBehaviour
         // Extra for initial layout
         if (_activeNode == _rootNode)
         {
-            // aber nur wenn's vorher nicht rootnode war!!
+            // aber nur wenn's vorher nicht rootnode war
             if (_rootNode != _oldActiveNode && _rootNode != _oldActiveNode.Parent)
             {
                 _cardMover.MoveCardsForStartLayoutAnimated(_rootNode, _oldActiveNode);
@@ -72,7 +72,6 @@ public class CardManager : MonoBehaviour
         }
 
         ClearTopLevelNodes();
-        SetTopNodes();
         RefreshTopLevelForAllNodes();
 
         _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, _isStartLayout);
@@ -83,8 +82,9 @@ public class CardManager : MonoBehaviour
         _isStartLayout = false;
 
         ClearTopLevelNodes();
-        SetTopNodes();
+        SetTopNodesNonAnimating();
         RefreshTopLevelForAllNodes();
+
         _cardMover.ResetPosition(_rootNode);
 
         _cardMover.ParentCards(_rootNode);
@@ -144,7 +144,7 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    void SetTopNodes()
+    void SetTopNodesNonAnimating()
     {
         _topLevelNodes.Add(_rootNode);
 

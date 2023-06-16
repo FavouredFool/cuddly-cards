@@ -189,6 +189,7 @@ public class CardMover : MonoBehaviour
         for (int i = 0; i < children.Count; i++)
         {
             CardNode child = children[i];
+            _cardManager.AddToTopLevel(child);
 
             DOTween.Sequence()
                 .Append(TweenY(child, child.NodeCountUpToCardInPile(rootNode)))
@@ -199,6 +200,7 @@ public class CardMover : MonoBehaviour
 
         // -------------- MAIN ---------------------
 
+        _cardManager.AddToTopLevel(mainNode);
         DOTween.Sequence()
             .Append(TweenY(mainNode, mainNode.NodeCountUpToCardInPile(rootNode)))
             .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
@@ -207,6 +209,7 @@ public class CardMover : MonoBehaviour
         // -------------- BACK ---------------------
 
         CardNode backNode = mainNode.Parent;
+        _cardManager.AddToTopLevel(backNode);
 
         List<CardNode> lowerTopMostCardsBack = mainNode.GetTopMostCardBodiesBelowCardInPile(backNode);
 
@@ -227,10 +230,11 @@ public class CardMover : MonoBehaviour
                 .AppendInterval(_waitTime)
                 .Append(TweenX(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
         }
-        
+
 
         // -------------- ROOT ---------------------
 
+        _cardManager.AddToTopLevel(rootNode);
         List<CardNode> lowerTopMostCardsRoot = backNode.GetTopMostCardBodiesBelowCardInPile(rootNode);
 
         foreach (CardNode node in lowerTopMostCardsRoot)
@@ -262,6 +266,7 @@ public class CardMover : MonoBehaviour
 
     public void StartLayoutExitedAnimated(CardNode rootNode)
     {
+        _cardManager.AddToTopLevel(rootNode);
         DOTween.Sequence()
             .AppendInterval(_verticalTime)
             .Append(TweenX(rootNode, _playSpaceBottomLeft.x))
@@ -271,6 +276,7 @@ public class CardMover : MonoBehaviour
         for (int i = 0; i < rootNode.Children.Count; i++)
         {
             CardNode childNode = rootNode.Children[i];
+            _cardManager.AddToTopLevel(childNode);
 
             DOTween.Sequence()
                 .AppendInterval(_verticalTime)
@@ -288,12 +294,14 @@ public class CardMover : MonoBehaviour
         for (int i = childsToBe.Count - 1; i >= 0; i--)
         {
             CardNode newChild = childsToBe[i];
+            _cardManager.AddToTopLevel(newChild);
 
             Sequence childSequence = DOTween.Sequence();
 
             if (previousMain == newChild)
             {
                 // ------------- PREVIOUS MAIN ----------------
+                
                 childSequence
                     .Append(TweenY(previousMain, previousMain.NodeCountUpToCardInPile(mainToBe)))
                     .AppendInterval(_horizontalTime + _waitTime)
@@ -331,6 +339,7 @@ public class CardMover : MonoBehaviour
 
         // ------------- NEW MAIN ----------------
 
+        _cardManager.AddToTopLevel(mainToBe);
         DOTween.Sequence()
             .Append(TweenY(mainToBe, mainToBe.NodeCountContext() + mainToBe.NodeCountBelowCardBodyInPile(rootNode)))
             .Append(TweenZ(mainToBe, _playSpaceBottomLeft.y))
@@ -340,6 +349,7 @@ public class CardMover : MonoBehaviour
 
         if (discard != null)
         {
+            _cardManager.AddToTopLevel(discard);
             _cardManager.AddToTopLevel(backToBe);
 
             // ------------- DISCARD ----------------
@@ -387,6 +397,7 @@ public class CardMover : MonoBehaviour
         for (int i = childsToBe.Count - 1; i >= 0; i--)
         {
             CardNode newChild = childsToBe[i];
+            _cardManager.AddToTopLevel(newChild);
 
             DOTween.Sequence()
                 .Append(TweenY(newChild, newChild.NodeCountUpToCardInPile(backToBe)))
@@ -396,9 +407,10 @@ public class CardMover : MonoBehaviour
                 .Append(TweenY(newChild, newChild.NodeCountContext()));
         }
 
-        
+
         // ------------- MAIN TO BE ----------------
 
+        _cardManager.AddToTopLevel(mainToBe);
         DOTween.Sequence()
             .Append(TweenY(mainToBe, mainToBe.NodeCountUpToCardInPile(backToBe)))
             .Append(TweenX(mainToBe, _playSpaceBottomLeft.x))
@@ -434,7 +446,7 @@ public class CardMover : MonoBehaviour
 
         // ------------- BackToBe ----------------
 
-        
+        _cardManager.AddToTopLevel(backToBe);
         DOTween.Sequence()
             .Append(TweenY(backToBe, backToBe.NodeCountContext()))
             .AppendInterval(_horizontalTime + _waitTime)
@@ -446,6 +458,7 @@ public class CardMover : MonoBehaviour
 
         if (discard != null)
         {
+            _cardManager.AddToTopLevel(discard);
             _cardManager.AddToTopLevel(discardToBe);
 
             // height needs to be calculated before the deck is split in two, because otherwise new top-levels would be overlooked (this is a bit ugly)
@@ -468,6 +481,7 @@ public class CardMover : MonoBehaviour
         }
         else if (discardToBe != null)
         {
+            _cardManager.AddToTopLevel(discardToBe);
             DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
                 .Append(TweenX(discardToBe, _playSpaceTopRight.x));
