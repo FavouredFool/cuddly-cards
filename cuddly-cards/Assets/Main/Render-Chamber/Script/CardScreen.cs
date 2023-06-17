@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using RenderPipeline = UnityEngine.Rendering.RenderPipelineManager;
@@ -14,12 +15,15 @@ public class CardScreen : MonoBehaviour
 
     void Start()
     {
-        screen = GetComponent<MeshRenderer>();
-        renderChamberCam = GameObject.FindGameObjectWithTag("RenderCam").GetComponent<Camera>();
+        //screen = GetComponent<MeshRenderer>();
+        //renderChamberCam = GameObject.FindGameObjectWithTag("RenderCam").GetComponent<Camera>();
+        //renderChamberCam.enabled = false;
 
-        //RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
-        CreateViewTexture();
+        //CreateViewTexture();
+        //RenderPipelineManager.beginContextRendering += OnBeginRendering;
     }
+
+
 
     void CreateViewTexture()
     {
@@ -35,7 +39,8 @@ public class CardScreen : MonoBehaviour
             renderChamberCam.targetTexture = viewTexture;
 
             screen.material.SetTexture("_MainTex", viewTexture);
-
         }
     }
+
+
 }

@@ -1,19 +1,14 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ObjectCopy : MonoBehaviour
 {
     [SerializeField]
     Vector3 _offset;
 
-    Transform objectTransform;
+    public MeshRenderer Object;
 
-    void Start()
-    {
-        objectTransform = GameObject.FindGameObjectWithTag("specialCard").transform;
-    }
-
-
-    void Update()
+    public void SetCopyTransform(Transform objectTransform)
     {
         transform.SetPositionAndRotation(objectTransform.position + _offset, objectTransform.rotation);
     }

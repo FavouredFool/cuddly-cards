@@ -6,6 +6,7 @@ TagManager:
   tags:
   - specialCard
   - RenderCam
+  - copyManager
   layers:
   - Default
   - TransparentFX
