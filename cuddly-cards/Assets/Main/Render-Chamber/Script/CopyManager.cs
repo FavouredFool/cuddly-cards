@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class CopyManager : MonoBehaviour
 {
@@ -18,6 +19,13 @@ public class CopyManager : MonoBehaviour
     [SerializeField]
     List<Transform> _cards;
 
+    List<CopyObject> _copyObjectList;
+
+    private void Start()
+    {
+        _copyObjectList = _copyList.Select(e => e.GetComponent<CopyObject>()).ToList();
+    }
+
     void Update()
     {
         _cameraCopyTransform.SetCopyTransform(_mainCameraTransform);
@@ -28,8 +36,11 @@ public class CopyManager : MonoBehaviour
         }
     }
 
-    public void SetCopyActive(int index, bool active)
+    public void ActivateCopyObject(int index)
     {
-        _copyList[index].GetComponent<CopyObject>().CopyObjectRenderer.enabled = active;
+        for (int i = 0; i < _copyList.Count; i++)
+        {
+            _copyObjectList[i].CopyObjectRenderer.enabled = i == index;
+        }
     }
 }

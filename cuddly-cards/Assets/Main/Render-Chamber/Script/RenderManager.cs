@@ -59,8 +59,6 @@ public class RenderManager : MonoBehaviour
                 _viewTextures.RemoveAt(i);
                 _viewTextures.Insert(i, newTexture);
             }
-            
-            
         }
     }
 
@@ -86,25 +84,11 @@ public class RenderManager : MonoBehaviour
         
         RecreateRenderTextures();
 
-        _copyManager.SetCopyActive(0, false);
-        _copyManager.SetCopyActive(1, false);
-        _copyManager.SetCopyActive(2, false);
-
-        _copyManager.SetCopyActive(0, true);
-
-        _renderCamera.targetTexture = _viewTextures[0];
-        UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
-
-        _copyManager.SetCopyActive(0, false);
-        _copyManager.SetCopyActive(1, true);
-
-        _renderCamera.targetTexture = _viewTextures[1];
-        UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
-
-        _copyManager.SetCopyActive(1, false);
-        _copyManager.SetCopyActive(2, true);
-
-        _renderCamera.targetTexture = _viewTextures[2];
-        UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
+        for (int i = 0; i < _meshRenderers.Count; i++)
+        {
+            _copyManager.ActivateCopyObject(i);
+            _renderCamera.targetTexture = _viewTextures[i];
+            UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
+        }
     }
 }
