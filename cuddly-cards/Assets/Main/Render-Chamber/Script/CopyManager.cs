@@ -24,4 +24,9 @@ public class CopyManager : MonoBehaviour
             _copyList[i].SetCopyTransform(_cards[i].transform);
         }
     }
+
+    public void SetCopyActive(int index, bool active)
+    {
+        _copyList[index].GetComponent<CopyObject>().CopyObjectRenderer.enabled = active;
+    }
 }

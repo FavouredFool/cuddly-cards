@@ -10,8 +10,14 @@ public class RenderManager : MonoBehaviour
     [SerializeField]
     Camera _renderCamera;
 
-    public List<MeshRenderer> _meshRenderers;
-    public Material _baseMat;
+    [SerializeField]
+    List<MeshRenderer> _meshRenderers;
+
+    [SerializeField]
+    Material _baseMat;
+
+    [SerializeField]
+    CopyManager _copyManager;
 
     List<RenderTexture> _viewTextures;
 
@@ -48,18 +54,25 @@ public class RenderManager : MonoBehaviour
             return;
         }
 
-        RemoveFromCullingMask("Object1");
-        RemoveFromCullingMask("Object2");
+        _copyManager.SetCopyActive(0, false);
+        _copyManager.SetCopyActive(1, false);
+        _copyManager.SetCopyActive(2, false);
 
-        AddToCullingMask("Object2");
+        _copyManager.SetCopyActive(0, true);
 
         _renderCamera.targetTexture = _viewTextures[0];
         UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
 
-        RemoveFromCullingMask("Object2");
-        AddToCullingMask("Object1");
+        _copyManager.SetCopyActive(0, false);
+        _copyManager.SetCopyActive(1, true);
 
         _renderCamera.targetTexture = _viewTextures[1];
+        UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
+
+        _copyManager.SetCopyActive(1, false);
+        _copyManager.SetCopyActive(2, true);
+
+        _renderCamera.targetTexture = _viewTextures[2];
         UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
     }
 
