@@ -2,43 +2,40 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEditor;
+using System;
 using UnityEngine.Rendering.Universal;
 
 public class RenderManager : MonoBehaviour
 {
+    [SerializeField]
+    Camera _renderCamera;
+
     public List<MeshRenderer> _meshRenderers;
     public Material _baseMat;
-    Camera renderCamera;
 
-    List<RenderTexture> viewTextures;
-
-    CopyManager copyManager;
+    List<RenderTexture> _viewTextures;
 
     void Start()
     {
-        viewTextures = new();
+        _viewTextures = new();
 
-        renderCamera = GameObject.FindGameObjectWithTag("RenderCam1").GetComponent<Camera>();
-        copyManager = GameObject.FindGameObjectWithTag("copyManager").GetComponent<CopyManager>();
-
-        for (int i = 0; i < copyManager.copyList.Count; i++)
+        for (int i = 0; i < _meshRenderers.Count; i++)
         {
             RenderTexture tex = new(Screen.width, Screen.height, 0);
 
-            renderCamera.enabled = false;
+            _renderCamera.enabled = false;
 
             _meshRenderers[i].material = _baseMat;
             _meshRenderers[i].material.SetTexture("_MainTex", tex);
 
-            viewTextures.Add(tex);
+            _viewTextures.Add(tex);
         }
 
         RenderPipelineManager.beginContextRendering += OnBeginRendering;
-
-        
-
     }
-
+#pragma warning disable 0618
+    [Obsolete]
+#pragma warning restore 0618
     void OnBeginRendering(ScriptableRenderContext context, List<Camera> cameras)
     {
         if (!Application.isPlaying)
@@ -56,23 +53,23 @@ public class RenderManager : MonoBehaviour
 
         AddToCullingMask("Object2");
 
-        renderCamera.targetTexture = viewTextures[0];
-        UniversalRenderPipeline.RenderSingleCamera(context, renderCamera);
+        _renderCamera.targetTexture = _viewTextures[0];
+        UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
 
         RemoveFromCullingMask("Object2");
         AddToCullingMask("Object1");
 
-        renderCamera.targetTexture = viewTextures[1];
-        UniversalRenderPipeline.RenderSingleCamera(context, renderCamera);
+        _renderCamera.targetTexture = _viewTextures[1];
+        UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
     }
 
     void AddToCullingMask(string layerName)
     {
-        renderCamera.cullingMask |= 1 << LayerMask.NameToLayer(layerName);
+        _renderCamera.cullingMask |= 1 << LayerMask.NameToLayer(layerName);
     }
 
     void RemoveFromCullingMask(string layerName)
     {
-        renderCamera.cullingMask &= ~(1 << LayerMask.NameToLayer(layerName));
+        _renderCamera.cullingMask &= ~(1 << LayerMask.NameToLayer(layerName));
     }
 }

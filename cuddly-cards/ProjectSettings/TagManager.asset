@@ -3,13 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - specialCard
-  - RenderCam
-  - copyManager
-  - RenderCam1
-  - RenderCam2
-  - RenderCam0
+  tags: []
   layers:
   - Default
   - TransparentFX

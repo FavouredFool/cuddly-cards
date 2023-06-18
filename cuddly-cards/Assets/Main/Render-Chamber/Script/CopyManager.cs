@@ -3,25 +3,25 @@ using UnityEngine;
 
 public class CopyManager : MonoBehaviour
 {
-    public List<ObjectCopy> copyList;
+    [SerializeField]
+    Transform _mainCameraTransform;
 
-    GameObject[] cards;
+    [SerializeField]
+    TransformCopy _cameraCopy;
 
-    void Start()
-    {
-        cards = GameObject.FindGameObjectsWithTag("specialCard");
-    }
+    [SerializeField]
+    List<TransformCopy> _copyList;
+
+    [SerializeField]
+    List<Transform> _cards;
 
     void Update()
     {
-        for (int i = 0; i < copyList.Count; i++)
-        {
-            copyList[i].SetCopyTransform(cards[i].transform);
-        }
-    }
+        _cameraCopy.SetCopyTransform(_mainCameraTransform);
 
-    public void SetEnabledObjects(int index, bool enabled)
-    {
-        copyList[index].Object.enabled = enabled;
+        for (int i = 0; i < _copyList.Count; i++)
+        {
+            _copyList[i].SetCopyTransform(_cards[i].transform);
+        }
     }
 }
