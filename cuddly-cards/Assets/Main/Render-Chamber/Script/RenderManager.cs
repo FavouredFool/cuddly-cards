@@ -8,7 +8,7 @@ public class RenderManager : MonoBehaviour
 {
     public List<MeshRenderer> _meshRenderers;
     public Material _baseMat;
-    List<Camera> renderCameras;
+    Camera renderCamera;
 
     List<RenderTexture> viewTextures;
 
@@ -16,27 +16,24 @@ public class RenderManager : MonoBehaviour
 
     void Start()
     {
-        renderCameras = new();
         viewTextures = new();
 
+        renderCamera = GameObject.FindGameObjectWithTag("RenderCam1").GetComponent<Camera>();
         copyManager = GameObject.FindGameObjectWithTag("copyManager").GetComponent<CopyManager>();
 
         for (int i = 0; i < copyManager.copyList.Count; i++)
         {
-            Camera cam = GameObject.FindGameObjectWithTag("RenderCam" + i).GetComponent<Camera>();
             RenderTexture tex = new(Screen.width, Screen.height, 0);
 
-            cam.targetTexture = tex;
-            //cam.enabled = false;
+            renderCamera.enabled = false;
 
             _meshRenderers[i].material = _baseMat;
             _meshRenderers[i].material.SetTexture("_MainTex", tex);
 
-            renderCameras.Add(cam);
             viewTextures.Add(tex);
         }
 
-        //RenderPipelineManager.beginContextRendering += OnBeginRendering;
+        RenderPipelineManager.beginContextRendering += OnBeginRendering;
 
         
 
@@ -54,8 +51,28 @@ public class RenderManager : MonoBehaviour
             return;
         }
 
-        UniversalRenderPipeline.RenderSingleCamera(context, renderCameras[0]);
+        RemoveFromCullingMask("Object1");
+        RemoveFromCullingMask("Object2");
 
-        UniversalRenderPipeline.RenderSingleCamera(context, renderCameras[1]);
+        AddToCullingMask("Object2");
+
+        renderCamera.targetTexture = viewTextures[0];
+        UniversalRenderPipeline.RenderSingleCamera(context, renderCamera);
+
+        RemoveFromCullingMask("Object2");
+        AddToCullingMask("Object1");
+
+        renderCamera.targetTexture = viewTextures[1];
+        UniversalRenderPipeline.RenderSingleCamera(context, renderCamera);
+    }
+
+    void AddToCullingMask(string layerName)
+    {
+        renderCamera.cullingMask |= 1 << LayerMask.NameToLayer(layerName);
+    }
+
+    void RemoveFromCullingMask(string layerName)
+    {
+        renderCamera.cullingMask &= ~(1 << LayerMask.NameToLayer(layerName));
     }
 }
