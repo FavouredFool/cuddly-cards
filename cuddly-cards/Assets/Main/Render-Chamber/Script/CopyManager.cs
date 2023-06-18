@@ -7,7 +7,10 @@ public class CopyManager : MonoBehaviour
     Transform _mainCameraTransform;
 
     [SerializeField]
-    TransformCopy _cameraCopy;
+    Camera _mainCamera;
+
+    [SerializeField]
+    TransformCopy _cameraCopyTransform;
 
     [SerializeField]
     List<TransformCopy> _copyList;
@@ -17,8 +20,8 @@ public class CopyManager : MonoBehaviour
 
     void Update()
     {
-        _cameraCopy.SetCopyTransform(_mainCameraTransform);
-
+        _cameraCopyTransform.SetCopyTransform(_mainCameraTransform);
+        
         for (int i = 0; i < _copyList.Count; i++)
         {
             _copyList[i].SetCopyTransform(_cards[i].transform);

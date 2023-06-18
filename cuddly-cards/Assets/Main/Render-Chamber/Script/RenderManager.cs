@@ -11,6 +11,9 @@ public class RenderManager : MonoBehaviour
     Camera _renderCamera;
 
     [SerializeField]
+    Camera _mainCamera;
+
+    [SerializeField]
     List<MeshRenderer> _meshRenderers;
 
     [SerializeField]
@@ -21,24 +24,46 @@ public class RenderManager : MonoBehaviour
 
     List<RenderTexture> _viewTextures;
 
+#pragma warning disable 0618
+    [Obsolete]
+#pragma warning restore 0618
     void Start()
     {
         _viewTextures = new();
 
-        for (int i = 0; i < _meshRenderers.Count; i++)
-        {
-            RenderTexture tex = new(Screen.width, Screen.height, 0);
+        _renderCamera.enabled = false;
 
-            _renderCamera.enabled = false;
 
-            _meshRenderers[i].material = _baseMat;
-            _meshRenderers[i].material.SetTexture("_MainTex", tex);
-
-            _viewTextures.Add(tex);
-        }
+        RecreateRenderTextures();
 
         RenderPipelineManager.beginContextRendering += OnBeginRendering;
     }
+
+    void RecreateRenderTextures()
+    {
+        for (int i = 0; i < _meshRenderers.Count; i++)
+        {
+            if (i >= _viewTextures.Count)
+            {
+                RenderTexture newTexture = new(Screen.width, Screen.height, 0);
+                _meshRenderers[i].material = _baseMat;
+                _meshRenderers[i].material.SetTexture("_MainTex", newTexture);
+                _viewTextures.Add(newTexture);
+            }
+
+            if (_viewTextures[i].width != Screen.width || _viewTextures[i].height != Screen.height)
+            {
+                RenderTexture newTexture = new(Screen.width, Screen.height, 0);
+                _meshRenderers[i].material.SetTexture("_MainTex", newTexture);
+
+                _viewTextures.RemoveAt(i);
+                _viewTextures.Insert(i, newTexture);
+            }
+            
+            
+        }
+    }
+
 #pragma warning disable 0618
     [Obsolete]
 #pragma warning restore 0618
@@ -48,11 +73,18 @@ public class RenderManager : MonoBehaviour
         {
             return;
         }
+        // make sure that only the relevant renders are allowed. Only if the mainCamera is part of the render, the render is relevant.
+        if (!cameras.Contains(_mainCamera))
+        {
+            return;
+        }
 
         if (_meshRenderers.Count <= 0)
         {
             return;
         }
+        
+        RecreateRenderTextures();
 
         _copyManager.SetCopyActive(0, false);
         _copyManager.SetCopyActive(1, false);
@@ -74,15 +106,5 @@ public class RenderManager : MonoBehaviour
 
         _renderCamera.targetTexture = _viewTextures[2];
         UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
-    }
-
-    void AddToCullingMask(string layerName)
-    {
-        _renderCamera.cullingMask |= 1 << LayerMask.NameToLayer(layerName);
-    }
-
-    void RemoveFromCullingMask(string layerName)
-    {
-        _renderCamera.cullingMask &= ~(1 << LayerMask.NameToLayer(layerName));
     }
 }
