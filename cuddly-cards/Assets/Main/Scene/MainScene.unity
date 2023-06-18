@@ -923,7 +923,7 @@ PrefabInstance:
     - target: {fileID: 7811054855538319272, guid: 8411cf3157daa06478020f204e0e5d3b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.384
+      value: 0.467
       objectReference: {fileID: 0}
     - target: {fileID: 7811054855538319272, guid: 8411cf3157daa06478020f204e0e5d3b,
         type: 3}
@@ -1110,6 +1110,7 @@ MonoBehaviour:
   _meshRenderers:
   - {fileID: 1232670691}
   - {fileID: 124817337}
+  _baseMat: {fileID: 2100000, guid: bbc1c47f3f02c4f4784f054e330a7aea, type: 2}
 --- !u!1 &601272618
 GameObject:
   m_ObjectHideFlags: 0
@@ -1259,6 +1260,7 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - srpBatcherFix: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1764,7 +1766,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh25584
+  m_Name: pb_Mesh29730
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2

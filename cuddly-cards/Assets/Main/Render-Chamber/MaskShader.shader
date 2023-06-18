@@ -3,6 +3,7 @@ Shader "Custom/Portal"
     Properties
     {
         _InactiveColour("Inactive Colour", Color) = (1, 1, 1, 1)
+        srpBatcherFix("srpBatcherFix", Float) = 1
     }
     SubShader
     {
@@ -17,6 +18,8 @@ Shader "Custom/Portal"
 #pragma fragment frag
 # include "UnityCG.cginc"
 
+            float srpBatcherFix;
+
 struct appdata
 {
     float4 vertex : POSITION;
@@ -30,7 +33,6 @@ struct v2f
 
 sampler2D _MainTex;
 float4 _InactiveColour;
-int displayMask = 1; // set to 1 to display texture, otherwise will draw test colour
 
 
 v2f vert(appdata v)
@@ -45,7 +47,8 @@ fixed4 frag(v2f i) : SV_Target
 {
     float2 uv = i.screenPos.xy / i.screenPos.w;
     fixed4 portalCol = tex2D(_MainTex, uv);
-    return portalCol;
+    // this is just used to make it not compatible with the srpbatcher. I hate that you can't turn it off manually.
+    return portalCol * srpBatcherFix;
 }
 ENDCG
         }

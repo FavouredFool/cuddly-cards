@@ -7,30 +7,39 @@ using UnityEngine.Rendering.Universal;
 public class RenderManager : MonoBehaviour
 {
     public List<MeshRenderer> _meshRenderers;
-    Camera renderCamera;
+    public Material _baseMat;
+    List<Camera> renderCameras;
 
-    RenderTexture viewTexture;
+    List<RenderTexture> viewTextures;
 
     CopyManager copyManager;
 
     void Start()
     {
-        viewTexture = new RenderTexture(Screen.width, Screen.height, 0);
-        renderCamera = GameObject.FindGameObjectWithTag("RenderCam").GetComponent<Camera>();
-        renderCamera.targetTexture = viewTexture;
-        renderCamera.enabled = false;
-
-        _meshRenderers[0].material.SetTexture("_MainTex", viewTexture);
-
-        RenderPipelineManager.beginContextRendering += OnBeginRendering;
+        renderCameras = new();
+        viewTextures = new();
 
         copyManager = GameObject.FindGameObjectWithTag("copyManager").GetComponent<CopyManager>();
 
-    }
+        for (int i = 0; i < copyManager.copyList.Count; i++)
+        {
+            Camera cam = GameObject.FindGameObjectWithTag("RenderCam" + i).GetComponent<Camera>();
+            RenderTexture tex = new(Screen.width, Screen.height, 0);
 
-    void SetViewTexture(MeshRenderer screen)
-    {
+            cam.targetTexture = tex;
+            //cam.enabled = false;
+
+            _meshRenderers[i].material = _baseMat;
+            _meshRenderers[i].material.SetTexture("_MainTex", tex);
+
+            renderCameras.Add(cam);
+            viewTextures.Add(tex);
+        }
+
+        //RenderPipelineManager.beginContextRendering += OnBeginRendering;
+
         
+
     }
 
     void OnBeginRendering(ScriptableRenderContext context, List<Camera> cameras)
@@ -45,14 +54,8 @@ public class RenderManager : MonoBehaviour
             return;
         }
 
-        SetViewTexture(_meshRenderers[0]);
-        copyManager.SetEnabledObjects(0, true);
-        copyManager.SetEnabledObjects(1, false);
-        UniversalRenderPipeline.RenderSingleCamera(context, renderCamera);
+        UniversalRenderPipeline.RenderSingleCamera(context, renderCameras[0]);
 
-        SetViewTexture(_meshRenderers[1]);
-        copyManager.SetEnabledObjects(0, false);
-        copyManager.SetEnabledObjects(1, true);
-        UniversalRenderPipeline.RenderSingleCamera(context, renderCamera);
+        UniversalRenderPipeline.RenderSingleCamera(context, renderCameras[1]);
     }
 }

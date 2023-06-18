@@ -7,6 +7,9 @@ TagManager:
   - specialCard
   - RenderCam
   - copyManager
+  - RenderCam1
+  - RenderCam2
+  - RenderCam0
   layers:
   - Default
   - TransparentFX
@@ -18,8 +21,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Object1
+  - Object2
   - 
   - 
   - 
