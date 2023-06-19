@@ -9,6 +9,8 @@ public class CardContext
 
     bool _hasBeenSeen;
 
+    int _modelID;
+
 
     public CardContext(string label, string description, CardType cardType)
     {
@@ -42,5 +44,10 @@ public class CardContext
     public void SetHasBeenSeen(bool hasBeenSeen)
     {
         _hasBeenSeen = hasBeenSeen;
+    }
+
+    public int GetModelID()
+    {
+        return _modelID;
     }
 }

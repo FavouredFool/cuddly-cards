@@ -14,6 +14,9 @@ public class CardBody : MonoBehaviour
     [SerializeField]
     Image _image;
 
+    [SerializeField]
+    MeshRenderer _maskMeshRenderer;
+
     public void SetLabel(string labelText)
     {
         _textField.text = labelText;
@@ -37,5 +40,10 @@ public class CardBody : MonoBehaviour
             CardInfo.CARDHEIGHT * height,
             transform.localPosition.z
         );
+    }
+
+    public MeshRenderer GetMaskMeshRenderer()
+    {
+        return _maskMeshRenderer;
     }
 }

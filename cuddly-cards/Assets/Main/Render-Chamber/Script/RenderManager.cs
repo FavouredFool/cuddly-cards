@@ -14,15 +14,22 @@ public class RenderManager : MonoBehaviour
     Camera _mainCamera;
 
     [SerializeField]
-    List<MeshRenderer> _meshRenderers;
-
-    [SerializeField]
     Material _baseMat;
 
     [SerializeField]
     CopyManager _copyManager;
 
+    [SerializeField]
+    CopyObject _cardCopyBlueprint;
+
+    [SerializeField]
+    Transform _cardModelFolder;
+
     List<RenderTexture> _viewTextures;
+
+    List<CopyObject> _copyObjectList;
+
+    List<CardNode> _topLevelNodes;
 
 #pragma warning disable 0618
     [Obsolete]
@@ -30,6 +37,8 @@ public class RenderManager : MonoBehaviour
     void Start()
     {
         _viewTextures = new();
+        _copyObjectList = new();
+        _topLevelNodes = new();
 
         _renderCamera.enabled = false;
 
@@ -37,24 +46,31 @@ public class RenderManager : MonoBehaviour
         RecreateRenderTextures();
 
         RenderPipelineManager.beginContextRendering += OnBeginRendering;
+
+        // Create 14 CardCopies -> A pool for all the renders
+        for (int i = 0; i < 14; i++)
+        {
+            _copyObjectList.Add(Instantiate(_cardCopyBlueprint, _cardModelFolder));
+        }
+
     }
 
     void RecreateRenderTextures()
     {
-        for (int i = 0; i < _meshRenderers.Count; i++)
+        for (int i = 0; i < _topLevelNodes.Count; i++)
         {
             if (i >= _viewTextures.Count)
             {
                 RenderTexture newTexture = new(Screen.width, Screen.height, 0);
-                _meshRenderers[i].material = _baseMat;
-                _meshRenderers[i].material.SetTexture("_MainTex", newTexture);
+                _topLevelNodes[i].Body.GetMaskMeshRenderer().material = _baseMat;
+                _topLevelNodes[i].Body.GetMaskMeshRenderer().material.SetTexture("_MainTex", newTexture);
                 _viewTextures.Add(newTexture);
             }
 
             if (_viewTextures[i].width != Screen.width || _viewTextures[i].height != Screen.height)
             {
                 RenderTexture newTexture = new(Screen.width, Screen.height, 0);
-                _meshRenderers[i].material.SetTexture("_MainTex", newTexture);
+                _topLevelNodes[i].Body.GetMaskMeshRenderer().material.SetTexture("_MainTex", newTexture);
 
                 _viewTextures.RemoveAt(i);
                 _viewTextures.Insert(i, newTexture);
@@ -77,18 +93,30 @@ public class RenderManager : MonoBehaviour
             return;
         }
 
-        if (_meshRenderers.Count <= 0)
+        if (_topLevelNodes.Count <= 0)
         {
             return;
         }
-        
+
+        _copyManager.UpdateObjects(_copyObjectList, _topLevelNodes);
         RecreateRenderTextures();
 
-        for (int i = 0; i < _meshRenderers.Count; i++)
+        for (int i = 0; i < _topLevelNodes.Count; i++)
         {
-            _copyManager.ActivateCopyObject(i);
+            _copyManager.ActivateCopyObject(_copyObjectList, i, _topLevelNodes.Count);
             _renderCamera.targetTexture = _viewTextures[i];
             UniversalRenderPipeline.RenderSingleCamera(context, _renderCamera);
         }
+    }
+
+    public void AddModel(CardNode cardNode)
+    {
+        // TODO _toplevelnodes wird doppelt gehalten very very bad
+        _topLevelNodes.Add(cardNode);
+    }
+
+    public void ResetAllModels()
+    {
+        _topLevelNodes.Clear();
     }
 }

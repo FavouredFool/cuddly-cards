@@ -6,6 +6,12 @@ public class CardManager : MonoBehaviour
     [SerializeField]
     CloseUpManager _closeUpManager;
 
+    [SerializeField]
+    RenderManager _renderManager;
+
+    [SerializeField]
+    List<CardNode> _initialNodes;
+
     CardBuilder _cardBuilder;
     CardMover _cardMover;
     CardInput _cardInput;
@@ -16,6 +22,7 @@ public class CardManager : MonoBehaviour
     CardNode _oldActiveNode;
 
     List<CardNode> _topLevelNodes;
+    
 
     bool _isCloseUp = false;
     public bool IsCloseUpFlag { get { return _isCloseUp; } set { _isCloseUp = value; } }
@@ -26,6 +33,7 @@ public class CardManager : MonoBehaviour
     public void Awake()
     {
         _topLevelNodes = new();
+        _initialNodes = new();
 
         _cardBuilder = GetComponent<CardBuilder>();
         _cardMover = GetComponent<CardMover>();
@@ -40,6 +48,11 @@ public class CardManager : MonoBehaviour
         _cardBuilder.BuildAllCards(_rootNode);
 
         FinishLayout(true);
+
+        foreach (CardNode node in _initialNodes)
+        {
+            AddToTopLevel(node);
+        }
     }
 
     public void NodeClicked(CardNode clickedNode)
@@ -154,12 +167,18 @@ public class CardManager : MonoBehaviour
             node.IsTopLevel = _topLevelNodes.Contains(node);
             return true;
         });
+
+        // Reset Model
+        _renderManager.ResetAllModels();
     }
 
     public void AddToTopLevel(CardNode cardNode)
     {
         _topLevelNodes.Add(cardNode);
         cardNode.IsTopLevel = true;
+
+        // Add Model
+        _renderManager.AddModel(cardNode);
     }
 
     public List<CardNode> GetTopLevelNodes()
