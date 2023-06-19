@@ -57,6 +57,9 @@ public class RenderManager : MonoBehaviour
 
     void RecreateRenderTextures()
     {
+
+        // Old render texture needs to be killed manually
+
         for (int i = 0; i < _topLevelNodes.Count; i++)
         {
             if (i >= _viewTextures.Count)
@@ -67,7 +70,7 @@ public class RenderManager : MonoBehaviour
                 _viewTextures.Add(newTexture);
             }
 
-            if (_viewTextures[i].width != Screen.width || _viewTextures[i].height != Screen.height)
+            if (_viewTextures[i] == null || _viewTextures[i].width != Screen.width || _viewTextures[i].height != Screen.height)
             {
                 RenderTexture newTexture = new(Screen.width, Screen.height, 0);
                 _topLevelNodes[i].Body.GetMaskMeshRenderer().material.SetTexture("_MainTex", newTexture);
@@ -118,5 +121,11 @@ public class RenderManager : MonoBehaviour
     public void ResetAllModels()
     {
         _topLevelNodes.Clear();
+
+        foreach (RenderTexture texture in _viewTextures)
+        {
+            texture.Release();
+        }
+        _viewTextures.Clear();
     }
 }

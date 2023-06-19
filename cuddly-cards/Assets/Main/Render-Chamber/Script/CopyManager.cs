@@ -13,13 +13,15 @@ public class CopyManager : MonoBehaviour
     [SerializeField]
     TransformCopy _cameraCopyTransform;
 
-    public void UpdateObjects(List<CopyObject> copyList, List<CardNode> topLevelCards)
+    public void UpdateObjects(List<CopyObject> copyObjectList, List<CardNode> topLevelCards)
     {
+        copyObjectList.ForEach(e => e.gameObject.SetActive(false));
         _cameraCopyTransform.SetCopyTransform(_mainCameraTransform);
 
         for (int i = 0; i < topLevelCards.Count; i++)
         {
-            copyList[i].GetComponent<TransformCopy>().SetCopyTransform(topLevelCards[i].Body.transform);
+            copyObjectList[i].gameObject.SetActive(true);
+            copyObjectList[i].GetComponent<TransformCopy>().SetCopyTransform(topLevelCards[i].Body.transform);
         }
     }
 
