@@ -70,6 +70,7 @@ public class ModelRenderManager : MonoBehaviour
             if (i >= _viewTextures.Count)
             {
                 RenderTexture newTexture = new(Screen.width, Screen.height, 0);
+                newTexture.depth = 16;
                 _cardManager.GetTopLevelNodes()[i].Body.GetMaskMeshRenderer().material = _baseMat;
                 _cardManager.GetTopLevelNodes()[i].Body.GetMaskMeshRenderer().material.SetTexture("_MainTex", newTexture);
                 _viewTextures.Add(newTexture);
@@ -78,6 +79,7 @@ public class ModelRenderManager : MonoBehaviour
             if (_viewTextures[i] == null || _viewTextures[i].width != Screen.width || _viewTextures[i].height != Screen.height)
             {
                 RenderTexture newTexture = new(Screen.width, Screen.height, 0);
+                newTexture.depth = 16;
                 _cardManager.GetTopLevelNodes()[i].Body.GetMaskMeshRenderer().material.SetTexture("_MainTex", newTexture);
 
                 _viewTextures.RemoveAt(i);
