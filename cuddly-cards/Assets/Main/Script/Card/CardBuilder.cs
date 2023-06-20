@@ -45,4 +45,18 @@ public class CardBuilder : MonoBehaviour
 
         return body;
     }
+
+    public void SetModelForCardContexts(CardNode rootNode)
+    {
+        rootNode.TraverseChildren(CardTraversal.CONTEXT,
+            delegate (CardNode cardNode)
+            {
+                CardContext context = cardNode.Context;
+                CardScriptableType type = _types.Where(e => e.GetCardType().Equals(context.GetCardType())).FirstOrDefault();
+
+                context.SetModelName(type.GetModelName());
+                return true;
+            }
+        );
+    }
 }

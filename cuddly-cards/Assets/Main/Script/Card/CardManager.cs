@@ -45,6 +45,7 @@ public class CardManager : MonoBehaviour
     {
         _activeNode = _oldActiveNode = _rootNode = _cardReader.ReadCards();
 
+        _cardBuilder.SetModelForCardContexts(_rootNode);
         _cardBuilder.BuildAllCards(_rootNode);
 
         FinishLayout(true);

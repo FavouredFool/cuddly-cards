@@ -11,7 +11,11 @@ public class CardScriptableType : ScriptableObject
     Sprite _cardIcon;
 
     [SerializeField]
-    public Color _cardColor;
+    Color _cardColor;
+
+    [SerializeField]
+    string _modelName;
+
 
     public CardType GetCardType()
     {
@@ -26,5 +30,10 @@ public class CardScriptableType : ScriptableObject
     public Color GetCardColor()
     {
         return _cardColor;
+    }
+
+    public string GetModelName()
+    {
+        return _modelName;
     }
 }
