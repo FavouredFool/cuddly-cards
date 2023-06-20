@@ -886,6 +886,7 @@ GameObject:
   m_Component:
   - component: {fileID: 441514800}
   - component: {fileID: 441514801}
+  - component: {fileID: 441514802}
   m_Layer: 0
   m_Name: RenderManager
   m_TagString: Untagged
@@ -921,12 +922,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardManager: {fileID: 1221586264}
+  _modelManager: {fileID: 441514802}
   _renderCameraMovement: {fileID: 1806426697}
   _mainCameraMovement: {fileID: 436137023}
   _cardModelBlueprint: {fileID: 4754038956750367551, guid: d150b8420d70bfb4ba0baddf1772be27,
     type: 3}
   _baseMat: {fileID: 2100000, guid: bbc1c47f3f02c4f4784f054e330a7aea, type: 2}
   _cardModelFolder: {fileID: 1519527919}
+--- !u!114 &441514802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441514799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02986b583fb22a34ca54fc23dfe887a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _meshes:
+  - {fileID: -2432090755550338912, guid: f9632389faa67734390b1712715c97c5, type: 3}
+  - {fileID: -2432090755550338912, guid: 26a090900ece5264da290f675b09c88e, type: 3}
+  - {fileID: -2432090755550338912, guid: bdbbcc6ffde14064fb1b85fbda99f913, type: 3}
+  - {fileID: -2432090755550338912, guid: 6694583075989b447addfabb1f24e544, type: 3}
 --- !u!1 &444447215
 GameObject:
   m_ObjectHideFlags: 0
@@ -1576,7 +1595,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh27536
+  m_Name: pb_Mesh30162
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2

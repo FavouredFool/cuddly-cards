@@ -170,13 +170,15 @@ public class CardManager : MonoBehaviour
         });
 
         // Reset Model
-        _renderManager.ResetAllModels();
+        _renderManager.ResetModels();
     }
 
     public void AddToTopLevel(CardNode cardNode)
     {
         _topLevelNodes.Add(cardNode);
         cardNode.IsTopLevel = true;
+
+        _renderManager.SetModel(cardNode);
     }
 
     public List<CardNode> GetTopLevelNodes()

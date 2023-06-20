@@ -11,6 +11,9 @@ public class ModelRenderManager : MonoBehaviour
     [SerializeField]
     CardManager _cardManager;
 
+    [SerializeField]
+    ModelManager _modelManager;
+
     [Header("Cameras")]
     [SerializeField]
     ModelCameraMovement _renderCameraMovement;
@@ -127,16 +130,31 @@ public class ModelRenderManager : MonoBehaviour
     {
         for (int i = 0; i < iterations; i++)
         {
-            copyObjectList[i].CopyObjectRenderer.enabled = i == index;
+            copyObjectList[i].GetMeshRenderer().enabled = i == index;
         }
     }
 
-    public void ResetAllModels()
+    public void SetModel(CardNode node)
+    {
+        int index = _cardManager.GetTopLevelNodes().IndexOf(node);
+
+        _modelObjectList[index].SetMesh(_modelManager.GetMeshFromModelName(node.Context.GetModelName()));
+    }
+
+    public void ResetModels()
     {
         foreach (RenderTexture texture in _viewTextures)
         {
             texture.Release();
+            
         }
         _viewTextures.Clear();
+
+        // Reset models
+        foreach (ModelObject model in _modelObjectList)
+        {
+            // new Mesh() ? 
+            model.SetMesh(new Mesh());
+        }
     }
 }
