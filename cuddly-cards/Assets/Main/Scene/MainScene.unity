@@ -927,7 +927,6 @@ MonoBehaviour:
   _mainCameraMovement: {fileID: 436137023}
   _cardModelBlueprint: {fileID: 4754038956750367551, guid: d150b8420d70bfb4ba0baddf1772be27,
     type: 3}
-  _baseMat: {fileID: 2100000, guid: bbc1c47f3f02c4f4784f054e330a7aea, type: 2}
   _cardModelFolder: {fileID: 1519527919}
 --- !u!114 &441514802
 MonoBehaviour:

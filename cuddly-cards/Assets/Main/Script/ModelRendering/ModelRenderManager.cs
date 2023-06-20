@@ -26,9 +26,6 @@ public class ModelRenderManager : MonoBehaviour
     ModelObject _cardModelBlueprint;
 
     [SerializeField]
-    Material _baseMat;
-
-    [SerializeField]
     Transform _cardModelFolder;
 
     List<RenderTexture> _viewTextures;
@@ -71,7 +68,6 @@ public class ModelRenderManager : MonoBehaviour
             {
                 RenderTexture newTexture = new(Screen.width, Screen.height, 0);
                 newTexture.depth = 16;
-                _cardManager.GetTopLevelNodes()[i].Body.GetMaskMeshRenderer().material = _baseMat;
                 _cardManager.GetTopLevelNodes()[i].Body.GetMaskMeshRenderer().material.SetTexture("_MainTex", newTexture);
                 _viewTextures.Add(newTexture);
             }
