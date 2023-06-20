@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CopyObject : MonoBehaviour
+public class ModelObject : MonoBehaviour
 {
     public MeshRenderer CopyObjectRenderer;
 }

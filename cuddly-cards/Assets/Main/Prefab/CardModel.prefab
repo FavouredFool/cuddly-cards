@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6521843898998335241}
-  - component: {fileID: 3114130391343479329}
   - component: {fileID: 4754038956750367551}
-  m_Layer: 10
-  m_Name: CardCopy
+  - component: {fileID: 3682033068146230147}
+  m_Layer: 9
+  m_Name: CardModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,18 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3114130391343479329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5020176826206872130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00ca8c3d6b38b4b4b97e06bef965a253, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4754038956750367551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,6 +48,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CopyObjectRenderer: {fileID: 5399765812183347065}
+--- !u!114 &3682033068146230147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5020176826206872130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23ee0b235ead4e4dbb3702d0e0e1497, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5830227442307898774
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,7 +69,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6937922262988919496}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2301528870276832449}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: CardContents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 370899131328609412}
   - component: {fileID: 331006357026477056}
   - component: {fileID: 5399765812183347065}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +185,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 488ba2fa82c62e64e8d355479987b24f, type: 2}
+  - {fileID: 2100000, guid: 7ca1859c832c0804d8451ff0eb179bc0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 4915953113090834422}
   - component: {fileID: 8166255758268926631}
   - component: {fileID: 4672711981300728115}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}

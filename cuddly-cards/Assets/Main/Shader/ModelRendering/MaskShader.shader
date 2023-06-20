@@ -1,8 +1,7 @@
-Shader "Custom/Portal"
+Shader "ModelRendering/Mask"
 {
     Properties
     {
-        _InactiveColour("Inactive Colour", Color) = (1, 1, 1, 1)
         srpBatcherFix("srpBatcherFix", Float) = 1
     }
     SubShader

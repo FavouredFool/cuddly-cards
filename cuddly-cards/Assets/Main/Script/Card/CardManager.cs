@@ -7,7 +7,7 @@ public class CardManager : MonoBehaviour
     CloseUpManager _closeUpManager;
 
     [SerializeField]
-    RenderManager _renderManager;
+    ModelRenderManager _renderManager;
 
     [SerializeField]
     List<CardNode> _initialNodes;
@@ -176,9 +176,6 @@ public class CardManager : MonoBehaviour
     {
         _topLevelNodes.Add(cardNode);
         cardNode.IsTopLevel = true;
-
-        // Add Model
-        _renderManager.AddModel(cardNode);
     }
 
     public List<CardNode> GetTopLevelNodes()

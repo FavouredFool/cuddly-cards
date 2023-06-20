@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class TransformCopy : MonoBehaviour
+public class ModelTransform : MonoBehaviour
 {
-    public void SetCopyTransform(Transform objectTransform)
+    public void SetModelTransform(Transform objectTransform)
     {
         transform.SetLocalPositionAndRotation(objectTransform.position, objectTransform.rotation);
     }

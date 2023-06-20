@@ -10,6 +10,8 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     CloseUpManager _closeUpManager;
 
+    [SerializeField]
+    Camera _camera;
 
 
     public void SetCardTableRotation(float transitionTime, Ease easing)
@@ -20,5 +22,10 @@ public class CameraMovement : MonoBehaviour
     public void SetCloseUpRotation(float closeUpRotation, float transitionTime, Ease easing)
     {
         transform.DORotate(new Vector3(closeUpRotation, 0, 0), transitionTime, RotateMode.Fast).SetEase(easing);
+    }
+
+    public Camera GetCamera()
+    {
+        return _camera;
     }
 }
