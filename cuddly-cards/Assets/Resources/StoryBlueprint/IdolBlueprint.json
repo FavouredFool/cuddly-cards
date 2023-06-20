@@ -151,6 +151,18 @@
             "depth": "9"
         },
         {
+            "label": "A Ring",
+            "description": "A red ring with an embedded jewel sits tight around the middle finger of the left hand.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
+            "label": "A Ring",
+            "description": "A red ring with an embedded jewel sits tight around the middle finger of the left hand.",
+            "type": "THING",
+            "depth": "9"
+        },
+        {
             "label": "The Right Door",
             "description": "The lock is locked.",
             "type": "THING",

@@ -35,6 +35,9 @@ public class ModelRenderManager : MonoBehaviour
 
     List<ModelObject> _modelObjectList;
 
+    // The amount of models that you need is unfortunately variable because the amount of top-level cards is variable. When a stack sorts into another stack, the top-level gets increased dynamically so that only part of the deck gets moved upwards.
+    int MODELAMOUNT = 32;
+
 #pragma warning disable 0618
     [Obsolete]
 #pragma warning restore 0618
@@ -50,8 +53,8 @@ public class ModelRenderManager : MonoBehaviour
 
         RenderPipelineManager.beginContextRendering += OnBeginRendering;
 
-        // Create 14 CardCopies -> A pool for all the renders
-        for (int i = 0; i < 14; i++)
+        // Create 15 CardCopies -> A pool for all the renders
+        for (int i = 0; i < MODELAMOUNT; i++)
         {
             _modelObjectList.Add(Instantiate(_cardModelBlueprint, _cardModelFolder));
         }
@@ -110,19 +113,22 @@ public class ModelRenderManager : MonoBehaviour
         {
             ActivateObjectCopy(_modelObjectList, i, _cardManager.GetTopLevelNodes().Count);
             _renderCameraMovement.GetCamera().targetTexture = _viewTextures[i];
+            CardNode cardNode = _cardManager.GetTopLevelNodes()[i];
+            Color backgroundColor = cardNode.Context.GetBackgroundColor();
+            _renderCameraMovement.GetCamera().backgroundColor = backgroundColor;
             UniversalRenderPipeline.RenderSingleCamera(context, _renderCameraMovement.GetCamera());
         }
     }
 
-    void UpdateObjects(List<ModelObject> copyObjectList, List<CardNode> topLevelCards)
+    void UpdateObjects(List<ModelObject> modelObjectList, List<CardNode> topLevelCards)
     {
-        copyObjectList.ForEach(e => e.gameObject.SetActive(false));
+        modelObjectList.ForEach(e => e.gameObject.SetActive(false));
         _renderCameraMovement.SetModelTransform(_mainCameraMovement.transform);
 
         for (int i = 0; i < topLevelCards.Count; i++)
         {
-            copyObjectList[i].gameObject.SetActive(true);
-            copyObjectList[i].GetComponent<ModelTransform>().SetModelTransform(topLevelCards[i].Body.transform);
+            modelObjectList[i].gameObject.SetActive(true);
+            modelObjectList[i].GetComponent<ModelTransform>().SetModelTransform(topLevelCards[i].Body.transform);
         }
     }
 
@@ -154,7 +160,7 @@ public class ModelRenderManager : MonoBehaviour
         foreach (ModelObject model in _modelObjectList)
         {
             // new Mesh() ? 
-            model.SetMesh(new Mesh());
+            model.SetMesh(null);
         }
     }
 }

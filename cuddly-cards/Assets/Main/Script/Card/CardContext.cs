@@ -1,11 +1,15 @@
 using static CardManager;
 using static CardInfo;
+using UnityEngine;
 
 public class CardContext
 {
     string _label;
     string _description;
     CardType _cardType;
+
+    // color is derived from cardtype but also needed to change the renderCamera background -> needs to be added manually
+    Color _backgroundColor;
 
     bool _hasBeenSeen;
 
@@ -54,5 +58,15 @@ public class CardContext
     public void SetModelName(string modelName)
     {
         _modelName = modelName;
+    }
+
+    public void SetBackgroundColor(Color backGroundColor)
+    {
+        _backgroundColor = backGroundColor;
+    }
+
+    public Color GetBackgroundColor()
+    {
+        return _backgroundColor;
     }
 }

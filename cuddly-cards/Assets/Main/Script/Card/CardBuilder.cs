@@ -55,6 +55,7 @@ public class CardBuilder : MonoBehaviour
                 CardScriptableType type = _types.Where(e => e.GetCardType().Equals(context.GetCardType())).FirstOrDefault();
 
                 context.SetModelName(type.GetModelName());
+                context.SetBackgroundColor(type.GetCardColor());
                 return true;
             }
         );
