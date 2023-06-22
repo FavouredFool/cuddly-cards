@@ -16,7 +16,7 @@ public class CardManager : MonoBehaviour
     CardNode _activeNode;
     CardNode _oldActiveNode;
 
-    List<CardNode> _topLevelNodesMainDeck;
+    List<CardNode> _topLevelNodesMainPile;
 
     bool _isCloseUp = false;
     public bool IsCloseUpFlag { get { return _isCloseUp; } set { _isCloseUp = value; } }
@@ -26,7 +26,7 @@ public class CardManager : MonoBehaviour
 
     public void Awake()
     {
-        _topLevelNodesMainDeck = new();
+        _topLevelNodesMainPile = new();
 
         _cardBuilder = GetComponent<CardBuilder>();
         _cardMover = GetComponent<CardMover>();
@@ -126,7 +126,7 @@ public class CardManager : MonoBehaviour
     {
         _cardInput.RemoveColliders();
 
-        ClearTopLevelNodesMainDeck();
+        ClearTopLevelNodesMainPile();
 
         bool activateStartLayout = false;
 
@@ -145,13 +145,13 @@ public class CardManager : MonoBehaviour
     {
         IsStartLayoutFlag = isStartLayout;
 
-        ClearTopLevelNodesMainDeck();
+        ClearTopLevelNodesMainPile();
 
         _cardMover.ResetPosition(_rootNode);
 
         if (isStartLayout)
         {
-            AddToTopLevelMainDeck(_rootNode);
+            AddToTopLevelMainPile(_rootNode);
             _cardMover.MoveCardsForStartLayoutStatic(_rootNode);
         }
         else
@@ -159,34 +159,38 @@ public class CardManager : MonoBehaviour
             _cardMover.MoveCardsForLayoutStatic(_activeNode, _rootNode);
         }
 
-        _cardMover.SetHeightOfTopLevelNodes();
+        _cardMover.MoveCardsForInventoryStatic(_cardInventory.GetInventoryNode(), false);
 
+        _cardMover.SetHeightOfTopLevelNodes();
+        _cardMover.SetHeightOfInventory(_cardInventory.GetInventoryNode());
+
+        _cardMover.SetInventoryCardsRelativeToParent(_cardInventory.GetInventoryNode());
         _cardMover.SetCardsRelativeToParent();
 
         _cardInput.SetColliders();
     }
 
-    void ClearTopLevelNodesMainDeck()
+    void ClearTopLevelNodesMainPile()
     {
-        _topLevelNodesMainDeck.Clear();
+        _topLevelNodesMainPile.Clear();
 
         _rootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT,
             delegate (CardNode node)
         {
-            node.IsTopLevel = _topLevelNodesMainDeck.Contains(node);
+            node.IsTopLevel = _topLevelNodesMainPile.Contains(node);
             return true;
         });
     }
 
-    public void AddToTopLevelMainDeck(CardNode cardNode)
+    public void AddToTopLevelMainPile(CardNode cardNode)
     {
-        _topLevelNodesMainDeck.Add(cardNode);
+        _topLevelNodesMainPile.Add(cardNode);
         cardNode.IsTopLevel = true;
     }
 
-    public List<CardNode> GetTopLevelNodesMainDeck()
+    public List<CardNode> GetTopLevelNodesMainPile()
     {
-        return _topLevelNodesMainDeck;
+        return _topLevelNodesMainPile;
     }
 
     public CardNode GetRootNode()

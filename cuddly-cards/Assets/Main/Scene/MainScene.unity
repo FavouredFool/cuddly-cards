@@ -1162,6 +1162,7 @@ MonoBehaviour:
   _cardFolder: {fileID: 35637509}
   _playSpaceBottomLeft: {x: -2.45, y: -0.5}
   _playSpaceTopRight: {x: 2.425, y: 1.5}
+  _playSpaceInventory: {x: 4, y: -0.5}
   _childrenDistance: 1.125
   _childrenStartOffset: 0.95
   _verticalTime: 0.2

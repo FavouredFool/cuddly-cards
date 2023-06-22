@@ -8,44 +8,53 @@ public class CardInventory : MonoBehaviour
 
     CardNode _inventoryNode;
 
-    List<CardNode> _keyNodes;
-    List<CardNode> _dialogueNodes;
-
-    List<CardNode>[] _cardNodes;
-
     private void Awake()
     {
         _cardMover = GetComponent<CardMover>();
-        _keyNodes = new();
-        _dialogueNodes = new();
-        _cardNodes = new[] { _keyNodes, _dialogueNodes };
     }
 
     public void InitializeInventory(CardBuilder builder)
     {
-        _inventoryNode = new CardNode(new CardContext("Inventory", "lots of things in here", CardInfo.CardType.INVENTORY));
-
+        _inventoryNode = new(new("Inventory", "lots of things in here", CardType.INVENTORY));
         _inventoryNode.Body = builder.BuildCardBody(_inventoryNode.Context);
 
-        _cardMover.MoveCard(_inventoryNode, new Vector2(_cardMover.GetPlaySpaceTopRight().x + 1.5f, _cardMover.GetPlaySpaceBottomLeft().y));
+        CardNode dialogueParentNode = new(new("Dialogue", "I need to talk about this.", CardType.INVENTORY));
+        dialogueParentNode.Body = builder.BuildCardBody(dialogueParentNode.Context);
+
+        CardNode keyParentNode = new(new("Keys", "All the things I have and know.", CardType.INVENTORY));
+        keyParentNode.Body = builder.BuildCardBody(keyParentNode.Context);
+
+        _inventoryNode.AddChild(dialogueParentNode);
+        _inventoryNode.AddChild(keyParentNode);
+        
     }
 
     public void AddNodeToInventory(CardNode node)
     {
         CardType type = node.Context.GetCardType();
+        CardNode parentNode;
 
-        if (type == CardType.KEY)
-        {
-            Debug.Log("added key");
-        }
-        else if (type == CardType.DIALOGUE)
+        if (type == CardType.DIALOGUE)
         {
             Debug.Log("added dialogue");
+            parentNode = _inventoryNode[0];
+        }
+        else if (type == CardType.KEY)
+        {
+            Debug.Log("added key");
+            parentNode = _inventoryNode[1];
         }
         else
         {
             Debug.LogError("WRONG TYPE");
             return;
         }
+
+        parentNode.AddChild(node);
+    }
+
+    public CardNode GetInventoryNode()
+    {
+        return _inventoryNode;
     }
 }
