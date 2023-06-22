@@ -36,12 +36,10 @@ public class CardInventory : MonoBehaviour
 
         if (type == CardType.DIALOGUE)
         {
-            Debug.Log("added dialogue");
             parentNode = _inventoryNode[0];
         }
         else if (type == CardType.KEY)
         {
-            Debug.Log("added key");
             parentNode = _inventoryNode[1];
         }
         else

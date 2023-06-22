@@ -62,11 +62,16 @@ public class CardMover : MonoBehaviour
             return;
         }
 
-        SetInventoryCardsRelativeToParent(_cardInventory.GetInventoryNode());
         SetCardsRelativeToParent();
     }
 
     public void SetCardsRelativeToParent()
+    {
+        SetInventoryCardsRelativeToParent();
+        SetMainCardsRelativeToParent();
+    }
+
+    public void SetMainCardsRelativeToParent()
     {
         List<CardNode> topLevelNodes = _cardManager.GetTopLevelNodesMainPile();
         foreach (CardNode topLevel in topLevelNodes)
@@ -80,11 +85,11 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void SetInventoryCardsRelativeToParent(CardNode inventoryNode)
+    public void SetInventoryCardsRelativeToParent()
     {
         int size = 1;
 
-        foreach (CardNode childNode in inventoryNode.Children)
+        foreach (CardNode childNode in _cardInventory.GetInventoryNode().Children)
         {
             size += childNode.SetPositionsRecursive(size);
         }
@@ -104,6 +109,12 @@ public class CardMover : MonoBehaviour
         card.Body.transform.localPosition = new Vector3(position.x, card.Body.transform.localPosition.y, position.y);
     }
 
+    public void SetHeights()
+    {
+        SetHeightOfTopLevelNodes();
+        SetHeightOfInventory();
+    }
+
     public void SetHeightOfTopLevelNodes()
     {
         foreach (CardNode node in _cardManager.GetTopLevelNodesMainPile())
@@ -112,17 +123,33 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void SetHeightOfInventory(CardNode inventoryNode)
+    public void SetHeightOfInventory()
     {
+        CardNode inventoryNode = _cardInventory.GetInventoryNode();
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
+    }
+
+    public void MoveCardsForLayoutStatic(CardNode activeNode, CardNode rootNode, bool isStartLayout)
+    {
+        if (isStartLayout)
+        {
+            MoveCardsForStartLayoutStatic(rootNode);
+        }
+        else
+        {
+            MoveCardsForGeneralLayoutStatic(activeNode, rootNode);
+        }
+
+        MoveCardsForInventoryStatic(_cardInventory.GetInventoryNode(), false);
     }
 
     public void MoveCardsForStartLayoutStatic(CardNode rootNode)
     {
+        _cardManager.AddToTopLevelMainPile(rootNode);
         MoveCard(rootNode, new Vector2(_playSpaceBottomLeft.x  + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _playSpaceBottomLeft.y));
     }
 
-    public void MoveCardsForLayoutStatic(CardNode pressedNode, CardNode rootNode)
+    public void MoveCardsForGeneralLayoutStatic(CardNode pressedNode, CardNode rootNode)
     {
         _cardManager.AddToTopLevelMainPile(pressedNode);
         MoveCard(pressedNode, _playSpaceBottomLeft);

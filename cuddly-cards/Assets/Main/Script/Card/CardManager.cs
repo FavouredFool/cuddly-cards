@@ -149,22 +149,10 @@ public class CardManager : MonoBehaviour
 
         _cardMover.ResetPosition(_rootNode);
 
-        if (isStartLayout)
-        {
-            AddToTopLevelMainPile(_rootNode);
-            _cardMover.MoveCardsForStartLayoutStatic(_rootNode);
-        }
-        else
-        {
-            _cardMover.MoveCardsForLayoutStatic(_activeNode, _rootNode);
-        }
+        _cardMover.MoveCardsForLayoutStatic(_activeNode, _rootNode, isStartLayout);
 
-        _cardMover.MoveCardsForInventoryStatic(_cardInventory.GetInventoryNode(), false);
+        _cardMover.SetHeights();
 
-        _cardMover.SetHeightOfTopLevelNodes();
-        _cardMover.SetHeightOfInventory(_cardInventory.GetInventoryNode());
-
-        _cardMover.SetInventoryCardsRelativeToParent(_cardInventory.GetInventoryNode());
         _cardMover.SetCardsRelativeToParent();
 
         _cardInput.SetColliders();
