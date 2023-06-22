@@ -9,11 +9,13 @@ public class CardInput : MonoBehaviour
     List<Collider> _colliders;
 
     CardManager _cardManager;
+    CardInventory _cardInventory;
 
     public void Awake()
     {
         _colliders = new();
         _cardManager = GetComponent<CardManager>();
+        _cardInventory = GetComponent<CardInventory>();
     }
 
     public void Update()
@@ -45,7 +47,9 @@ public class CardInput : MonoBehaviour
                 return;
             }
 
-            CardNode hitNode = _cardManager.GetTopLevelNodesMainPile()[_colliders.IndexOf(hit.collider)];
+
+
+            CardNode hitNode = _cardManager.GetClickableNodes()[_colliders.IndexOf(hit.collider)];
 
             _cardManager.NodeClicked(hitNode);
         }
@@ -53,7 +57,7 @@ public class CardInput : MonoBehaviour
 
     public void SetColliders()
     {
-        foreach (CardNode node in _cardManager.GetTopLevelNodesMainPile())
+        foreach (CardNode node in _cardManager.GetClickableNodes())
         {
             BoxCollider collider = gameObject.AddComponent<BoxCollider>();
 

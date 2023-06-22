@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using static CardInfo;
 
 public class CardManager : MonoBehaviour
 {
@@ -71,6 +72,25 @@ public class CardManager : MonoBehaviour
 
     public void NodeClicked(CardNode clickedNode)
     {
+        switch (clickedNode.Context.GetCardType())
+        {
+            case CardType.INVENTORY:
+                InventoryNodeAction();
+                return;
+            case CardType.KEY:
+            case CardType.DIALOGUE:
+                return;
+            case CardType.LOCK:
+                return;
+            default:
+                DefaultNodeAction(clickedNode);
+                return;
+        }
+        
+    }
+
+    void DefaultNodeAction(CardNode clickedNode)
+    {
         if (clickedNode == _activeNode && !IsStartLayoutFlag)
         {
             EnterCloseUp();
@@ -79,6 +99,21 @@ public class CardManager : MonoBehaviour
         {
             SetNodeActive(clickedNode);
         }
+    }
+
+    void InventoryNodeAction()
+    {
+        if (_cardInventory.InventoryIsOpenFlag)
+        {
+            _cardInventory.InventoryShouldOpenFlag = false;
+
+        }
+        else
+        {
+            _cardInventory.InventoryShouldOpenFlag = true;
+        }
+
+        PrepareLayout();
     }
 
     public void SetNodeActive(CardNode node)
@@ -133,6 +168,13 @@ public class CardManager : MonoBehaviour
 
         ClearTopLevelNodesMainPile();
 
+        // check if Inventory has changed
+        if (_cardInventory.InventoryShouldOpenFlag != _cardInventory.InventoryIsOpenFlag)
+        {
+            _cardMover.MoveCardsForToggleInventoryAnimated();
+            return;
+        }
+
         bool activateStartLayout = false;
 
         if (_activeNode == _rootNode)
@@ -145,6 +187,8 @@ public class CardManager : MonoBehaviour
 
         _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, activateStartLayout);
     }
+
+
 
     public void FinishLayout(bool isStartLayout)
     {
@@ -161,6 +205,16 @@ public class CardManager : MonoBehaviour
         _cardMover.SetCardsRelativeToParent();
 
         _cardInput.SetColliders();
+
+        _cardInventory.InventoryIsOpenFlag = _cardInventory.InventoryShouldOpenFlag;
+    }
+
+    public List<CardNode> GetClickableNodes()
+    {
+        List<CardNode> clickables = new(GetTopLevelNodesMainPile());
+        clickables.Add(_cardInventory.GetInventoryNode());
+
+        return clickables;
     }
 
     void ClearTopLevelNodesMainPile()

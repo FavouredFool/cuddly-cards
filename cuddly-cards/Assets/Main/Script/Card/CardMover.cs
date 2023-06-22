@@ -156,16 +156,41 @@ public class CardMover : MonoBehaviour
 
     public void MoveCardsForLayoutStatic(CardNode activeNode, CardNode rootNode, bool isStartLayout)
     {
-        if (isStartLayout)
+        if (_cardInventory.InventoryIsOpenFlag != _cardInventory.InventoryShouldOpenFlag)
         {
-            MoveCardsForStartLayoutStatic(rootNode);
+            if (_cardInventory.InventoryShouldOpenFlag)
+            {
+                // close cards because inventory opens
+                CloseCards(activeNode, rootNode);
+            }
+            else
+            {
+                // TODO THIS IS TERRIBLE AAAA
+                if (isStartLayout)
+                {
+                    MoveCardsForStartLayoutStatic(rootNode);
+                }
+                else
+                {
+                    MoveCardsForGeneralLayoutStatic(activeNode, rootNode);
+                }
+            }
         }
         else
         {
-            MoveCardsForGeneralLayoutStatic(activeNode, rootNode);
+            if (isStartLayout)
+            {
+                MoveCardsForStartLayoutStatic(rootNode);
+            }
+            else
+            {
+                MoveCardsForGeneralLayoutStatic(activeNode, rootNode);
+            }
         }
 
-        MoveCardsForInventoryStatic(_cardInventory.GetInventoryNode(), true);
+        
+        // this always does its thing and espects the other cards to behave properly
+        MoveCardsForInventoryStatic(_cardInventory.GetInventoryNode(), _cardInventory.InventoryShouldOpenFlag);
     }
 
     public void MoveCardsForStartLayoutStatic(CardNode rootNode)
@@ -198,23 +223,40 @@ public class CardMover : MonoBehaviour
         }
     }
 
+    public void CloseCards(CardNode pressedNode, CardNode rootNode)
+    {
+        _cardManager.AddToTopLevelMainPile(pressedNode);
+        MoveCard(pressedNode, _playSpaceBottomLeft);
+
+        if (pressedNode != rootNode)
+        {
+            _cardManager.AddToTopLevelMainPile(pressedNode.Parent);
+            MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
+
+            if (pressedNode.Parent != rootNode)
+            {
+                _cardManager.AddToTopLevelMainPile(rootNode);
+                MoveCard(rootNode, _playSpaceTopRight);
+            }
+        }
+    }
+
     public void MoveCardsForInventoryStatic(CardNode inventoryNode, bool inventoryIsOpen)
     {
-        // Set all cardnodes toplevel
-        inventoryNode[0].IsTopLevel = true;
-        foreach (CardNode node in inventoryNode[0].Children)
-        {
-            node.IsTopLevel = true;
-        }
-        inventoryNode[1].IsTopLevel = true;
-        foreach (CardNode node in inventoryNode[1].Children)
-        {
-            node.IsTopLevel = true;
-        }
-
-
         if (inventoryIsOpen)
         {
+            // Set all cardnodes toplevel
+            inventoryNode[0].IsTopLevel = true;
+            foreach (CardNode node in inventoryNode[0].Children)
+            {
+                node.IsTopLevel = true;
+            }
+            inventoryNode[1].IsTopLevel = true;
+            foreach (CardNode node in inventoryNode[1].Children)
+            {
+                node.IsTopLevel = true;
+            }
+
             float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
             float fannedCardSpace = (totalSpace - 3 * _border) * 0.5f;
 
@@ -254,6 +296,17 @@ public class CardMover : MonoBehaviour
         {
             MoveCard(inventorySubcard[i], new Vector2(startFanX + i * CardInfo.CARDWIDTH * cardPercentage, _playSpaceBottomLeft.y));
         }
+    }
+
+    public void MoveCardsForToggleInventoryAnimated()
+    {
+        IsAnimatingFlag = true;
+        float timeTotal = _verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime;
+
+        // MAKE SURE THAT THE TIMER IS A BIT LONGER THAN THE MAXIMUM TWEENING TIME
+        Sequence timerSequence = DOTween.Sequence()
+            .AppendInterval(timeTotal + 0.01f)
+            .OnComplete(() => { IsAnimatingFlag = false; _cardManager.FinishLayout(false); });
     }
 
     public void MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode, bool activateStartLayout)
