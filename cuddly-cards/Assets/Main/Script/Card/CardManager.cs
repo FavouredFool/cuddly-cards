@@ -44,10 +44,17 @@ public class CardManager : MonoBehaviour
         _cardInventory.InitializeInventory(_cardBuilder);
 
         List<CardNode> tests = new();
-        tests.Add(new CardNode(new CardContext("Dagger", "sharp like... a dagger i guess", CardInfo.CardType.KEY)));
-        tests.Add(new CardNode(new CardContext("A revelation", "you just had a dangerous thought", CardInfo.CardType.KEY)));
-        tests.Add(new CardNode(new CardContext("The affair", "Not a nice topic to talk about. Don't expect a happy welcome.", CardInfo.CardType.DIALOGUE)));
-        tests.Add(new CardNode(new CardContext("Bad friends", "The worst.", CardInfo.CardType.DIALOGUE)));
+        for (int i = 0; i < 15; i++)
+        {
+            tests.Add(new CardNode(new CardContext("Dagger", "sharp like... a dagger i guess", CardInfo.CardType.KEY)));
+            tests.Add(new CardNode(new CardContext("A revelation", "you just had a dangerous thought", CardInfo.CardType.KEY)));
+        }
+
+        for (int i = 0; i < 15; i++)
+        {
+            tests.Add(new CardNode(new CardContext("The affair", "Not a nice topic to talk about. Don't expect a happy welcome.", CardInfo.CardType.DIALOGUE)));
+            tests.Add(new CardNode(new CardContext("Bad friends", "The worst.", CardInfo.CardType.DIALOGUE)));
+        }
 
         // make bodies
         foreach (CardNode node in tests)
@@ -55,11 +62,11 @@ public class CardManager : MonoBehaviour
             node.Body = _cardBuilder.BuildCardBody(node.Context);
         }
         // werden von Inventory noch nicht bewegt -> muss im Layout angegangen werden.
-        _cardInventory.AddNodeToInventory(tests[0]);
-        _cardInventory.AddNodeToInventory(tests[1]);
 
-        _cardInventory.AddNodeToInventory(tests[2]);
-        _cardInventory.AddNodeToInventory(tests[3]);
+        for (int i = 0; i < tests.Count; i++)
+        {
+            _cardInventory.AddNodeToInventory(tests[i]);
+        }
 
         FinishLayout(true);
     }
