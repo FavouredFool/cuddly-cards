@@ -10,12 +10,13 @@ public class CardManager : MonoBehaviour
     CardMover _cardMover;
     CardInput _cardInput;
     CardReader _cardReader;
+    CardInventory _cardInventory;
     
     CardNode _rootNode;
     CardNode _activeNode;
     CardNode _oldActiveNode;
 
-    List<CardNode> _topLevelNodes;
+    List<CardNode> _topLevelNodesMainDeck;
 
     bool _isCloseUp = false;
     public bool IsCloseUpFlag { get { return _isCloseUp; } set { _isCloseUp = value; } }
@@ -25,12 +26,13 @@ public class CardManager : MonoBehaviour
 
     public void Awake()
     {
-        _topLevelNodes = new();
+        _topLevelNodesMainDeck = new();
 
         _cardBuilder = GetComponent<CardBuilder>();
         _cardMover = GetComponent<CardMover>();
         _cardInput = GetComponent<CardInput>();
         _cardReader = GetComponent<CardReader>();
+        _cardInventory = GetComponent<CardInventory>();
     }
 
     public void Start()
@@ -38,6 +40,26 @@ public class CardManager : MonoBehaviour
         _activeNode = _oldActiveNode = _rootNode = _cardReader.ReadCards();
 
         _cardBuilder.BuildAllCards(_rootNode);
+
+        _cardInventory.InitializeInventory(_cardBuilder);
+
+        List<CardNode> tests = new();
+        tests.Add(new CardNode(new CardContext("Dagger", "sharp like... a dagger i guess", CardInfo.CardType.KEY)));
+        tests.Add(new CardNode(new CardContext("A revelation", "you just had a dangerous thought", CardInfo.CardType.KEY)));
+        tests.Add(new CardNode(new CardContext("The affair", "Not a nice topic to talk about. Don't expect a happy welcome.", CardInfo.CardType.DIALOGUE)));
+        tests.Add(new CardNode(new CardContext("Bad friends", "The worst.", CardInfo.CardType.DIALOGUE)));
+
+        // make bodies
+        foreach (CardNode node in tests)
+        {
+            node.Body = _cardBuilder.BuildCardBody(node.Context);
+        }
+        // werden von Inventory noch nicht bewegt -> muss im Layout angegangen werden.
+        _cardInventory.AddNodeToInventory(tests[0]);
+        _cardInventory.AddNodeToInventory(tests[1]);
+
+        _cardInventory.AddNodeToInventory(tests[2]);
+        _cardInventory.AddNodeToInventory(tests[3]);
 
         FinishLayout(true);
     }
@@ -104,7 +126,7 @@ public class CardManager : MonoBehaviour
     {
         _cardInput.RemoveColliders();
 
-        ClearTopLevelNodes();
+        ClearTopLevelNodesMainDeck();
 
         bool activateStartLayout = false;
 
@@ -123,13 +145,13 @@ public class CardManager : MonoBehaviour
     {
         IsStartLayoutFlag = isStartLayout;
 
-        ClearTopLevelNodes();
+        ClearTopLevelNodesMainDeck();
 
         _cardMover.ResetPosition(_rootNode);
 
         if (isStartLayout)
         {
-            AddToTopLevel(_rootNode);
+            AddToTopLevelMainDeck(_rootNode);
             _cardMover.MoveCardsForStartLayoutStatic(_rootNode);
         }
         else
@@ -144,27 +166,27 @@ public class CardManager : MonoBehaviour
         _cardInput.SetColliders();
     }
 
-    void ClearTopLevelNodes()
+    void ClearTopLevelNodesMainDeck()
     {
-        _topLevelNodes.Clear();
+        _topLevelNodesMainDeck.Clear();
 
         _rootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT,
             delegate (CardNode node)
         {
-            node.IsTopLevel = _topLevelNodes.Contains(node);
+            node.IsTopLevel = _topLevelNodesMainDeck.Contains(node);
             return true;
         });
     }
 
-    public void AddToTopLevel(CardNode cardNode)
+    public void AddToTopLevelMainDeck(CardNode cardNode)
     {
-        _topLevelNodes.Add(cardNode);
+        _topLevelNodesMainDeck.Add(cardNode);
         cardNode.IsTopLevel = true;
     }
 
-    public List<CardNode> GetTopLevelNodes()
+    public List<CardNode> GetTopLevelNodesMainDeck()
     {
-        return _topLevelNodes;
+        return _topLevelNodesMainDeck;
     }
 
     public CardNode GetRootNode()

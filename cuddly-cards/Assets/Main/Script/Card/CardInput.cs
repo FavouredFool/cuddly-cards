@@ -45,7 +45,7 @@ public class CardInput : MonoBehaviour
                 return;
             }
 
-            CardNode hitNode = _cardManager.GetTopLevelNodes()[_colliders.IndexOf(hit.collider)];
+            CardNode hitNode = _cardManager.GetTopLevelNodesMainDeck()[_colliders.IndexOf(hit.collider)];
 
             _cardManager.NodeClicked(hitNode);
         }
@@ -53,7 +53,7 @@ public class CardInput : MonoBehaviour
 
     public void SetColliders()
     {
-        foreach (CardNode node in _cardManager.GetTopLevelNodes())
+        foreach (CardNode node in _cardManager.GetTopLevelNodesMainDeck())
         {
             BoxCollider collider = gameObject.AddComponent<BoxCollider>();
 

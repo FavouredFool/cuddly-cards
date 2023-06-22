@@ -20,13 +20,13 @@ public class CardBuilder : MonoBehaviour
             delegate (CardNode cardNode)
             {
                 CardContext context = cardNode.Context;
-                cardNode.Body = BuildCard(context);
+                cardNode.Body = BuildCardBody(context);
                 return true;
             }
         );
     }
 
-    public CardBody BuildCard(CardContext cardContext)
+    public CardBody BuildCardBody(CardContext cardContext)
     {
         CardBody body = Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, _cardFolder).GetComponent<CardBody>();
 

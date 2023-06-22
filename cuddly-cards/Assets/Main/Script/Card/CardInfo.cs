@@ -2,7 +2,7 @@
 
 public static class CardInfo
 {
-    public enum CardType { COVER, PLACE, THING, PERSON, DIALOGUE, CLUE, LOCK }
+    public enum CardType { COVER, PLACE, THING, PERSON, DIALOGUE, KEY, LOCK, INVENTORY }
 
     public enum CardTraversal { BODY, CONTEXT }
 
