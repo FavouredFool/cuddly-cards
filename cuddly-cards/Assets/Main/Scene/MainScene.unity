@@ -1160,14 +1160,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardFolder: {fileID: 35637509}
-  _playSpaceBottomLeft: {x: -2.45, y: -0.5}
-  _playSpaceTopRight: {x: 2.425, y: 1.5}
-  _playSpaceInventory: {x: 4, y: -0.5}
+  _playSpaceBottomLeft: {x: -3, y: -0.5}
+  _playSpaceTopRight: {x: 3, y: 1.5}
   _childrenDistance: 1.125
-  _childrenStartOffset: 0.95
+  _childrenStartOffset: 1.648
   _verticalTime: 0.2
   _horizontalTime: 0.35
   _waitTime: 0.1
+  _border: 1.25
   _horizontalEasing: 10
   _verticalEasing: 4
 --- !u!114 &1221586267

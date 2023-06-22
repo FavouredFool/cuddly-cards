@@ -15,13 +15,10 @@ public class CardMover : MonoBehaviour
     [SerializeField]
     Vector2 _playSpaceTopRight = new Vector2(2.875f, 2.5f);
 
-    [SerializeField]
-    Vector2 _playSpaceInventory = new Vector2(4.25f, -0.5f);
-
     [SerializeField, Range(0, 2f)]
     float _childrenDistance = 1.125f;
 
-    [SerializeField, Range(0, 2f)]
+    [SerializeField]
     float _childrenStartOffset = 1;
 
 
@@ -35,6 +32,11 @@ public class CardMover : MonoBehaviour
     [SerializeField, Range(0f, 210)]
     float _waitTime = 1f;
 
+    [Header("Inventory")]
+    [SerializeField]
+    float _border = 1f;
+
+    [Header("Easing")]
     [SerializeField]
     Ease _horizontalEasing;
 
@@ -91,6 +93,11 @@ public class CardMover : MonoBehaviour
 
         foreach (CardNode childNode in _cardInventory.GetInventoryNode().Children)
         {
+            if (childNode.IsTopLevel)
+            {
+                return;
+            }
+
             size += childNode.SetPositionsRecursive(size);
         }
     }
@@ -127,6 +134,24 @@ public class CardMover : MonoBehaviour
     {
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
+
+        int cardNr = inventoryNode[0].Children.Count+1;
+        inventoryNode[0].Body.SetHeight(cardNr);
+
+        for (int i = inventoryNode[0].Children.Count-1; i >= 0; i--)
+        {
+            cardNr -= 1;
+            inventoryNode[0][i].Body.SetHeight(cardNr);
+        }
+
+        cardNr = inventoryNode[1].Children.Count + 1;
+        inventoryNode[1].Body.SetHeight(cardNr);
+
+        for (int i = inventoryNode[1].Children.Count - 1; i >= 0; i--)
+        {
+            cardNr -= 1;
+            inventoryNode[1][i].Body.SetHeight(cardNr);
+        }
     }
 
     public void MoveCardsForLayoutStatic(CardNode activeNode, CardNode rootNode, bool isStartLayout)
@@ -140,7 +165,7 @@ public class CardMover : MonoBehaviour
             MoveCardsForGeneralLayoutStatic(activeNode, rootNode);
         }
 
-        MoveCardsForInventoryStatic(_cardInventory.GetInventoryNode(), false);
+        MoveCardsForInventoryStatic(_cardInventory.GetInventoryNode(), true);
     }
 
     public void MoveCardsForStartLayoutStatic(CardNode rootNode)
@@ -170,6 +195,64 @@ public class CardMover : MonoBehaviour
         {
             _cardManager.AddToTopLevelMainPile(pressedNode.Children[i]);
             MoveCard(pressedNode.Children[i], new Vector2(i * _childrenDistance - _childrenStartOffset, _playSpaceBottomLeft.y));
+        }
+    }
+
+    public void MoveCardsForInventoryStatic(CardNode inventoryNode, bool inventoryIsOpen)
+    {
+        // Set all cardnodes toplevel
+        inventoryNode[0].IsTopLevel = true;
+        foreach (CardNode node in inventoryNode[0].Children)
+        {
+            node.IsTopLevel = true;
+        }
+        inventoryNode[1].IsTopLevel = true;
+        foreach (CardNode node in inventoryNode[1].Children)
+        {
+            node.IsTopLevel = true;
+        }
+
+
+        if (inventoryIsOpen)
+        {
+            float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
+            float fannedCardSpace = (totalSpace - 3 * _border) * 0.5f;
+
+            float dialogueOffset = _playSpaceBottomLeft.x + 2 * _border + fannedCardSpace;
+            FanCardsFromInventorySubcard(inventoryNode[0], dialogueOffset, fannedCardSpace);
+
+            float keyOffset = _playSpaceBottomLeft.x + _border;
+            FanCardsFromInventorySubcard(inventoryNode[1], keyOffset, fannedCardSpace);
+        }
+        else
+        {
+            // Set no cardnodes toplevel
+            inventoryNode[0].IsTopLevel = false;
+            foreach (CardNode node in inventoryNode[0].Children)
+            {
+                node.IsTopLevel = false;
+            }
+            inventoryNode[1].IsTopLevel = false;
+            foreach (CardNode node in inventoryNode[1].Children)
+            {
+                node.IsTopLevel = false;
+            }
+        }
+
+        MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
+    }
+
+    public void FanCardsFromInventorySubcard(CardNode inventorySubcard, float startFanX, float fannedCardSpace)
+    {
+        int totalChildCards = inventorySubcard.Children.Count;
+
+        MoveCard(inventorySubcard, new Vector2(startFanX + fannedCardSpace, _playSpaceBottomLeft.y));
+
+        float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildCards);
+
+        for (int i = 0; i < totalChildCards; i++)
+        {
+            MoveCard(inventorySubcard[i], new Vector2(startFanX + i * CardInfo.CARDWIDTH * cardPercentage, _playSpaceBottomLeft.y));
         }
     }
 
@@ -507,18 +590,6 @@ public class CardMover : MonoBehaviour
             DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
                 .Append(TweenX(discardToBe, _playSpaceTopRight.x));
-        }
-    }
-
-    public void MoveCardsForInventoryStatic(CardNode inventoryNode, bool inventoryIsOpen)
-    {
-        if (inventoryIsOpen)
-        {
-
-        }
-        else
-        {
-            MoveCard(inventoryNode, _playSpaceInventory);
         }
     }
 

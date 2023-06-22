@@ -17,6 +17,7 @@ public class CardInventory : MonoBehaviour
     {
         _inventoryNode = new(new("Inventory", "lots of things in here", CardType.INVENTORY));
         _inventoryNode.Body = builder.BuildCardBody(_inventoryNode.Context);
+        _inventoryNode.IsTopLevel = true;
 
         CardNode dialogueParentNode = new(new("Dialogue", "I need to talk about this.", CardType.INVENTORY));
         dialogueParentNode.Body = builder.BuildCardBody(dialogueParentNode.Context);

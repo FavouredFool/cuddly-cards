@@ -44,24 +44,22 @@ public class CardManager : MonoBehaviour
         _cardInventory.InitializeInventory(_cardBuilder);
 
         List<CardNode> tests = new();
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 5; i++)
         {
             tests.Add(new CardNode(new CardContext("Dagger", "sharp like... a dagger i guess", CardInfo.CardType.KEY)));
             tests.Add(new CardNode(new CardContext("A revelation", "you just had a dangerous thought", CardInfo.CardType.KEY)));
         }
 
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 2; i++)
         {
             tests.Add(new CardNode(new CardContext("The affair", "Not a nice topic to talk about. Don't expect a happy welcome.", CardInfo.CardType.DIALOGUE)));
             tests.Add(new CardNode(new CardContext("Bad friends", "The worst.", CardInfo.CardType.DIALOGUE)));
         }
 
-        // make bodies
         foreach (CardNode node in tests)
         {
             node.Body = _cardBuilder.BuildCardBody(node.Context);
         }
-        // werden von Inventory noch nicht bewegt -> muss im Layout angegangen werden.
 
         for (int i = 0; i < tests.Count; i++)
         {
