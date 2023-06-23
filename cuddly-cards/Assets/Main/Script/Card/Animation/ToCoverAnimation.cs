@@ -2,11 +2,19 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using System;
 using static CardInfo;
 
 public class ToCoverAnimation : CardAnimation
 {
-    public ToCoverAnimation(CardManager cardManager, CardMover cardMover) : base(cardManager, cardMover){}
+    public ToCoverAnimation(
+
+        CardManager cardManager, CardMover cardMover,
+        float waitTime, float horizontalWaitTime,float verticalWaitTime,
+        Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
+        Func<CardNode, float, Tween> _tweenXFuncFunc, Func<CardNode, int, Tween> _tweenYFuncFunc, Func<CardNode, float, Tween> _tweenZFuncFunc
+        
+        ) : base(cardManager, cardMover, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, _tweenXFuncFunc, _tweenYFuncFunc, _tweenZFuncFunc){}
 
     public async override Task AnimateCards(CardNode activeNode, CardNode previousMainNode, CardNode rootNode)
     {
@@ -20,19 +28,19 @@ public class ToCoverAnimation : CardAnimation
             _cardManager.AddToTopLevelMainPile(child);
 
             DOTween.Sequence()
-                .Append(_cardMover.TweenY(child, child.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
-                .Append(_cardMover.TweenX(child, _cardMover.GetPlaySpaceBottomLeft().x))
-                .AppendInterval(2 * _cardMover.GetWaitTime() + _cardMover.GetHorizontalTime())
-                .Append(_cardMover.TweenX(child, _cardMover.GetPlaySpaceBottomLeft().x + (_cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x) * 0.5f));
+                .Append(_tweenYFunc(child, child.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
+                .Append(_tweenXFunc(child, _playSpaceBottomLeft.x))
+                .AppendInterval(2 * _waitTime + _horizontalTime)
+                .Append(_tweenXFunc(child, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
         }
 
         // -------------- MAIN ---------------------
 
         _cardManager.AddToTopLevelMainPile(previousMainNode);
         DOTween.Sequence()
-            .Append(_cardMover.TweenY(previousMainNode, previousMainNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
-            .AppendInterval(2 * _cardMover.GetHorizontalTime() + 2 * _cardMover.GetWaitTime())
-            .Append(_cardMover.TweenX(previousMainNode, _cardMover.GetPlaySpaceBottomLeft().x + (_cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x) * 0.5f));
+            .Append(_tweenYFunc(previousMainNode, previousMainNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
+            .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
+            .Append(_tweenXFunc(previousMainNode, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
 
         // -------------- BACK ---------------------
 
@@ -52,11 +60,11 @@ public class ToCoverAnimation : CardAnimation
         foreach (CardNode node in animatingNodesBack)
         {
             DOTween.Sequence()
-                .Append(_cardMover.TweenY(node, node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
-                .AppendInterval(_cardMover.GetHorizontalTime() + _cardMover.GetWaitTime())
-                .Append(_cardMover.TweenZ(node, _cardMover.GetPlaySpaceBottomLeft().y))
-                .AppendInterval(_cardMover.GetWaitTime())
-                .Append(_cardMover.TweenX(node, _cardMover.GetPlaySpaceBottomLeft().x + (_cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x) * 0.5f));
+                .Append(_tweenYFunc(node, node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
+                .AppendInterval(_horizontalTime + _waitTime)
+                .Append(_tweenZFunc(node, _playSpaceBottomLeft.y))
+                .AppendInterval(_waitTime)
+                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
         }
 
 
@@ -76,17 +84,17 @@ public class ToCoverAnimation : CardAnimation
         foreach (CardNode node in animatingNodesRoot)
         {
             DOTween.Sequence()
-                .Append(_cardMover.TweenY(node, node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
-                .Append(_cardMover.TweenX(node, _cardMover.GetPlaySpaceBottomLeft().x))
-                .AppendInterval(_cardMover.GetWaitTime())
-                .Append(_cardMover.TweenZ(node, _cardMover.GetPlaySpaceBottomLeft().y))
-                .AppendInterval(_cardMover.GetWaitTime())
-                .Append(_cardMover.TweenX(node, _cardMover.GetPlaySpaceBottomLeft().x + (_cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x) * 0.5f));
+                .Append(_tweenYFunc(node, node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
+                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x))
+                .AppendInterval(_waitTime)
+                .Append(_tweenZFunc(node, _playSpaceBottomLeft.y))
+                .AppendInterval(_waitTime)
+                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
         }
 
         // THE EMPTY ONCOMPLETE NEEDS TO BE THERE, OTHERWISE IT WILL NOT WORK!
         await DOTween.Sequence()
-            .AppendInterval(_cardMover.GetVerticalTime() * 2 + _cardMover.GetHorizontalTime() * 3 + 2 * _cardMover.GetWaitTime() + 0.01f)
+            .AppendInterval(_verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime + 0.01f)
             .OnComplete(() => { })
             .AsyncWaitForCompletion();
     }
