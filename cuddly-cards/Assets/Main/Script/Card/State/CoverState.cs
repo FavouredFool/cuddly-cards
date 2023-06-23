@@ -1,6 +1,7 @@
 
 using System.Threading.Tasks;
 using UnityEngine;
+using static CardInfo;
 
 public class CoverState : LayoutState
 {
@@ -13,7 +14,7 @@ public class CoverState : LayoutState
 
     public void StartState()
     {
-        _manager.GetCardManager().FinishLayout(true);
+        _manager.GetCardManager().FinishLayout(CardTransition.TOCOVER);
     }
 
     public async void HandleClick(CardNode clickedNode)

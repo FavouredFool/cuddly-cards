@@ -10,13 +10,36 @@ public class ChildAnimation : CardAnimation
 {
     public ChildAnimation(
 
-        CardManager cardManager, CardMover cardMover,
+        CardManager cardManager, CardMover cardMover, CardInventory cardInventory,
         float waitTime, float horizontalWaitTime, float verticalWaitTime,
         Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
         Func<CardNode, float, Tween> __tweenXFuncFuncFunc, Func<CardNode, int, Tween> __tweenYFuncFuncFunc, Func<CardNode, float, Tween> __tweenZFuncFuncFunc
 
-        ) : base(cardManager, cardMover, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
+        ) : base(cardManager, cardMover, cardInventory, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
+    public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
+    {
+        _cardManager.AddToTopLevelMainPile(pressedNode);
+        _cardMover.MoveCard(pressedNode, _playSpaceBottomLeft);
+
+        if (pressedNode != rootNode)
+        {
+            _cardManager.AddToTopLevelMainPile(pressedNode.Parent);
+            _cardMover.MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
+
+            if (pressedNode.Parent != rootNode)
+            {
+                _cardManager.AddToTopLevelMainPile(rootNode);
+                _cardMover.MoveCard(rootNode, _playSpaceTopRight);
+            }
+        }
+
+        for (int i = 0; i < pressedNode.Children.Count; i++)
+        {
+            _cardManager.AddToTopLevelMainPile(pressedNode.Children[i]);
+            _cardMover.MoveCard(pressedNode.Children[i], new Vector2(i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset(), _playSpaceBottomLeft.y));
+        }
+    }
 
     public override async Task AnimateCards(CardNode mainToBe, CardNode backToBe, CardNode rootNode)
     {

@@ -9,12 +9,36 @@ public class FromCoverAnimation : CardAnimation
 {
     public FromCoverAnimation(
 
-        CardManager cardManager, CardMover cardMover,
+        CardManager cardManager, CardMover cardMover, CardInventory cardInventory,
         float waitTime, float horizontalWaitTime, float verticalWaitTime,
         Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
         Func<CardNode, float, Tween> __tweenXFunc, Func<CardNode, int, Tween> __tweenYFunc, Func<CardNode, float, Tween> __tweenZFunc
 
-        ) : base(cardManager, cardMover, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFunc, __tweenYFunc, __tweenZFunc) { }
+        ) : base(cardManager, cardMover, cardInventory, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFunc, __tweenYFunc, __tweenZFunc) { }
+
+    public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
+    {
+        _cardManager.AddToTopLevelMainPile(pressedNode);
+        _cardMover.MoveCard(pressedNode, _playSpaceBottomLeft);
+
+        if (pressedNode != rootNode)
+        {
+            _cardManager.AddToTopLevelMainPile(pressedNode.Parent);
+            _cardMover.MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
+
+            if (pressedNode.Parent != rootNode)
+            {
+                _cardManager.AddToTopLevelMainPile(rootNode);
+                _cardMover.MoveCard(rootNode, _playSpaceTopRight);
+            }
+        }
+
+        for (int i = 0; i < pressedNode.Children.Count; i++)
+        {
+            _cardManager.AddToTopLevelMainPile(pressedNode.Children[i]);
+            _cardMover.MoveCard(pressedNode.Children[i], new Vector2(i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset(), _playSpaceBottomLeft.y));
+        }
+    }
 
     public override async Task AnimateCards(CardNode mainNode, CardNode previousActiveNode, CardNode rootNode)
     {

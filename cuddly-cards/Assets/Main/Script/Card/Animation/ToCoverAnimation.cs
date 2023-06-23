@@ -9,12 +9,21 @@ public class ToCoverAnimation : CardAnimation
 {
     public ToCoverAnimation(
 
-        CardManager cardManager, CardMover cardMover,
+        CardManager cardManager, CardMover cardMover, CardInventory cardInventory,
         float waitTime, float horizontalWaitTime,float verticalWaitTime,
         Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
         Func<CardNode, float, Tween> _tweenXFuncFunc, Func<CardNode, int, Tween> _tweenYFuncFunc, Func<CardNode, float, Tween> _tweenZFuncFunc
         
-        ) : base(cardManager, cardMover, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, _tweenXFuncFunc, _tweenYFuncFunc, _tweenZFuncFunc){}
+        ) : base(cardManager, cardMover, cardInventory, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, _tweenXFuncFunc, _tweenYFuncFunc, _tweenZFuncFunc){}
+
+    public override void MoveCardsStatic(CardNode activeNode, CardNode rootNode)
+    {
+        _cardManager.AddToTopLevelMainPile(rootNode);
+        _cardMover.MoveCard(rootNode, new Vector2(_playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _playSpaceBottomLeft.y));
+
+        // Move inventory once so its out of the way (temporary solution)
+        _cardMover.MoveCard(_cardInventory.GetInventoryNode(), new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
+    }
 
     public async override Task AnimateCards(CardNode activeNode, CardNode previousMainNode, CardNode rootNode)
     {

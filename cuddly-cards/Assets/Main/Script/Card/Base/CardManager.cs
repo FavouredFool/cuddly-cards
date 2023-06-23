@@ -24,9 +24,6 @@ public class CardManager : MonoBehaviour
     bool _isCloseUp = false;
     public bool IsCloseUpFlag { get { return _isCloseUp; } set { _isCloseUp = value; } }
 
-    bool _isStartLayout = false;
-    public bool IsStartLayoutFlag { get { return _isStartLayout; } set { _isStartLayout = value; } }
-
     public void Awake()
     {
         _topLevelNodesMainPile = new();
@@ -118,18 +115,16 @@ public class CardManager : MonoBehaviour
 
         ClearTopLevelNodesMainPile();
 
-        await _cardMover.AnimateCards(_activeNode, previousActiveNode, _rootNode, cardTransition);
+        await _cardMover.AnimateCardsForLayout(_activeNode, previousActiveNode, _rootNode, cardTransition);
     }
 
-    public void FinishLayout(bool isStartLayout)
+    public void FinishLayout(CardTransition transition)
     {
-        IsStartLayoutFlag = isStartLayout;
-
         ClearTopLevelNodesMainPile();
 
         _cardMover.ResetPosition(GetRootNode());
 
-        _cardMover.MoveCardsForLayoutStatic(GetActiveNode(), GetRootNode(), isStartLayout); ;
+        _cardMover.MoveCardsForLayoutStatic(GetActiveNode(), GetRootNode(), transition); ;
 
         _cardMover.SetHeights();
 

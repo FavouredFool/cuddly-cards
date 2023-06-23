@@ -60,10 +60,10 @@ public class CardMover : MonoBehaviour
         _cardInventory = GetComponent<CardInventory>();
         _stateManager = GetComponent<StateManager>();
         _cardAnimations = new(){
-            new ChildAnimation(_cardManager, this, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new BackAnimation(_cardManager, this, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new ToCoverAnimation(_cardManager, this, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new FromCoverAnimation(_cardManager, this, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new ChildAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new BackAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new ToCoverAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new FromCoverAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
         };
     }
 
@@ -102,11 +102,16 @@ public class CardMover : MonoBehaviour
         return null;
     }
 
-    public async Task AnimateCards(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode, CardTransition transition)
+    public async Task AnimateCardsForLayout(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode, CardTransition transition)
     {
         _isAnimating = true;
         await CardTransitionToAnimation(transition).AnimateCards(activeNode, previousActiveNode, rootNode);
         _isAnimating = false;
+    }
+
+    public void MoveCardsForLayoutStatic(CardNode activeNode, CardNode rootNode, CardTransition transition)
+    {
+        CardTransitionToAnimation(transition).MoveCardsStatic(activeNode, rootNode);
     }
 
     public void SetMainCardsRelativeToParent()
@@ -188,162 +193,7 @@ public class CardMover : MonoBehaviour
             cardNr -= 1;
             inventoryNode[1][i].Body.SetHeight(cardNr);
         }
-    }
-
-    public void MoveCardsForLayoutStatic(CardNode activeNode, CardNode rootNode, bool isStartLayout)
-    {
-        if (_cardInventory.InventoryIsOpenFlag != _cardInventory.InventoryShouldOpenFlag)
-        {
-            if (_cardInventory.InventoryShouldOpenFlag)
-            {
-                // close cards because inventory opens
-                CloseCards(activeNode, rootNode);
-            }
-            else
-            {
-                // TODO THIS IS TERRIBLE AAAA
-                if (isStartLayout)
-                {
-                    MoveCardsForStartLayoutStatic(rootNode);
-                }
-                else
-                {
-                    MoveCardsForGeneralLayoutStatic(activeNode, rootNode);
-                }
-            }
-        }
-        else
-        {
-            if (isStartLayout)
-            {
-                MoveCardsForStartLayoutStatic(rootNode);
-            }
-            else
-            {
-                MoveCardsForGeneralLayoutStatic(activeNode, rootNode);
-            }
-        }
-
-        
-        // this always does its thing and espects the other cards to behave properly
-        MoveCardsForInventoryStatic(_cardInventory.GetInventoryNode(), _cardInventory.InventoryShouldOpenFlag);
-    }
-
-    public void MoveCardsForStartLayoutStatic(CardNode rootNode)
-    {
-        _cardManager.AddToTopLevelMainPile(rootNode);
-        MoveCard(rootNode, new Vector2(_playSpaceBottomLeft.x  + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _playSpaceBottomLeft.y));
-    }
-
-    public void MoveCardsForGeneralLayoutStatic(CardNode pressedNode, CardNode rootNode)
-    {
-        _cardManager.AddToTopLevelMainPile(pressedNode);
-        MoveCard(pressedNode, _playSpaceBottomLeft);
-
-        if (pressedNode != rootNode)
-        {
-            _cardManager.AddToTopLevelMainPile(pressedNode.Parent);
-            MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
-
-            if (pressedNode.Parent != rootNode)
-            {
-                _cardManager.AddToTopLevelMainPile(rootNode);
-                MoveCard(rootNode, _playSpaceTopRight);
-            }
-        }
-
-        for (int i = 0; i < pressedNode.Children.Count; i++)
-        {
-            _cardManager.AddToTopLevelMainPile(pressedNode.Children[i]);
-            MoveCard(pressedNode.Children[i], new Vector2(i * _childrenDistance - _childrenStartOffset, _playSpaceBottomLeft.y));
-        }
-    }
-
-    public void CloseCards(CardNode pressedNode, CardNode rootNode)
-    {
-        _cardManager.AddToTopLevelMainPile(pressedNode);
-        MoveCard(pressedNode, _playSpaceBottomLeft);
-
-        if (pressedNode != rootNode)
-        {
-            _cardManager.AddToTopLevelMainPile(pressedNode.Parent);
-            MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
-
-            if (pressedNode.Parent != rootNode)
-            {
-                _cardManager.AddToTopLevelMainPile(rootNode);
-                MoveCard(rootNode, _playSpaceTopRight);
-            }
-        }
-    }
-
-    public void MoveCardsForInventoryStatic(CardNode inventoryNode, bool inventoryIsOpen)
-    {
-        if (inventoryIsOpen)
-        {
-            // Set all cardnodes toplevel
-            inventoryNode[0].IsTopLevel = true;
-            foreach (CardNode node in inventoryNode[0].Children)
-            {
-                node.IsTopLevel = true;
-            }
-            inventoryNode[1].IsTopLevel = true;
-            foreach (CardNode node in inventoryNode[1].Children)
-            {
-                node.IsTopLevel = true;
-            }
-
-            float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
-            float fannedCardSpace = (totalSpace - 3 * _border) * 0.5f;
-
-            float dialogueOffset = _playSpaceBottomLeft.x + 2 * _border + fannedCardSpace;
-            FanCardsFromInventorySubcard(inventoryNode[0], dialogueOffset, fannedCardSpace);
-
-            float keyOffset = _playSpaceBottomLeft.x + _border;
-            FanCardsFromInventorySubcard(inventoryNode[1], keyOffset, fannedCardSpace);
-        }
-        else
-        {
-            // Set no cardnodes toplevel
-            inventoryNode[0].IsTopLevel = false;
-            foreach (CardNode node in inventoryNode[0].Children)
-            {
-                node.IsTopLevel = false;
-            }
-            inventoryNode[1].IsTopLevel = false;
-            foreach (CardNode node in inventoryNode[1].Children)
-            {
-                node.IsTopLevel = false;
-            }
-        }
-
-        MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
-    }
-
-    public void FanCardsFromInventorySubcard(CardNode inventorySubcard, float startFanX, float fannedCardSpace)
-    {
-        int totalChildCards = inventorySubcard.Children.Count;
-
-        MoveCard(inventorySubcard, new Vector2(startFanX + fannedCardSpace, _playSpaceBottomLeft.y));
-
-        float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildCards);
-
-        for (int i = 0; i < totalChildCards; i++)
-        {
-            MoveCard(inventorySubcard[i], new Vector2(startFanX + i * CardInfo.CARDWIDTH * cardPercentage, _playSpaceBottomLeft.y));
-        }
-    }
-
-    public void MoveCardsForToggleInventoryAnimated()
-    {
-        IsAnimatingFlag = true;
-        float timeTotal = _verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime;
-
-        // MAKE SURE THAT THE TIMER IS A BIT LONGER THAN THE MAXIMUM TWEENING TIME
-        Sequence timerSequence = DOTween.Sequence()
-            .AppendInterval(timeTotal + 0.01f)
-            .OnComplete(() => { IsAnimatingFlag = false; _cardManager.FinishLayout(false); });
-    }
+    }   
 
     public Vector2 GetPlaySpaceBottomLeft()
     {
@@ -403,5 +253,10 @@ public class CardMover : MonoBehaviour
     public Ease GetHorizontalEase()
     {
         return _horizontalEasing;
+    }
+
+    public float GetBorder()
+    {
+        return _border;
     }
 }

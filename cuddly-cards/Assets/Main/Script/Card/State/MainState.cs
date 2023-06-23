@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using static CardInfo;
 
 public class MainState : LayoutState
 {
@@ -12,7 +13,7 @@ public class MainState : LayoutState
 
     public void StartState()
     {
-        _manager.GetCardManager().FinishLayout(false);
+        _manager.GetCardManager().FinishLayout(CardTransition.CHILD);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -25,8 +26,8 @@ public class MainState : LayoutState
         CardNode rootNode = _manager.GetCardManager().GetRootNode();
         CardNode previousActiveNode = _manager.GetCardManager().GetActiveNode();
 
-        CardInfo.CardTransition cardTransition = CardInfo.CardTransition.CHILD;
-        LayoutState nextState = null;
+        CardInfo.CardTransition cardTransition;
+        LayoutState nextState;
 
         if (clickedNode == previousActiveNode)
         {
