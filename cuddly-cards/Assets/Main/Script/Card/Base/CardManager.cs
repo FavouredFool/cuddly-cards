@@ -118,7 +118,10 @@ public class CardManager : MonoBehaviour
 
         ClearTopLevelNodesMainPile();
 
+        await _cardMover.AnimateCards(_activeNode, previousActiveNode, _rootNode, cardTransition);
+  
         await _cardMover.MoveCardsForLayoutAnimated(_activeNode, previousActiveNode, _rootNode, false);
+        await Task.Yield();
     }
 
     public void FinishLayout(bool isStartLayout)

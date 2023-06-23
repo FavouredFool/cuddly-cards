@@ -52,11 +52,14 @@ public class CardMover : MonoBehaviour
     CardInventory _cardInventory;
     StateManager _stateManager;
 
+    List<CardAnimation> _cardAnimations;
+
     public void Awake()
     {
         _cardManager = GetComponent<CardManager>();
         _cardInventory = GetComponent<CardInventory>();
         _stateManager = GetComponent<StateManager>();
+        _cardAnimations = new(){ new ChildAnimation(_cardManager, this), new BackAnimation(_cardManager, this), new ToCoverAnimation(_cardManager, this), new FromCoverAnimation(_cardManager, this) };
     }
 
     public void LateUpdate()
@@ -74,6 +77,31 @@ public class CardMover : MonoBehaviour
     {
         SetInventoryCardsRelativeToParent();
         SetMainCardsRelativeToParent();
+    }
+
+    public CardAnimation CardTransitionToAnimation(CardTransition transition)
+    {
+        switch (transition)
+        {
+            case CardTransition.CHILD:
+                return _cardAnimations[0];
+            case CardTransition.BACK:
+                return _cardAnimations[1];
+            case CardTransition.TOCOVER:
+                return _cardAnimations[2];
+            case CardTransition.FROMCOVER:
+                return _cardAnimations[3];
+        }
+
+        Debug.Log("ANIMATION NOT SET YET");
+        return null;
+    }
+
+    public async Task AnimateCards(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode, CardTransition transition)
+    {
+        _isAnimating = true;
+        await CardTransitionToAnimation(transition).AnimateCards(activeNode, previousActiveNode, rootNode);
+        _isAnimating = false;
     }
 
     public void SetMainCardsRelativeToParent()
@@ -319,8 +347,8 @@ public class CardMover : MonoBehaviour
 
         if (activateStartLayout)
         {
-            StartLayoutEnteredAnimated(rootNode, previousMain);
-            timeTotal = _verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime;
+            //StartLayoutEnteredAnimated(rootNode, previousMain);
+            //timeTotal = _verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime;
         }
         else
         {
@@ -661,18 +689,43 @@ public class CardMover : MonoBehaviour
         return _playSpaceTopRight;
     }
 
-    private Tween TweenX(CardNode main, float posX)
+    public Tween TweenX(CardNode main, float posX)
     {
         return main.Body.transform.DOMoveX(posX, _horizontalTime).SetEase(_horizontalEasing);
     }
 
-    private Tween TweenY(CardNode main, int height)
+    public Tween TweenY(CardNode main, int height)
     {
         return main.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
     }
 
-    private Tween TweenZ(CardNode main, float posZ)
+    public Tween TweenZ(CardNode main, float posZ)
     {
         return main.Body.transform.DOMoveZ(posZ, _horizontalTime).SetEase(_horizontalEasing);
+    }
+
+    public float GetWaitTime()
+    {
+        return _waitTime;
+    }
+
+    public float GetVerticalTime()
+    {
+        return _verticalTime;
+    }
+
+    public float GetHorizontalTime()
+    {
+        return _horizontalTime;
+    }
+
+    public Ease GetVerticalEase()
+    {
+        return _verticalEasing;
+    }
+
+    public Ease GetHorizontalEase()
+    {
+        return _horizontalEasing;
     }
 }

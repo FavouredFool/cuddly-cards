@@ -33,12 +33,6 @@ public class MainState : LayoutState
             // closeup without layoutchange
             return;
         }
-        else if (clickedNode == rootNode)
-        {
-            // pressed root
-            cardTransition = CardInfo.CardTransition.TOCOVER;
-            nextState = new CoverState(_manager);
-        }
         else if (previousActiveNode.Children.Contains(clickedNode))
         {
             // pressed child
@@ -50,6 +44,12 @@ public class MainState : LayoutState
             // pressed back
             cardTransition = CardInfo.CardTransition.BACK;
             nextState = new MainState(_manager);
+        }
+        else if (clickedNode == rootNode)
+        {
+            // pressed root
+            cardTransition = CardInfo.CardTransition.TOCOVER;
+            nextState = new CoverState(_manager);
         }
         else
         {
