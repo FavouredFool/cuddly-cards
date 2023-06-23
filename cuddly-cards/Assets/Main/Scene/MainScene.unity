@@ -1232,6 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bfdd64efc1cd0e4ab6caaea9c5d7d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _closeUpManager: {fileID: 2054258260}
 --- !u!43 &1277535843
 Mesh:
   m_ObjectHideFlags: 0

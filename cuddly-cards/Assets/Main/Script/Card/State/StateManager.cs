@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class StateManager : StateMachine
 {
+    [SerializeField]
+    CloseUpManager _closeUpManager;
+
     CardManager _cardManager;
     CardMover _cardMover;
     CardInventory _cardInventory;
     CardInput _cardInput;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+
         _cardManager = GetComponent<CardManager>();
         _cardMover = GetComponent<CardMover>();
         _cardInventory = GetComponent<CardInventory>();
@@ -24,11 +29,16 @@ public class StateManager : StateMachine
 
     public void HandleClick(CardNode clickedNode)
     {
-        _state.HandleClick(clickedNode);
+        _states.Peek().HandleClick(clickedNode);
     }
 
     public CardManager GetCardManager()
     {
         return _cardManager;
+    }
+
+    public CloseUpManager GetCloseUpManager()
+    {
+        return _closeUpManager;
     }
 }

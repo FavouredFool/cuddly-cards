@@ -18,7 +18,7 @@ public class MainState : LayoutState
 
     public async void HandleClick(CardNode clickedNode)
     {
-        if (clickedNode.Context.GetCardType() == CardInfo.CardType.INVENTORY)
+        if (clickedNode == null || clickedNode.Context.GetCardType() == CardInfo.CardType.INVENTORY)
         {
             return;
         }

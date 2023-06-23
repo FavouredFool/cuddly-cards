@@ -27,11 +27,17 @@ public class CardInput : MonoBehaviour
                 _cardManager.ExitCloseUp();
             }
 
-            EvaluateClickedCard();
+            EvaluateClick();
         }
     }
 
-    public void EvaluateClickedCard()
+    public void EvaluateClick()
+    {
+        // note that the card can be null to express that a click has happened without a target card
+        _cardManager.NodeClicked(EvaluateClickedCard());
+    }
+
+    public CardNode EvaluateClickedCard()
     {
         Ray shotRay = _camera.ScreenPointToRay(Input.mousePosition);
 
@@ -39,20 +45,18 @@ public class CardInput : MonoBehaviour
         {
             if (hit.collider == null)
             {
-                return;
+                return null;
             }
 
             if (!_colliders.Contains(hit.collider))
             {
-                return;
+                return null;
             }
 
-
-
-            CardNode hitNode = _cardManager.GetClickableNodes()[_colliders.IndexOf(hit.collider)];
-
-            _cardManager.NodeClicked(hitNode);
+            return _cardManager.GetClickableNodes()[_colliders.IndexOf(hit.collider)];
         }
+
+        return null;
     }
 
     public void SetColliders()

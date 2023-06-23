@@ -1,17 +1,36 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class StateMachine : MonoBehaviour
 {
-    protected LayoutState _state;
+    protected Stack<LayoutState> _states;
+
+    public void Awake()
+    {
+        _states = new();
+    }
 
     public void SetState(LayoutState state)
     {
-        _state = state;
-        _state.StartState();
+        _states.Clear();
+        _states.Push(state);
+        state.StartState();
     }
 
-    public LayoutState GetState()
+    public void PushState(LayoutState state)
     {
-        return _state;
+        _states.Push(state);
+        state.StartState();
+    }
+
+    public void PopState()
+    {
+        _states.Pop();
+        _states.Peek().StartState();
+    }
+
+    public Stack<LayoutState> GetStates()
+    {
+        return _states;
     }
 }

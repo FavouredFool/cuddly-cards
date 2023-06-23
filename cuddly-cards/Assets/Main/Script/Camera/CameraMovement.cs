@@ -21,4 +21,9 @@ public class CameraMovement : MonoBehaviour
     {
         transform.DORotate(new Vector3(closeUpRotation, 0, 0), transitionTime, RotateMode.Fast).SetEase(easing);
     }
+
+    public float GetCardTableRotation()
+    {
+        return _cardTableRotation;
+    }
 }

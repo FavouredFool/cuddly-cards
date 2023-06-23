@@ -19,10 +19,15 @@ public class CoverState : LayoutState
 
     public async void HandleClick(CardNode clickedNode)
     {
-        if (clickedNode.Context.GetCardType() == CardInfo.CardType.INVENTORY)
+        if (clickedNode == null || clickedNode.Context.GetCardType() == CardInfo.CardType.INVENTORY)
         {
             return;
         }
+
+        // closeUp
+        _manager.PushState(new CloseUpState(_manager, clickedNode));
+        // Closeup animation would be initialized here
+        return;
 
         await _manager.GetCardManager().PrepareLayout(clickedNode, _manager.GetCardManager().GetActiveNode(), CardInfo.CardTransition.FROMCOVER);
 

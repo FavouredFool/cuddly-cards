@@ -95,4 +95,29 @@ public class CloseUpManager : MonoBehaviour
 
         _cardManager.CloseUpFinished(_initialCloseUp);
     }
+
+    public CameraMovement GetCameraMovement()
+    {
+        return _cameraMovement;
+    }
+
+    public float GetCloseUpRotation()
+    {
+        return _closeUpRotation;
+    }
+
+    public Transform GetCloseUpTransform()
+    {
+        return _cardCloseUpTransform;
+    }
+
+    public GameObject GetCloseUpCanvas()
+    {
+        return _closeUpCanvas;
+    }
+
+    public TMP_Text GetDescriptionText()
+    {
+        return _descriptionText;
+    }
 }

@@ -8,6 +8,9 @@ public class InventoryState : LayoutState
 
     public void HandleClick(CardNode clickedNode)
     {
-
+        if (clickedNode == null)
+        {
+            return;
+        }
     }
 }
