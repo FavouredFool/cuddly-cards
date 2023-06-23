@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
+using System.Threading.Tasks;
 
 public class CardManager : MonoBehaviour
 {
@@ -12,10 +13,11 @@ public class CardManager : MonoBehaviour
     CardInput _cardInput;
     CardReader _cardReader;
     CardInventory _cardInventory;
+
+    StateManager _stateManager;
     
     CardNode _rootNode;
     CardNode _activeNode;
-    CardNode _oldActiveNode;
 
     List<CardNode> _topLevelNodesMainPile;
 
@@ -34,11 +36,12 @@ public class CardManager : MonoBehaviour
         _cardInput = GetComponent<CardInput>();
         _cardReader = GetComponent<CardReader>();
         _cardInventory = GetComponent<CardInventory>();
+        _stateManager = GetComponent<StateManager>();
     }
 
     public void Start()
     {
-        _activeNode = _oldActiveNode = _rootNode = _cardReader.ReadCards();
+        _activeNode = _rootNode = _cardReader.ReadCards();
 
         _cardBuilder.BuildAllCards(_rootNode);
 
@@ -67,68 +70,12 @@ public class CardManager : MonoBehaviour
             _cardInventory.AddNodeToInventory(tests[i]);
         }
 
-        FinishLayout(true);
+        _stateManager.StartStates();
     }
 
     public void NodeClicked(CardNode clickedNode)
     {
-        switch (clickedNode.Context.GetCardType())
-        {
-            case CardType.INVENTORY:
-                InventoryNodeAction();
-                return;
-            case CardType.KEY:
-            case CardType.DIALOGUE:
-                return;
-            case CardType.LOCK:
-                return;
-            default:
-                DefaultNodeAction(clickedNode);
-                return;
-        }
-        
-    }
-
-    void DefaultNodeAction(CardNode clickedNode)
-    {
-        if (clickedNode == _activeNode && !IsStartLayoutFlag)
-        {
-            EnterCloseUp();
-        }
-        else
-        {
-            SetNodeActive(clickedNode);
-        }
-    }
-
-    void InventoryNodeAction()
-    {
-        if (_cardInventory.InventoryIsOpenFlag)
-        {
-            _cardInventory.InventoryShouldOpenFlag = false;
-
-        }
-        else
-        {
-            _cardInventory.InventoryShouldOpenFlag = true;
-        }
-
-        PrepareLayout();
-    }
-
-    public void SetNodeActive(CardNode node)
-    {
-        _oldActiveNode = _activeNode;
-        _activeNode = node;
-
-        if (!_activeNode.Context.GetHasBeenSeen())
-        {
-            EnterCloseUp();
-        }
-        else
-        {
-            PrepareLayout();
-        }
+        _stateManager.HandleClick(clickedNode);        
     }
 
     public void EnterCloseUp()
@@ -154,7 +101,7 @@ public class CardManager : MonoBehaviour
     {
         if (initialCloseUp)
         {
-            PrepareLayout();
+            //PrepareLayout();
         }
         else
         {
@@ -162,33 +109,17 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void PrepareLayout()
+    public async Task PrepareLayout(CardNode clickedNode, CardNode previousActiveNode, CardTransition cardTransition)
     {
+        // TODO Sets the active node the moment the animation starts. Is that the best way to go about it, or should the active node be set when the animation has finished?
+        _activeNode = clickedNode;
+
         _cardInput.RemoveColliders();
 
         ClearTopLevelNodesMainPile();
 
-        // check if Inventory has changed
-        if (_cardInventory.InventoryShouldOpenFlag != _cardInventory.InventoryIsOpenFlag)
-        {
-            _cardMover.MoveCardsForToggleInventoryAnimated();
-            return;
-        }
-
-        bool activateStartLayout = false;
-
-        if (_activeNode == _rootNode)
-        {
-            if (_rootNode != _oldActiveNode && _rootNode != _oldActiveNode.Parent)
-            {
-                activateStartLayout = true;
-            }
-        }
-
-        _cardMover.MoveCardsForLayoutAnimated(_activeNode, _oldActiveNode, _rootNode, activateStartLayout);
+        await _cardMover.MoveCardsForLayoutAnimated(_activeNode, previousActiveNode, _rootNode, false);
     }
-
-
 
     public void FinishLayout(bool isStartLayout)
     {
@@ -196,9 +127,9 @@ public class CardManager : MonoBehaviour
 
         ClearTopLevelNodesMainPile();
 
-        _cardMover.ResetPosition(_rootNode);
+        _cardMover.ResetPosition(GetRootNode());
 
-        _cardMover.MoveCardsForLayoutStatic(_activeNode, _rootNode, isStartLayout);
+        _cardMover.MoveCardsForLayoutStatic(GetActiveNode(), GetRootNode(), isStartLayout); ;
 
         _cardMover.SetHeights();
 
@@ -217,7 +148,7 @@ public class CardManager : MonoBehaviour
         return clickables;
     }
 
-    void ClearTopLevelNodesMainPile()
+    public void ClearTopLevelNodesMainPile()
     {
         _topLevelNodesMainPile.Clear();
 
@@ -248,10 +179,5 @@ public class CardManager : MonoBehaviour
     public CardNode GetActiveNode()
     {
         return _activeNode;
-    }
-
-    public CardNode GetOldActiveNode()
-    {
-        return _oldActiveNode;
     }
 }

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
@@ -49,11 +50,13 @@ public class CardMover : MonoBehaviour
 
     CardManager _cardManager;
     CardInventory _cardInventory;
+    StateManager _stateManager;
 
     public void Awake()
     {
         _cardManager = GetComponent<CardManager>();
         _cardInventory = GetComponent<CardInventory>();
+        _stateManager = GetComponent<StateManager>();
     }
 
     public void LateUpdate()
@@ -309,7 +312,7 @@ public class CardMover : MonoBehaviour
             .OnComplete(() => { IsAnimatingFlag = false; _cardManager.FinishLayout(false); });
     }
 
-    public void MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode, bool activateStartLayout)
+    public async Task MoveCardsForLayoutAnimated(CardNode mainToBe, CardNode previousMain, CardNode rootNode, bool activateStartLayout)
     {
         float timeTotal = 0;
         IsAnimatingFlag = true;
@@ -339,9 +342,11 @@ public class CardMover : MonoBehaviour
         }
 
         // MAKE SURE THAT THE TIMER IS A BIT LONGER THAN THE MAXIMUM TWEENING TIME
-        Sequence timerSequence = DOTween.Sequence()
+        
+        await DOTween.Sequence()
             .AppendInterval(timeTotal + 0.01f)
-            .OnComplete(() => { IsAnimatingFlag = false; _cardManager.FinishLayout(activateStartLayout); });
+            .OnComplete(() => { IsAnimatingFlag = false; })
+            .AsyncWaitForCompletion();
     }
 
     public void StartLayoutEnteredAnimated(CardNode rootNode, CardNode mainNode)

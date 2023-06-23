@@ -6,6 +6,8 @@ public static class CardInfo
 
     public enum CardTraversal { BODY, CONTEXT }
 
+    public enum CardTransition { CHILD, BACK, TOCOVER, FROMCOVER }
+
     public static readonly float CARDWIDTH = 1;
 
     public static readonly float CARDHEIGHT = 0.005f;
