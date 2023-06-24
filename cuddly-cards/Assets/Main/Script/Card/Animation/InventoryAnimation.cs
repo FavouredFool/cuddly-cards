@@ -6,9 +6,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class ToInventoryAnimation : CardAnimation
+public class InventoryAnimation : CardAnimation
 {
-    public ToInventoryAnimation(
+    public InventoryAnimation(
 
         CardManager cardManager, CardMover cardMover, CardInventory cardInventory,
         float waitTime, float horizontalWaitTime, float verticalWaitTime,
@@ -16,6 +16,7 @@ public class ToInventoryAnimation : CardAnimation
         Func<CardNode, float, Tween> __tweenXFuncFuncFunc, Func<CardNode, int, Tween> __tweenYFuncFuncFunc, Func<CardNode, float, Tween> __tweenZFuncFuncFunc
 
         ) : base(cardManager, cardMover, cardInventory, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
+
 
     public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
     {

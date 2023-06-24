@@ -105,13 +105,47 @@ public class CardMover : MonoBehaviour
     public async Task AnimateCardsForLayout(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode, CardTransition transition)
     {
         _isAnimating = true;
+        MoveInventoryPileAnimated(transition);
         await CardTransitionToAnimation(transition).AnimateCards(activeNode, previousActiveNode, rootNode);
         _isAnimating = false;
     }
 
     public void MoveCardsForLayoutStatic(CardNode activeNode, CardNode rootNode, CardTransition transition)
     {
+        MoveInventoryPileStatic(transition);
         CardTransitionToAnimation(transition).MoveCardsStatic(activeNode, rootNode);
+    }
+
+    public void MoveInventoryPileAnimated(CardTransition transition)
+    {
+
+        if (transition == CardTransition.TOCOVER)
+        {
+            float xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
+            DOTween.Sequence()
+            .AppendInterval(_verticalTime + 2 * _horizontalTime + 2 * _waitTime)
+            .Append(TweenX(_cardInventory.GetInventoryNode(), xInventoryPosition));
+        }
+        else
+        {
+            DOTween.Sequence()
+            .AppendInterval(_verticalTime)
+            .Append(TweenX(_cardInventory.GetInventoryNode(), _playSpaceTopRight.x));
+        }
+
+        
+    }
+
+    public void MoveInventoryPileStatic(CardTransition transition)
+    {
+        float xInventoryPosition = _playSpaceTopRight.x;
+
+        if (transition == CardTransition.TOCOVER)
+        {
+            xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
+        }
+
+        MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
     }
 
     public void SetMainCardsRelativeToParent()
