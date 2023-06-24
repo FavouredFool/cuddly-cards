@@ -21,9 +21,6 @@ public class CardManager : MonoBehaviour
 
     List<CardNode> _topLevelNodesMainPile;
 
-    bool _isCloseUp = false;
-    public bool IsCloseUpFlag { get { return _isCloseUp; } set { _isCloseUp = value; } }
-
     public void Awake()
     {
         _topLevelNodesMainPile = new();
@@ -75,37 +72,6 @@ public class CardManager : MonoBehaviour
         _stateManager.HandleClick(clickedNode);        
     }
 
-    public void EnterCloseUp()
-    {
-        _closeUpManager.EnterCloseUp(_activeNode);
-
-        IsCloseUpFlag = true;
-        _cardInput.RemoveColliders();
-    }
-
-    public void ExitCloseUp()
-    {
-        if (!_closeUpManager.IntroAnimationFinishedFlag)
-        {
-            return;
-        }
-
-        _closeUpManager.ExitCloseUp();
-        _isCloseUp = false;
-    }
-
-    public void CloseUpFinished(bool initialCloseUp)
-    {
-        if (initialCloseUp)
-        {
-            //PrepareLayout();
-        }
-        else
-        {
-            _cardInput.SetColliders();
-        }
-    }
-
     public async Task PrepareLayout(CardNode clickedNode, CardNode previousActiveNode, CardTransition cardTransition)
     {
         // TODO Sets the active node the moment the animation starts. Is that the best way to go about it, or should the active node be set when the animation has finished?
@@ -120,6 +86,8 @@ public class CardManager : MonoBehaviour
 
     public void FinishLayout(CardTransition transition)
     {
+        _cardInput.RemoveColliders();
+
         ClearTopLevelNodesMainPile();
 
         _cardMover.ResetPosition(GetRootNode());

@@ -29,6 +29,13 @@ public class MainState : LayoutState
         CardInfo.CardTransition cardTransition;
         LayoutState nextState;
 
+        // closeUp
+        if (!clickedNode.Context.GetHasBeenSeen())
+        {
+            _manager.PushState(new CloseUpState(_manager, clickedNode));
+            return;
+        }
+
         if (clickedNode == previousActiveNode)
         {
             // closeup without layoutchange

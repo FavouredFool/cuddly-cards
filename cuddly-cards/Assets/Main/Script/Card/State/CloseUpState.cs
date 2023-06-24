@@ -1,43 +1,49 @@
 using UnityEngine;
 
-
-
 public class CloseUpState : LayoutState
 {
     StateManager _manager;
+    CloseUpManager _closeUpManager;
     CardNode _closeUpNode;
+    Vector3 _originalPosition;
+    bool _blockInputs;
 
     public CloseUpState(StateManager manager, CardNode clickedNode)
     {
         _manager = manager;
         _closeUpNode = clickedNode;
+        _closeUpManager = _manager.GetCloseUpManager();
     }
 
-    public void StartState()
+    public async void StartState()
     {
-        CloseUpManager closeUpManager = _manager.GetCloseUpManager();
+        _closeUpNode.Context.SetHasBeenSeen(true);
+        _originalPosition = _closeUpNode.Body.transform.position;
 
-        CameraMovement camMovement = closeUpManager.GetCameraMovement();
-        camMovement.transform.rotation = Quaternion.Euler(new Vector3(closeUpManager.GetCloseUpRotation(), 0, 0));
+        _blockInputs = true;
+        await _closeUpManager.SetCloseUpAnimated(_closeUpNode);
+        _blockInputs = false;
 
-        Vector3 endPosition = closeUpManager.GetCloseUpTransform().position;
-        Quaternion endRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(closeUpManager.GetCloseUpRotation(), 0, 0) * Quaternion.Euler(-90, 0, 0);
-
-        _closeUpNode.Body.transform.position = endPosition;
-        _closeUpNode.Body.transform.rotation = endRotation;
-
-        closeUpManager.GetCloseUpCanvas().SetActive(true);
-        closeUpManager.GetDescriptionText().text = _closeUpNode.Context.GetDescription();
+        _closeUpManager.SetCloseUpStatic(_closeUpNode);
     }
 
-    public void HandleClick(CardNode clickedNode)
+    public async void HandleClick(CardNode clickedNode)
     {
-        // get out of the thingy
-        CloseUpManager closeUpManager = _manager.GetCloseUpManager();
+        // DONT USE CLICKEDNODE -> IT DOESNT WORK, WHICH IS INTENTIONAL. USE _CLOSEUPNODE
 
-        closeUpManager.GetCloseUpCanvas().SetActive(false);
-        closeUpManager.GetCameraMovement().transform.rotation = Quaternion.Euler(closeUpManager.GetCameraMovement().GetCardTableRotation(), 0, 0);
+        if (_blockInputs)
+        {
+            return;
+        }
+        
+        _blockInputs = true;
+        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition);
+        _blockInputs = false;
+
+        _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition);
 
         _manager.PopState();
+
+        _manager.GetStates().Peek().HandleClick(_closeUpNode);
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System.Threading.Tasks;
 
 public class CloseUpManager : MonoBehaviour
 {
@@ -30,70 +31,51 @@ public class CloseUpManager : MonoBehaviour
     [SerializeField]
     Ease _easing;
 
-    CardNode _currentNode;
-
-    Vector3 _originalPosition;
-
-    bool _introAnimationFinished;
-    public bool IntroAnimationFinishedFlag { get { return _introAnimationFinished; } set { _introAnimationFinished = value; } }
-
-    bool _initialCloseUp;
-
     public void Start()
     {
         _closeUpCanvas.SetActive(false);
     }
 
-    public void EnterCloseUp(CardNode closeUpNode)
+    public void SetCloseUpStatic(CardNode closeUpNode)
     {
-        _introAnimationFinished = false;
+        _cameraMovement.transform.rotation = Quaternion.Euler(new Vector3(GetCloseUpRotation(), 0, 0));
 
-        _originalPosition = closeUpNode.Body.transform.position;
+        Vector3 endPosition = GetCloseUpTransform().position;
+        Quaternion endRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(GetCloseUpRotation(), 0, 0) * Quaternion.Euler(-90, 0, 0);
 
-        _currentNode = closeUpNode;
-        _initialCloseUp = !_currentNode.Context.GetHasBeenSeen();
-        _currentNode.Context.SetHasBeenSeen(true);
+        closeUpNode.Body.transform.SetPositionAndRotation(endPosition, endRotation);
 
-        IntroAnimationStart();
+        GetCloseUpCanvas().SetActive(true);
+        GetDescriptionText().text = closeUpNode.Context.GetDescription();
     }
 
-    public void IntroAnimationStart()
+    public void RevertCloseUpStatic(CardNode closeUpNode, Vector3 originalPosition)
+    {
+        // out animation
+        GetCloseUpCanvas().SetActive(false);
+        GetCameraMovement().transform.rotation = Quaternion.Euler(GetCameraMovement().GetCardTableRotation(), 0, 0);
+
+        closeUpNode.Body.transform.position = originalPosition;
+        closeUpNode.Body.transform.rotation = Quaternion.identity;
+    }
+
+    public async Task SetCloseUpAnimated(CardNode closeUpNode)
     {
         _cameraMovement.SetCloseUpRotation(_closeUpRotation, _transitionTime, _easing);
 
         Vector3 endPosition = _cardCloseUpTransform.position;
         Quaternion endRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(_closeUpRotation, 0, 0) * Quaternion.Euler(-90, 0, 0);
 
-        _currentNode.Body.transform.DOMove(endPosition, _transitionTime).SetEase(_easing).OnComplete(() => { IntroAnimationEnd(); });
-        _currentNode.Body.transform.DORotateQuaternion(endRotation, _transitionTime).SetEase(_easing);
+        closeUpNode.Body.transform.DOMove(endPosition, _transitionTime).SetEase(_easing);
+        await closeUpNode.Body.transform.DORotateQuaternion(endRotation, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
     }
 
-    public void IntroAnimationEnd()
-    {
-        _introAnimationFinished = true;
-        _closeUpCanvas.SetActive(true);
-        _descriptionText.text = _currentNode.Context.GetDescription();
-    }
-
-    public void ExitCloseUp()
+    public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition)
     {
         _closeUpCanvas.SetActive(false);
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
-
-        ExitAnimationStart();
-    }
-
-    public void ExitAnimationStart()
-    {
-        _currentNode.Body.transform.DOMove(_originalPosition, _transitionTime).SetEase(_easing).OnComplete(() => { ExitAnimationEnd(); });
-        _currentNode.Body.transform.DORotateQuaternion(Quaternion.identity, _transitionTime).SetEase(_easing);
-    }
-
-    public void ExitAnimationEnd()
-    {
-        _currentNode.Body.transform.position = _originalPosition;
-
-        _cardManager.CloseUpFinished(_initialCloseUp);
+        closeUpNode.Body.transform.DOMove(originalPosition, _transitionTime).SetEase(_easing);
+        await closeUpNode.Body.transform.DORotateQuaternion(Quaternion.identity, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
     }
 
     public CameraMovement GetCameraMovement()

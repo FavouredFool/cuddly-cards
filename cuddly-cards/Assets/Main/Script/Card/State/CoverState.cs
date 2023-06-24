@@ -25,9 +25,11 @@ public class CoverState : LayoutState
         }
 
         // closeUp
-        _manager.PushState(new CloseUpState(_manager, clickedNode));
-        // Closeup animation would be initialized here
-        return;
+        if (!clickedNode.Context.GetHasBeenSeen())
+        {
+            _manager.PushState(new CloseUpState(_manager, clickedNode));
+            return;
+        }
 
         await _manager.GetCardManager().PrepareLayout(clickedNode, _manager.GetCardManager().GetActiveNode(), CardInfo.CardTransition.FROMCOVER);
 

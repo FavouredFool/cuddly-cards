@@ -22,11 +22,6 @@ public class CardInput : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (_cardManager.IsCloseUpFlag)
-            {
-                _cardManager.ExitCloseUp();
-            }
-
             EvaluateClick();
         }
     }
