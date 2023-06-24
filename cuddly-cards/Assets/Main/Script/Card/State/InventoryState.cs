@@ -1,9 +1,18 @@
 
 public class InventoryState : LayoutState
 {
-    public void StartState()
-    {
+    StateManager _manager;
 
+    public InventoryState(StateManager manager)
+    {
+        _manager = manager;
+    }
+
+    public async void StartState()
+    {
+        //await _manager.GetCardManager().PrepareInventoryLayout();
+
+        _manager.GetCardManager().FinishInventoryLayout();
     }
 
     public void HandleClick(CardNode clickedNode)
@@ -12,5 +21,9 @@ public class InventoryState : LayoutState
         {
             return;
         }
+
+        // move back
+
+        _manager.PopState();
     }
 }

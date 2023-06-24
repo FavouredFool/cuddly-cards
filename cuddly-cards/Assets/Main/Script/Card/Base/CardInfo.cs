@@ -6,7 +6,7 @@ public static class CardInfo
 
     public enum CardTraversal { BODY, CONTEXT }
 
-    public enum CardTransition { CHILD, BACK, TOCOVER, FROMCOVER }
+    public enum CardTransition { CHILD, BACK, TOCOVER, FROMCOVER, CLOSE, TOINVENTORY, FROMINVENTORY }
 
     public static readonly float CARDWIDTH = 1;
 

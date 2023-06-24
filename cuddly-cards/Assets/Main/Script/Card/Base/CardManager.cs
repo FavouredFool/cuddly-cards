@@ -75,6 +75,8 @@ public class CardManager : MonoBehaviour
     public async Task PrepareLayout(CardNode clickedNode, CardNode previousActiveNode, CardTransition cardTransition)
     {
         // TODO Sets the active node the moment the animation starts. Is that the best way to go about it, or should the active node be set when the animation has finished?
+        // This blocks lots of calls like closeLayout and Animation.
+        // what should be active during inventory?
         _activeNode = clickedNode;
 
         _cardInput.RemoveColliders();
@@ -82,6 +84,33 @@ public class CardManager : MonoBehaviour
         ClearTopLevelNodesMainPile();
 
         await _cardMover.AnimateCardsForLayout(_activeNode, previousActiveNode, _rootNode, cardTransition);
+    }
+
+    public async Task PrepareInventoryLayout()
+    {
+        _cardInput.RemoveColliders();
+
+        await _cardMover.AnimateCardsForLayout(_cardInventory.GetInventoryNode(), null, _rootNode, CardTransition.TOINVENTORY);
+    }
+
+    public void FinishInventoryLayout()
+    {
+        _cardInput.RemoveColliders();
+
+        _cardMover.MoveCardsForLayoutStatic(GetActiveNode(), GetRootNode(), CardTransition.TOINVENTORY);
+
+        _cardInput.SetColliders();
+    }
+
+    public async void CloseLayout()
+    {
+        _cardInput.RemoveColliders();
+
+        ClearTopLevelNodesMainPile();
+
+        await _cardMover.AnimateCardsForLayout(_activeNode, null, _rootNode, CardTransition.CLOSE);
+
+        FinishLayout(CardTransition.CLOSE);
     }
 
     public void FinishLayout(CardTransition transition)

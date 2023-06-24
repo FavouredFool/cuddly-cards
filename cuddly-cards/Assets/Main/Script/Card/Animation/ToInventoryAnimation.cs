@@ -6,9 +6,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class InventoryAnimation : CardAnimation
+public class ToInventoryAnimation : CardAnimation
 {
-    public InventoryAnimation(
+    public ToInventoryAnimation(
 
         CardManager cardManager, CardMover cardMover, CardInventory cardInventory,
         float waitTime, float horizontalWaitTime, float verticalWaitTime,
@@ -18,32 +18,13 @@ public class InventoryAnimation : CardAnimation
         ) : base(cardManager, cardMover, cardInventory, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
 
-    public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
+    public override void MoveCardsStatic(CardNode activeNode, CardNode rootNode)
     {
-        // move in deck -> move out inventory
-
-        _cardManager.AddToTopLevelMainPile(pressedNode);
-        _cardMover.MoveCard(pressedNode, _playSpaceBottomLeft);
-
-        if (pressedNode != rootNode)
-        {
-            _cardManager.AddToTopLevelMainPile(pressedNode.Parent);
-            _cardMover.MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
-
-            if (pressedNode.Parent != rootNode)
-            {
-                _cardManager.AddToTopLevelMainPile(rootNode);
-                _cardMover.MoveCard(rootNode, _playSpaceTopRight);
-            }
-        }
-
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
 
         // inventory open
         if (_cardInventory.InventoryIsOpenFlag)
         {
-            
-
             // Set all cardnodes toplevel
             inventoryNode.IsTopLevel = true;
             foreach (CardNode node in inventoryNode[0].Children)
@@ -64,22 +45,6 @@ public class InventoryAnimation : CardAnimation
 
             float keyOffset = _playSpaceBottomLeft.x + _cardMover.GetBorder();
             FanCardsFromInventorySubcard(inventoryNode[1], keyOffset, fannedCardSpace);
-        }
-
-        // inventory closed THIS NEEDS TO BE OUTSOURCED TO SOMEWHERE ELSE
-        else
-        {
-            // Set no cardnodes toplevel
-            inventoryNode[0].IsTopLevel = false;
-            foreach (CardNode node in inventoryNode[0].Children)
-            {
-                node.IsTopLevel = false;
-            }
-            inventoryNode[1].IsTopLevel = false;
-            foreach (CardNode node in inventoryNode[1].Children)
-            {
-                node.IsTopLevel = false;
-            }
         }
 
         _cardMover.MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));

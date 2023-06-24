@@ -64,6 +64,9 @@ public class CardMover : MonoBehaviour
             new BackAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
             new ToCoverAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
             new FromCoverAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new CloseAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new ToInventoryAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new FromInventoryAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
         };
     }
 
@@ -96,6 +99,12 @@ public class CardMover : MonoBehaviour
                 return _cardAnimations[2];
             case CardTransition.FROMCOVER:
                 return _cardAnimations[3];
+            case CardTransition.CLOSE:
+                return _cardAnimations[4];
+            case CardTransition.TOINVENTORY:
+                return _cardAnimations[5];
+            case CardTransition.FROMINVENTORY:
+                return _cardAnimations[6];
         }
 
         Debug.Log("ANIMATION NOT SET YET");
@@ -104,6 +113,12 @@ public class CardMover : MonoBehaviour
 
     public async Task AnimateCardsForLayout(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode, CardTransition transition)
     {
+        // this is bad
+        if (transition == CardTransition.CLOSE)
+        {
+            return;
+        }
+
         _isAnimating = true;
         MoveInventoryPileAnimated(transition);
         await CardTransitionToAnimation(transition).AnimateCards(activeNode, previousActiveNode, rootNode);

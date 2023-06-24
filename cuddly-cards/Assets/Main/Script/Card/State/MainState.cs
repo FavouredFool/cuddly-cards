@@ -18,8 +18,16 @@ public class MainState : LayoutState
 
     public async void HandleClick(CardNode clickedNode)
     {
-        if (clickedNode == null || clickedNode.Context.GetCardType() == CardInfo.CardType.INVENTORY)
+        if (clickedNode == null)
         {
+            return;
+        }
+
+        if (clickedNode.Context.GetCardType() == CardType.INVENTORY)
+        {
+            _manager.GetCardManager().CloseLayout();
+
+            _manager.PushState(new InventoryState(_manager));
             return;
         }
 
