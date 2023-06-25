@@ -28,7 +28,7 @@ public class CoverState : LayoutState
         // --- Put the closeup state on the stack
         if (!clickedNode.Context.GetHasBeenSeen())
         {
-            _manager.PushState(new CloseUpState(_manager, clickedNode));
+            _manager.PushState(new CloseUpState(_manager, clickedNode, true));
             return;
         }
 

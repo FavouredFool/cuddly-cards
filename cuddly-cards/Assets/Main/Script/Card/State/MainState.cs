@@ -40,13 +40,12 @@ public class MainState : LayoutState
         // closeUp
         if (!clickedNode.Context.GetHasBeenSeen())
         {
-            _manager.PushState(new CloseUpState(_manager, clickedNode));
+            _manager.PushState(new CloseUpState(_manager, clickedNode, true));
             return;
         }
-
-        if (clickedNode == previousActiveNode)
+        else if (clickedNode == previousActiveNode)
         {
-            // closeup without layoutchange
+            _manager.PushState(new CloseUpState(_manager, clickedNode, false));
             return;
         }
         else if (previousActiveNode.Children.Contains(clickedNode))

@@ -7,12 +7,14 @@ public class CloseUpState : LayoutState
     CardNode _closeUpNode;
     Vector3 _originalPosition;
     bool _blockInputs;
+    bool _clickAfterFinish;
 
-    public CloseUpState(StateManager manager, CardNode clickedNode)
+    public CloseUpState(StateManager manager, CardNode clickedNode, bool clickAfterFinish)
     {
         _manager = manager;
         _closeUpNode = clickedNode;
         _closeUpManager = _manager.GetCloseUpManager();
+        _clickAfterFinish = clickAfterFinish;
     }
 
     public async void StartState()
@@ -44,6 +46,10 @@ public class CloseUpState : LayoutState
 
         _manager.PopState();
 
-        _manager.GetStates().Peek().HandleClick(_closeUpNode);
+        if (_clickAfterFinish)
+        {
+            _manager.GetStates().Peek().HandleClick(_closeUpNode);
+        }
+        
     }
 }
