@@ -111,24 +111,30 @@ public class CardMover : MonoBehaviour
         return null;
     }
 
-    public async Task AnimateCardsForLayout(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode, CardTransition transition)
+    public async Task MoveInventoryCardsForLayoutAnimated(CardTransition inventoryTransition)
     {
-        // this is bad
-        if (transition == CardTransition.CLOSE)
-        {
-            return;
-        }
+        // is animating is weird,this might need to be in a separate animation class. -> another layer between cardmover and AnimateCards
+        await Task.Yield();
+    }
 
+    public void MoveInventoryCardsForLayoutStatic(CardTransition inventoryTransition)
+    {
+        // differentiate between to and from
+        CardTransitionToAnimation(inventoryTransition).MoveCardsStatic(null, null);
+    }
+
+    public async Task MoveMainCardsForLayoutAnimated(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode, CardTransition transition)
+    {
         _isAnimating = true;
         MoveInventoryPileAnimated(transition);
         await CardTransitionToAnimation(transition).AnimateCards(activeNode, previousActiveNode, rootNode);
         _isAnimating = false;
     }
 
-    public void MoveCardsForLayoutStatic(CardNode activeNode, CardNode rootNode, CardTransition transition)
+    public void MoveMainCardsForLayoutStatic(CardNode baseNode, CardNode rootNode, CardTransition transition)
     {
         MoveInventoryPileStatic(transition);
-        CardTransitionToAnimation(transition).MoveCardsStatic(activeNode, rootNode);
+        CardTransitionToAnimation(transition).MoveCardsStatic(baseNode, rootNode);
     }
 
     public void MoveInventoryPileAnimated(CardTransition transition)

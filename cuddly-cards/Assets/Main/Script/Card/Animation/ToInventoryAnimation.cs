@@ -22,30 +22,28 @@ public class ToInventoryAnimation : CardAnimation
     {
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
 
-        // inventory open
-        if (_cardInventory.InventoryIsOpenFlag)
+
+        // Set all cardnodes toplevel
+        inventoryNode.IsTopLevel = true;
+        foreach (CardNode node in inventoryNode[0].Children)
         {
-            // Set all cardnodes toplevel
-            inventoryNode.IsTopLevel = true;
-            foreach (CardNode node in inventoryNode[0].Children)
-            {
-                node.IsTopLevel = true;
-            }
-            inventoryNode[1].IsTopLevel = true;
-            foreach (CardNode node in inventoryNode[1].Children)
-            {
-                node.IsTopLevel = true;
-            }
-
-            float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
-            float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
-
-            float dialogueOffset = _playSpaceBottomLeft.x + 2 * _cardMover.GetBorder() + fannedCardSpace;
-            FanCardsFromInventorySubcard(inventoryNode[0], dialogueOffset, fannedCardSpace);
-
-            float keyOffset = _playSpaceBottomLeft.x + _cardMover.GetBorder();
-            FanCardsFromInventorySubcard(inventoryNode[1], keyOffset, fannedCardSpace);
+            node.IsTopLevel = true;
         }
+        inventoryNode[1].IsTopLevel = true;
+        foreach (CardNode node in inventoryNode[1].Children)
+        {
+            node.IsTopLevel = true;
+        }
+
+        float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
+        float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
+
+        float dialogueOffset = _playSpaceBottomLeft.x + 2 * _cardMover.GetBorder() + fannedCardSpace;
+        FanCardsFromInventorySubcard(inventoryNode[0], dialogueOffset, fannedCardSpace);
+
+        float keyOffset = _playSpaceBottomLeft.x + _cardMover.GetBorder();
+        FanCardsFromInventorySubcard(inventoryNode[1], keyOffset, fannedCardSpace);
+        
 
         _cardMover.MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
 

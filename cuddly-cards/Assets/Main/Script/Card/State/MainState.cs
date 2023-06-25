@@ -5,15 +5,17 @@ using static CardInfo;
 public class MainState : LayoutState
 {
     StateManager _manager;
+    CardNode _baseNode;
 
-    public MainState(StateManager manager)
+    public MainState(StateManager manager, CardNode baseNode)
     {
         _manager = manager;
+        _baseNode = baseNode;
     }
 
     public void StartState()
     {
-        _manager.GetCardManager().FinishLayout(CardTransition.CHILD);
+        _manager.GetCardManager().SetMainLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CHILD);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -25,14 +27,16 @@ public class MainState : LayoutState
 
         if (clickedNode.Context.GetCardType() == CardType.INVENTORY)
         {
-            _manager.GetCardManager().CloseLayout();
-
             _manager.PushState(new InventoryState(_manager));
+
+            await _manager.GetCardManager().SetMainLayoutBasedOnTransitionAnimated(_baseNode, _baseNode, CardTransition.CLOSE);
+
+            _manager.GetCardManager().SetMainLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CLOSE);
             return;
         }
 
         CardNode rootNode = _manager.GetCardManager().GetRootNode();
-        CardNode previousActiveNode = _manager.GetCardManager().GetActiveNode();
+        CardNode previousActiveNode = _baseNode;
 
         CardInfo.CardTransition cardTransition;
         LayoutState nextState;
@@ -52,13 +56,13 @@ public class MainState : LayoutState
         {
             // pressed child
             cardTransition = CardInfo.CardTransition.CHILD;
-            nextState = new MainState(_manager);
+            nextState = new MainState(_manager, clickedNode);
         }
         else if (previousActiveNode.Parent == clickedNode)
         {
             // pressed back
             cardTransition = CardInfo.CardTransition.BACK;
-            nextState = new MainState(_manager);
+            nextState = new MainState(_manager, clickedNode);
         }
         else if (clickedNode == rootNode)
         {
@@ -72,7 +76,7 @@ public class MainState : LayoutState
             return;
         }
 
-        await _manager.GetCardManager().PrepareLayout(clickedNode, previousActiveNode, cardTransition);
+        await _manager.GetCardManager().SetMainLayoutBasedOnTransitionAnimated(clickedNode, previousActiveNode, cardTransition);
         _manager.SetState(nextState);
     }
 }

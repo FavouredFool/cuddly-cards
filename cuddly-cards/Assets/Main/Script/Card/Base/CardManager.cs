@@ -17,7 +17,7 @@ public class CardManager : MonoBehaviour
     StateManager _stateManager;
     
     CardNode _rootNode;
-    CardNode _activeNode;
+    CardNode _baseNode;
 
     List<CardNode> _topLevelNodesMainPile;
 
@@ -35,7 +35,7 @@ public class CardManager : MonoBehaviour
 
     public void Start()
     {
-        _activeNode = _rootNode = _cardReader.ReadCards();
+        _baseNode = _rootNode = _cardReader.ReadCards();
 
         _cardBuilder.BuildAllCards(_rootNode);
 
@@ -72,48 +72,32 @@ public class CardManager : MonoBehaviour
         _stateManager.HandleClick(clickedNode);        
     }
 
-    public async Task PrepareLayout(CardNode clickedNode, CardNode previousActiveNode, CardTransition cardTransition)
+    public async Task SetMainLayoutBasedOnTransitionAnimated(CardNode clickedNode, CardNode previousBaseNode, CardTransition cardTransition)
     {
-        // TODO Sets the active node the moment the animation starts. Is that the best way to go about it, or should the active node be set when the animation has finished?
-        // This blocks lots of calls like closeLayout and Animation.
-        // what should be active during inventory?
-        _activeNode = clickedNode;
-
         _cardInput.RemoveColliders();
 
         ClearTopLevelNodesMainPile();
 
-        await _cardMover.AnimateCardsForLayout(_activeNode, previousActiveNode, _rootNode, cardTransition);
+        await _cardMover.MoveMainCardsForLayoutAnimated(clickedNode, previousBaseNode, _rootNode, cardTransition);
     }
 
-    public async Task PrepareInventoryLayout()
+    public async Task SetInventoryLayoutBasedOnTransitionAnimated(CardTransition inventoryTransition)
     {
         _cardInput.RemoveColliders();
 
-        await _cardMover.AnimateCardsForLayout(_cardInventory.GetInventoryNode(), null, _rootNode, CardTransition.TOINVENTORY);
+        await _cardMover.MoveInventoryCardsForLayoutAnimated(inventoryTransition);
     }
 
-    public void FinishInventoryLayout()
+    public void SetInventoryLayoutBasedOnTransitionStatic(CardTransition inventoryTransition)
     {
         _cardInput.RemoveColliders();
 
-        _cardMover.MoveCardsForLayoutStatic(GetActiveNode(), GetRootNode(), CardTransition.TOINVENTORY);
+        _cardMover.MoveInventoryCardsForLayoutStatic(inventoryTransition);
 
         _cardInput.SetColliders();
     }
 
-    public async void CloseLayout()
-    {
-        _cardInput.RemoveColliders();
-
-        ClearTopLevelNodesMainPile();
-
-        await _cardMover.AnimateCardsForLayout(_activeNode, null, _rootNode, CardTransition.CLOSE);
-
-        FinishLayout(CardTransition.CLOSE);
-    }
-
-    public void FinishLayout(CardTransition transition)
+    public void SetMainLayoutBasedOnTransitionStatic(CardNode clickedNode, CardTransition transition)
     {
         _cardInput.RemoveColliders();
 
@@ -121,7 +105,7 @@ public class CardManager : MonoBehaviour
 
         _cardMover.ResetPosition(GetRootNode());
 
-        _cardMover.MoveCardsForLayoutStatic(GetActiveNode(), GetRootNode(), transition); ;
+        _cardMover.MoveMainCardsForLayoutStatic(clickedNode, GetRootNode(), transition);
 
         _cardMover.SetHeights();
 
@@ -168,8 +152,13 @@ public class CardManager : MonoBehaviour
         return _rootNode;
     }
 
-    public CardNode GetActiveNode()
+    public CardNode GetBaseNode()
     {
-        return _activeNode;
+        return _baseNode;
+    }
+
+    public void SetBaseNode(CardNode baseNode)
+    {
+        _baseNode = baseNode;
     }
 }

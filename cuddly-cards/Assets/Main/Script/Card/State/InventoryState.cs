@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 public class InventoryState : LayoutState
 {
     StateManager _manager;
@@ -10,19 +12,23 @@ public class InventoryState : LayoutState
 
     public async void StartState()
     {
-        //await _manager.GetCardManager().PrepareInventoryLayout();
+        await _manager.GetCardManager().SetInventoryLayoutBasedOnTransitionAnimated(CardInfo.CardTransition.TOINVENTORY);
 
-        _manager.GetCardManager().FinishInventoryLayout();
+        _manager.GetCardManager().SetInventoryLayoutBasedOnTransitionStatic(CardInfo.CardTransition.TOINVENTORY);
     }
 
-    public void HandleClick(CardNode clickedNode)
+    public async void HandleClick(CardNode clickedNode)
     {
         if (clickedNode == null)
         {
             return;
         }
 
-        // move back
+        // HERE NEEDS TO BE THE REFERENCE FOR THE ANIMATION FROM ANY STATE'S CLOSED TO OPEN
+
+        await _manager.GetCardManager().SetInventoryLayoutBasedOnTransitionAnimated(CardInfo.CardTransition.FROMINVENTORY);
+
+        _manager.GetCardManager().SetInventoryLayoutBasedOnTransitionStatic(CardInfo.CardTransition.FROMINVENTORY);
 
         _manager.PopState();
     }
