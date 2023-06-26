@@ -4,20 +4,7 @@ using static CardInfo;
 
 public class CardInventory : MonoBehaviour
 {
-    bool _inventoryIsOpen = false;
-    public bool InventoryIsOpenFlag { get { return _inventoryIsOpen; } set { _inventoryIsOpen = value; } }
-
-    bool _inventoryShouldOpen = false;
-    public bool InventoryShouldOpenFlag { get { return _inventoryShouldOpen; } set { _inventoryShouldOpen = value; } }
-
-    CardMover _cardMover;
-
     CardNode _inventoryNode;
-
-    private void Awake()
-    {
-        _cardMover = GetComponent<CardMover>();
-    }
 
     public void InitializeInventory(CardBuilder builder)
     {

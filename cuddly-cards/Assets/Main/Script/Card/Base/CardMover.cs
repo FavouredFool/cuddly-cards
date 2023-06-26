@@ -50,24 +50,36 @@ public class CardMover : MonoBehaviour
 
     CardManager _cardManager;
     CardInventory _cardInventory;
-    StateManager _stateManager;
 
-    List<CardAnimation> _cardAnimations;
+    List<SubLayout> _subLayouts;
+    
 
     public void Awake()
     {
         _cardManager = GetComponent<CardManager>();
         _cardInventory = GetComponent<CardInventory>();
-        _stateManager = GetComponent<StateManager>();
-        _cardAnimations = new(){
-            new ChildAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new BackAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new ToCoverAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new FromCoverAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new CloseAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new ToInventoryAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new FromInventoryAnimation(_cardManager, this, _cardInventory, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+
+        List<CardAnimation> mainAnimations = new()
+        {
+            new ChildAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new BackAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new ToCoverAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new FromCoverAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new CloseAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
         };
+
+        List<CardAnimation> inventoryAnimations = new()
+        {
+            new ToInventoryAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new FromInventoryAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+        };
+
+        _subLayouts = new()
+        {
+            new MainLayout(mainAnimations, _cardManager),
+            new InventoryLayout(inventoryAnimations, _cardManager),
+        };
+
     }
 
     public void LateUpdate()
@@ -81,93 +93,56 @@ public class CardMover : MonoBehaviour
         SetCardsRelativeToParent();
     }
 
+    public EnterInventoryPileAnimation InstantiateEnterInventoryPileAnimation()
+    {
+        return new EnterInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ);
+    }
+
+    public ExitInventoryPileAnimation InstantiateExitInventoryPileAnimation()
+    {
+        return new ExitInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ);
+    }
+
     public void SetCardsRelativeToParent()
     {
         SetInventoryCardsRelativeToParent();
         SetMainCardsRelativeToParent();
     }
 
-    public CardAnimation CardTransitionToAnimation(CardTransition transition)
+    public SubLayout CardTransitionToSubLayout(CardTransition transition)
     {
         switch (transition)
         {
             case CardTransition.CHILD:
-                return _cardAnimations[0];
             case CardTransition.BACK:
-                return _cardAnimations[1];
             case CardTransition.TOCOVER:
-                return _cardAnimations[2];
             case CardTransition.FROMCOVER:
-                return _cardAnimations[3];
             case CardTransition.CLOSE:
-                return _cardAnimations[4];
+                return _subLayouts[0];
             case CardTransition.TOINVENTORY:
-                return _cardAnimations[5];
             case CardTransition.FROMINVENTORY:
-                return _cardAnimations[6];
+                return _subLayouts[1];
         }
 
-        Debug.Log("ANIMATION NOT SET YET");
-        return null;
+        throw new System.Exception("SubLayout not set");
     }
 
-    public async Task MoveInventoryCardsForLayoutAnimated(CardTransition inventoryTransition)
-    {
-        // is animating is weird,this might need to be in a separate animation class. -> another layer between cardmover and AnimateCards
-        await Task.Yield();
-    }
-
-    public void MoveInventoryCardsForLayoutStatic(CardTransition inventoryTransition)
-    {
-        // differentiate between to and from
-        CardTransitionToAnimation(inventoryTransition).MoveCardsStatic(null, null);
-    }
-
-    public async Task MoveMainCardsForLayoutAnimated(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode, CardTransition transition)
+    public async Task SetLayoutBasedOnTransitionAnimated(CardNode activeNode, CardNode previousActiveNode, CardTransition transition)
     {
         _isAnimating = true;
-        MoveInventoryPileAnimated(transition);
-        await CardTransitionToAnimation(transition).AnimateCards(activeNode, previousActiveNode, rootNode);
+        CardTransitionToSubLayout(transition).PrepareAnimation(transition);
+        await CardTransitionToSubLayout(transition).CardTransitionToAnimation(transition).AnimateCards(activeNode, previousActiveNode, _cardManager.GetRootNode());
+        CardTransitionToSubLayout(transition).FinishAnimation(transition);
         _isAnimating = false;
     }
 
-    public void MoveMainCardsForLayoutStatic(CardNode baseNode, CardNode rootNode, CardTransition transition)
+    public void SetLayoutBasedOnTransitionStatic(CardNode activeNode, CardTransition transition)
     {
-        MoveInventoryPileStatic(transition);
-        CardTransitionToAnimation(transition).MoveCardsStatic(baseNode, rootNode);
+        CardTransitionToSubLayout(transition).PrepareStatic(transition);
+        CardTransitionToSubLayout(transition).CardTransitionToAnimation(transition).MoveCardsStatic(activeNode, _cardManager.GetRootNode());
+        CardTransitionToSubLayout(transition).FinishStatic(transition);
     }
 
-    public void MoveInventoryPileAnimated(CardTransition transition)
-    {
-
-        if (transition == CardTransition.TOCOVER)
-        {
-            float xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
-            DOTween.Sequence()
-            .AppendInterval(_verticalTime + 2 * _horizontalTime + 2 * _waitTime)
-            .Append(TweenX(_cardInventory.GetInventoryNode(), xInventoryPosition));
-        }
-        else
-        {
-            DOTween.Sequence()
-            .AppendInterval(_verticalTime)
-            .Append(TweenX(_cardInventory.GetInventoryNode(), _playSpaceTopRight.x));
-        }
-
-        
-    }
-
-    public void MoveInventoryPileStatic(CardTransition transition)
-    {
-        float xInventoryPosition = _playSpaceTopRight.x;
-
-        if (transition == CardTransition.TOCOVER)
-        {
-            xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
-        }
-
-        MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
-    }
 
     public void SetMainCardsRelativeToParent()
     {

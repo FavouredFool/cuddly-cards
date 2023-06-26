@@ -72,50 +72,6 @@ public class CardManager : MonoBehaviour
         _stateManager.HandleClick(clickedNode);        
     }
 
-    public async Task SetMainLayoutBasedOnTransitionAnimated(CardNode clickedNode, CardNode previousBaseNode, CardTransition cardTransition)
-    {
-        _cardInput.RemoveColliders();
-
-        ClearTopLevelNodesMainPile();
-
-        await _cardMover.MoveMainCardsForLayoutAnimated(clickedNode, previousBaseNode, _rootNode, cardTransition);
-    }
-
-    public async Task SetInventoryLayoutBasedOnTransitionAnimated(CardTransition inventoryTransition)
-    {
-        _cardInput.RemoveColliders();
-
-        await _cardMover.MoveInventoryCardsForLayoutAnimated(inventoryTransition);
-    }
-
-    public void SetInventoryLayoutBasedOnTransitionStatic(CardTransition inventoryTransition)
-    {
-        _cardInput.RemoveColliders();
-
-        _cardMover.MoveInventoryCardsForLayoutStatic(inventoryTransition);
-
-        _cardInput.SetColliders();
-    }
-
-    public void SetMainLayoutBasedOnTransitionStatic(CardNode clickedNode, CardTransition transition)
-    {
-        _cardInput.RemoveColliders();
-
-        ClearTopLevelNodesMainPile();
-
-        _cardMover.ResetPosition(GetRootNode());
-
-        _cardMover.MoveMainCardsForLayoutStatic(clickedNode, GetRootNode(), transition);
-
-        _cardMover.SetHeights();
-
-        _cardMover.SetCardsRelativeToParent();
-
-        _cardInput.SetColliders();
-
-        _cardInventory.InventoryIsOpenFlag = _cardInventory.InventoryShouldOpenFlag;
-    }
-
     public List<CardNode> GetClickableNodes()
     {
         List<CardNode> clickables = new(GetTopLevelNodesMainPile());
@@ -160,5 +116,20 @@ public class CardManager : MonoBehaviour
     public void SetBaseNode(CardNode baseNode)
     {
         _baseNode = baseNode;
+    }
+
+    public CardInput GetCardInput()
+    {
+        return _cardInput;
+    }
+
+    public CardMover GetCardMover()
+    {
+        return _cardMover;
+    }
+
+    public CardInventory GetCardInventory()
+    {
+        return _cardInventory;
     }
 }

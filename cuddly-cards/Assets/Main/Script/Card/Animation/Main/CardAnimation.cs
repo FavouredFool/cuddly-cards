@@ -23,13 +23,13 @@ public abstract class CardAnimation
 
 
     public CardAnimation(
-        CardManager cardManager, CardMover cardMover, CardInventory cardInventory, float waitTime, float horizontalWaitTime, float verticalWaitTime,
+        CardManager cardManager, float waitTime, float horizontalWaitTime, float verticalWaitTime,
         Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
         Func<CardNode, float, Tween> tweenXFunc, Func<CardNode, int, Tween> tweenYFunc, Func<CardNode, float, Tween> tweenZFunc)
     {
         _cardManager = cardManager;
-        _cardMover = cardMover;
-        _cardInventory = cardInventory;
+        _cardMover = _cardManager.GetCardMover();
+        _cardInventory = _cardManager.GetCardInventory();
         _waitTime = waitTime;
         _horizontalTime = horizontalWaitTime;
         _verticalTime = verticalWaitTime;

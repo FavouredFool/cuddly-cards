@@ -9,12 +9,12 @@ public class FromCoverAnimation : CardAnimation
 {
     public FromCoverAnimation(
 
-        CardManager cardManager, CardMover cardMover, CardInventory cardInventory,
+        CardManager cardManager,
         float waitTime, float horizontalWaitTime, float verticalWaitTime,
         Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
         Func<CardNode, float, Tween> __tweenXFunc, Func<CardNode, int, Tween> __tweenYFunc, Func<CardNode, float, Tween> __tweenZFunc
 
-        ) : base(cardManager, cardMover, cardInventory, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFunc, __tweenYFunc, __tweenZFunc) { }
+        ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFunc, __tweenYFunc, __tweenZFunc) { }
 
     public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
     {

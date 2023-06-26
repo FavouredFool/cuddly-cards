@@ -12,9 +12,9 @@ public class InventoryState : LayoutState
 
     public async void StartState()
     {
-        await _manager.GetCardManager().SetInventoryLayoutBasedOnTransitionAnimated(CardInfo.CardTransition.TOINVENTORY);
+        await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(null, null, CardInfo.CardTransition.TOINVENTORY);
 
-        _manager.GetCardManager().SetInventoryLayoutBasedOnTransitionStatic(CardInfo.CardTransition.TOINVENTORY);
+        _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(null, CardInfo.CardTransition.TOINVENTORY);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -26,9 +26,9 @@ public class InventoryState : LayoutState
 
         // HERE NEEDS TO BE THE REFERENCE FOR THE ANIMATION FROM ANY STATE'S CLOSED TO OPEN
 
-        await _manager.GetCardManager().SetInventoryLayoutBasedOnTransitionAnimated(CardInfo.CardTransition.FROMINVENTORY);
+        await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(null, null, CardInfo.CardTransition.FROMINVENTORY);
 
-        _manager.GetCardManager().SetInventoryLayoutBasedOnTransitionStatic(CardInfo.CardTransition.FROMINVENTORY);
+        _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(null, CardInfo.CardTransition.FROMINVENTORY);
 
         _manager.PopState();
     }

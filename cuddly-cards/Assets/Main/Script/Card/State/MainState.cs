@@ -15,7 +15,7 @@ public class MainState : LayoutState
 
     public void StartState()
     {
-        _manager.GetCardManager().SetMainLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CHILD);
+        _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CHILD);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -29,9 +29,9 @@ public class MainState : LayoutState
         {
             _manager.PushState(new InventoryState(_manager));
 
-            await _manager.GetCardManager().SetMainLayoutBasedOnTransitionAnimated(_baseNode, _baseNode, CardTransition.CLOSE);
+            await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(_baseNode, _baseNode, CardTransition.CLOSE);
 
-            _manager.GetCardManager().SetMainLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CLOSE);
+            _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CLOSE);
             return;
         }
 
@@ -76,7 +76,7 @@ public class MainState : LayoutState
             return;
         }
 
-        await _manager.GetCardManager().SetMainLayoutBasedOnTransitionAnimated(clickedNode, previousActiveNode, cardTransition);
+        await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(clickedNode, previousActiveNode, cardTransition);
         _manager.SetState(nextState);
     }
 }

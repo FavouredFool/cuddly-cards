@@ -10,12 +10,12 @@ public class ChildAnimation : CardAnimation
 {
     public ChildAnimation(
 
-        CardManager cardManager, CardMover cardMover, CardInventory cardInventory,
+        CardManager cardManager,
         float waitTime, float horizontalWaitTime, float verticalWaitTime,
         Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
         Func<CardNode, float, Tween> __tweenXFuncFuncFunc, Func<CardNode, int, Tween> __tweenYFuncFuncFunc, Func<CardNode, float, Tween> __tweenZFuncFuncFunc
 
-        ) : base(cardManager, cardMover, cardInventory, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
+        ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
     public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
     {
