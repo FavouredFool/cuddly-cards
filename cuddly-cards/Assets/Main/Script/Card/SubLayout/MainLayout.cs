@@ -40,10 +40,12 @@ public class MainLayout : SubLayout
 
         _cardManager.ClearTopLevelNodesMainPile();
 
+        /*
         if (transition == CardTransition.TOCOVER)
             _exitInventoryPileAnimation.AnimateCards(null, null, null);
         else
             _enterInventoryPileAnimation.AnimateCards(null, null, null);
+        */
     }
 
     public override void FinishAnimation(CardTransition transition)
@@ -59,17 +61,22 @@ public class MainLayout : SubLayout
 
         _cardMover.ResetPosition(_cardManager.GetRootNode());
 
+        /*
         if (transition == CardTransition.TOCOVER)
             _exitInventoryPileAnimation.MoveCardsStatic(null, null);
         else
             _enterInventoryPileAnimation.MoveCardsStatic(null, null);
+
+        _cardManager.GetCardMover().SetHeightOfInventory();
+        _cardManager.GetCardMover().SetInventoryCardsRelativeToParent();
+        */
     }
 
     public override void FinishStatic(CardTransition transition)
     {
-        _cardMover.SetHeights();
+        _cardMover.SetHeightOfTopLevelNodes();
 
-        _cardMover.SetCardsRelativeToParent();
+        _cardMover.SetMainCardsRelativeToParent();
 
         _cardInput.SetColliders();
     }

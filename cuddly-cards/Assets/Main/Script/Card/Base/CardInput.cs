@@ -56,6 +56,11 @@ public class CardInput : MonoBehaviour
 
     public void SetColliders()
     {
+        if (_colliders.Count != 0)
+        {
+            RemoveColliders();
+        }
+
         foreach (CardNode node in _cardManager.GetClickableNodes())
         {
             BoxCollider collider = gameObject.AddComponent<BoxCollider>();

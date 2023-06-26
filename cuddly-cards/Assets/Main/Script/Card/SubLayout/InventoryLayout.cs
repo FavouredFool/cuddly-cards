@@ -37,6 +37,10 @@ public class InventoryLayout : SubLayout
 
     public override void FinishStatic(CardTransition transition)
     {
+        _cardMover.SetHeightAndRotationOfInventory();
+
+        _cardMover.SetInventoryCardsRelativeToParent();
+
         _cardInput.SetColliders();
     }
 }

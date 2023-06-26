@@ -24,7 +24,7 @@ public class ToInventoryAnimation : CardAnimation
 
 
         // Set all cardnodes toplevel
-        inventoryNode.IsTopLevel = true;
+        inventoryNode[0].IsTopLevel = true;
         foreach (CardNode node in inventoryNode[0].Children)
         {
             node.IsTopLevel = true;
@@ -44,10 +44,9 @@ public class ToInventoryAnimation : CardAnimation
         float keyOffset = _playSpaceBottomLeft.x + _cardMover.GetBorder();
         FanCardsFromInventorySubcard(inventoryNode[1], keyOffset, fannedCardSpace);
         
-
         _cardMover.MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
-
     }
+
     public void FanCardsFromInventorySubcard(CardNode inventorySubcard, float startFanX, float fannedCardSpace)
     {
         int totalChildCards = inventorySubcard.Children.Count;

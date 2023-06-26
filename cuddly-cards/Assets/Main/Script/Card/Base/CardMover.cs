@@ -36,6 +36,8 @@ public class CardMover : MonoBehaviour
     [Header("Inventory")]
     [SerializeField]
     float _border = 1f;
+    [SerializeField]
+    float _cardRotationAmount = 0.9f;
 
     [Header("Easing")]
     [SerializeField]
@@ -89,8 +91,9 @@ public class CardMover : MonoBehaviour
         {
             return;
         }
-
-        SetCardsRelativeToParent();
+        
+        SetMainCardsRelativeToParent();
+        SetInventoryCardsRelativeToParent();
     }
 
     public EnterInventoryPileAnimation InstantiateEnterInventoryPileAnimation()
@@ -101,12 +104,6 @@ public class CardMover : MonoBehaviour
     public ExitInventoryPileAnimation InstantiateExitInventoryPileAnimation()
     {
         return new ExitInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ);
-    }
-
-    public void SetCardsRelativeToParent()
-    {
-        SetInventoryCardsRelativeToParent();
-        SetMainCardsRelativeToParent();
     }
 
     public SubLayout CardTransitionToSubLayout(CardTransition transition)
@@ -143,7 +140,6 @@ public class CardMover : MonoBehaviour
         CardTransitionToSubLayout(transition).FinishStatic(transition);
     }
 
-
     public void SetMainCardsRelativeToParent()
     {
         List<CardNode> topLevelNodes = _cardManager.GetTopLevelNodesMainPile();
@@ -173,6 +169,12 @@ public class CardMover : MonoBehaviour
         }
     }
 
+    public void SetInventoryPosition()
+    {
+        float xInventoryPosition = _playSpaceTopRight.x;
+        MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
+    }
+
     public void ResetPosition(CardNode rootNode)
     {
         rootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT, delegate (CardNode node)
@@ -187,12 +189,6 @@ public class CardMover : MonoBehaviour
         card.Body.transform.localPosition = new Vector3(position.x, card.Body.transform.localPosition.y, position.y);
     }
 
-    public void SetHeights()
-    {
-        SetHeightOfTopLevelNodes();
-        SetHeightOfInventory();
-    }
-
     public void SetHeightOfTopLevelNodes()
     {
         foreach (CardNode node in _cardManager.GetTopLevelNodesMainPile())
@@ -201,29 +197,51 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void SetHeightOfInventory()
+    public void SetHeightAndRotationOfInventory()
     {
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
 
-        int cardNr = inventoryNode[0].Children.Count+1;
-        inventoryNode[0].Body.SetHeight(cardNr);
+        for (int i = 0; i < inventoryNode.Children.Count; i++)
+        {
+            if (inventoryNode[i].IsTopLevel)
+            {
+                SetFannedHeightAndRotationOfInventoryPart(inventoryNode[i]);
+            }
+            else
+            {
+                SetStackedHeightAndRotationOfInventoryPart(inventoryNode[i]);
+            }
+        }
+    }
 
-        for (int i = inventoryNode[0].Children.Count-1; i >= 0; i--)
+    public void SetStackedHeightAndRotationOfInventoryPart(CardNode inventoryPart)
+    {
+        int cardNr = inventoryPart.Children.Count + 1;
+        inventoryPart.Body.SetHeight(cardNr);
+        inventoryPart.Body.transform.rotation = Quaternion.identity;
+
+        for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
         {
             cardNr -= 1;
-            inventoryNode[0][i].Body.SetHeight(cardNr);
+            inventoryPart[i].Body.SetHeight(cardNr);
+            inventoryPart.Body.transform.rotation = Quaternion.identity;
         }
+    }
 
-        cardNr = inventoryNode[1].Children.Count + 1;
-        inventoryNode[1].Body.SetHeight(cardNr);
+    public void SetFannedHeightAndRotationOfInventoryPart(CardNode inventoryPart)
+    {
+        // hardcoded
+        inventoryPart.Body.SetHeight(2);
+        inventoryPart.Body.transform.rotation = Quaternion.Euler(0, 0, -_cardRotationAmount);
 
-        for (int i = inventoryNode[1].Children.Count - 1; i >= 0; i--)
+        for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
         {
-            cardNr -= 1;
-            inventoryNode[1][i].Body.SetHeight(cardNr);
+            inventoryPart[i].Body.SetHeight(2);
+            inventoryPart[i].Body.transform.rotation = Quaternion.Euler(0, 0, -_cardRotationAmount);
         }
-    }   
+    }
+
 
     public Vector2 GetPlaySpaceBottomLeft()
     {

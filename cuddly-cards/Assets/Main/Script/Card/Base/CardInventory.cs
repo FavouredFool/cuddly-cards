@@ -5,6 +5,12 @@ using static CardInfo;
 public class CardInventory : MonoBehaviour
 {
     CardNode _inventoryNode;
+    CardManager _cardManager;
+
+    public void Awake()
+    {
+        _cardManager = GetComponent<CardManager>();
+    }
 
     public void InitializeInventory(CardBuilder builder)
     {
@@ -20,7 +26,15 @@ public class CardInventory : MonoBehaviour
 
         _inventoryNode.AddChild(dialogueParentNode);
         _inventoryNode.AddChild(keyParentNode);
-        
+
+       
+    }
+
+    public void SynchronizeInventory()
+    {
+        _cardManager.GetCardMover().SetInventoryPosition();
+        _cardManager.GetCardMover().SetHeightAndRotationOfInventory();
+        _cardManager.GetCardMover().SetInventoryCardsRelativeToParent();
     }
 
     public void AddNodeToInventory(CardNode node)

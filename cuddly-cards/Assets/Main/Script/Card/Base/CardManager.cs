@@ -64,6 +64,8 @@ public class CardManager : MonoBehaviour
             _cardInventory.AddNodeToInventory(tests[i]);
         }
 
+        _cardInventory.SynchronizeInventory();
+
         _stateManager.StartStates();
     }
 

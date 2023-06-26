@@ -34,10 +34,10 @@ public class FromInventoryAnimation : CardAnimation
             node.IsTopLevel = false;
         }
         
-
         _cardMover.MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
 
     }
+
     public void FanCardsFromInventorySubcard(CardNode inventorySubcard, float startFanX, float fannedCardSpace)
     {
         int totalChildCards = inventorySubcard.Children.Count;

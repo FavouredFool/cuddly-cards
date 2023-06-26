@@ -19,7 +19,10 @@ public class CloseAnimation : CardAnimation
 
     public async override Task AnimateCards(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode)
     {
-        await Task.Yield();
+        await DOTween.Sequence()
+            .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
+            .OnComplete(() => { })
+            .AsyncWaitForCompletion();
     }
 
     public override void MoveCardsStatic(CardNode activeNode, CardNode rootNode)
