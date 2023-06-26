@@ -25,10 +25,6 @@ public class EnterInventoryPileAnimation : CardAnimation
 
     public override Task AnimateCards(CardNode mainToBe, CardNode previousMain, CardNode rootNode)
     {
-        DOTween.Sequence()
-            .AppendInterval(_verticalTime)
-            .Append(_tweenXFunc(_cardInventory.GetInventoryNode(), _playSpaceTopRight.x));
-
         return Task.CompletedTask;
     }
 }

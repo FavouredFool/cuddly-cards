@@ -1334,6 +1334,7 @@ MonoBehaviour:
   _horizontalTime: 0.35
   _waitTime: 0.1
   _border: 1.25
+  _inventoryCardRotationAmount: 0.9
   _horizontalEasing: 10
   _verticalEasing: 4
 --- !u!114 &1221586267

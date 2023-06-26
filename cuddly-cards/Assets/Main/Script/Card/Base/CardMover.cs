@@ -27,7 +27,7 @@ public class CardMover : MonoBehaviour
     [SerializeField, Range(0f, 1)]
     float _verticalTime = 0.5f;
 
-    [SerializeField, Range(0.1f, 210)]
+    [SerializeField]
     float _horizontalTime = 1f;
 
     [SerializeField, Range(0f, 210)]
@@ -37,7 +37,7 @@ public class CardMover : MonoBehaviour
     [SerializeField]
     float _border = 1f;
     [SerializeField]
-    float _cardRotationAmount = 0.9f;
+    float _inventoryCardRotationAmount = 0.9f;
 
     [Header("Easing")]
     [SerializeField]
@@ -219,26 +219,25 @@ public class CardMover : MonoBehaviour
     {
         int cardNr = inventoryPart.Children.Count + 1;
         inventoryPart.Body.SetHeight(cardNr);
-        inventoryPart.Body.transform.rotation = Quaternion.identity;
+        inventoryPart.Body.transform.localRotation = Quaternion.identity;
 
         for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
         {
             cardNr -= 1;
             inventoryPart[i].Body.SetHeight(cardNr);
-            inventoryPart.Body.transform.rotation = Quaternion.identity;
+            inventoryPart[i].Body.transform.localRotation = Quaternion.identity;
         }
     }
 
     public void SetFannedHeightAndRotationOfInventoryPart(CardNode inventoryPart)
     {
-        // hardcoded
         inventoryPart.Body.SetHeight(2);
-        inventoryPart.Body.transform.rotation = Quaternion.Euler(0, 0, -_cardRotationAmount);
+        inventoryPart.Body.transform.localRotation = Quaternion.Euler(0, 0, -_inventoryCardRotationAmount);
 
         for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
         {
             inventoryPart[i].Body.SetHeight(2);
-            inventoryPart[i].Body.transform.rotation = Quaternion.Euler(0, 0, -_cardRotationAmount);
+            inventoryPart[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -_inventoryCardRotationAmount);
         }
     }
 
@@ -306,5 +305,10 @@ public class CardMover : MonoBehaviour
     public float GetBorder()
     {
         return _border;
+    }
+
+    public float GetInventoryCardRotationAmount()
+    {
+        return _inventoryCardRotationAmount;
     }
 }
