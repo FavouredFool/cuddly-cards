@@ -66,8 +66,11 @@ public class ToInventoryAnimation : CardAnimation
         float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
         float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
 
-
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
+
+        DOTween.Sequence()
+            .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
+            .Append(inventoryNode.Body.transform.DOMoveY(CardInfo.CARDHEIGHT, _horizontalTime));
 
         for (int i = 0; i < inventoryNode.Children.Count; i++)
         {
@@ -78,9 +81,10 @@ public class ToInventoryAnimation : CardAnimation
             subNode.IsTopLevel = true;
 
             DOTween.Sequence()
+                .AppendInterval(_verticalTime)
                 .Append(_tweenXFunc(subNode, generalStartOffset))
                 .Append(subNode.Body.transform.DORotate(new Vector3(0, 0, -_cardMover.GetInventoryCardRotationAmount()), _waitTime))
-                .Append(subNode.Body.transform.DOMove(new Vector3(generalStartOffset + fannedCardSpace, 2 * CardInfo.CARDHEIGHT, subNode.Body.transform.position.z), _horizontalTime + _verticalTime));
+                .Append(subNode.Body.transform.DOMove(new Vector3(generalStartOffset + fannedCardSpace, 2 * CardInfo.CARDHEIGHT, subNode.Body.transform.position.z), _horizontalTime));
 
             int totalChildren = subNode.Children.Count;
 
@@ -91,9 +95,10 @@ public class ToInventoryAnimation : CardAnimation
                 float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren);
 
                 DOTween.Sequence()
+                    .AppendInterval(_verticalTime)
                     .Append(_tweenXFunc(childNode, generalStartOffset))
                     .Append(childNode.Body.transform.DOLocalRotate(new Vector3(0, 0, -_cardMover.GetInventoryCardRotationAmount()), _waitTime))
-                    .Append(childNode.Body.transform.DOMove(new Vector3(generalStartOffset + (totalChildren - 1 - j) * CardInfo.CARDWIDTH * cardPercentage, 2 * CardInfo.CARDHEIGHT, childNode.Body.transform.position.z), _horizontalTime + _verticalTime));
+                    .Append(childNode.Body.transform.DOMove(new Vector3(generalStartOffset + (totalChildren - 1 - j) * CardInfo.CARDWIDTH * cardPercentage, 2 * CardInfo.CARDHEIGHT, childNode.Body.transform.position.z), _horizontalTime));
             }
 
         }
@@ -101,7 +106,7 @@ public class ToInventoryAnimation : CardAnimation
 
         // THE EMPTY ONCOMPLETE NEEDS TO BE THERE, OTHERWISE IT WILL NOT WORK!
         await DOTween.Sequence()
-            .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
+            .AppendInterval(_verticalTime + _horizontalTime * 2 + _waitTime + 0.01f)
             .OnComplete(() => { })
             .AsyncWaitForCompletion();
     }

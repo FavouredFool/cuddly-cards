@@ -19,22 +19,28 @@ public class CloseAnimation : CardAnimation
 
     public async override Task AnimateCards(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode)
     {
-
-        // move in deck -> move out inventory
-
         _cardManager.AddToTopLevelMainPile(activeNode);
-        _cardMover.MoveCard(activeNode, _playSpaceBottomLeft);
+        _tweenYFunc(activeNode, activeNode.GetNodeCount(CardInfo.CardTraversal.CONTEXT));
 
         if (activeNode != rootNode)
         {
             _cardManager.AddToTopLevelMainPile(activeNode.Parent);
-            _cardMover.MoveCard(activeNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
 
             if (activeNode.Parent != rootNode)
             {
                 _cardManager.AddToTopLevelMainPile(rootNode);
-                _cardMover.MoveCard(rootNode, _playSpaceTopRight);
             }
+        }
+
+        foreach(CardNode childNode in activeNode.Children)
+        {
+            _cardManager.AddToTopLevelMainPile(childNode);
+
+            DOTween.Sequence()
+                .Append(_tweenYFunc(childNode, childNode.GetNodeCountUpToNodeInPile(activeNode, CardInfo.CardTraversal.CONTEXT)))
+                .Append(_tweenXFunc(childNode, _playSpaceBottomLeft.x));
+
+            
         }
 
 
