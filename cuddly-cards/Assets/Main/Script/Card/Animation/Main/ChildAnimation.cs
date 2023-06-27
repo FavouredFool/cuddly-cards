@@ -17,8 +17,9 @@ public class ChildAnimation : CardAnimation
 
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
-    public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
+    public override void MoveCardsStatic(CardNode pressedNode)
     {
+        CardNode rootNode = _cardManager.GetRootNode();
         _cardManager.AddToTopLevelMainPile(pressedNode);
         _cardMover.MoveCard(pressedNode, _playSpaceBottomLeft);
 
@@ -41,8 +42,10 @@ public class ChildAnimation : CardAnimation
         }
     }
 
-    public override async Task AnimateCards(CardNode mainToBe, CardNode backToBe, CardNode rootNode)
+    public override async Task AnimateCards(CardNode mainToBe, CardNode backToBe)
     {
+        CardNode rootNode = _cardManager.GetRootNode();
+
         CardNode discardToBe = backToBe.Parent;
         CardNode discard = discardToBe != null && discardToBe != rootNode ? rootNode : null;
 
@@ -149,5 +152,15 @@ public class ChildAnimation : CardAnimation
             .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
             .OnComplete(() => { })
             .AsyncWaitForCompletion();
+    }
+
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void MoveCardsStaticNew(CardNode activeNode)
+    {
+        throw new NotImplementedException();
     }
 }

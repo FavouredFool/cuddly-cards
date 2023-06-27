@@ -16,7 +16,8 @@ public class MainState : LayoutState
     public void StartState()
     {
         _manager.GetCardManager().SetBaseNode(_baseNode);
-        _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CHILD);
+        _manager.GetCardManager().GetCardMover().AddAnimation(CardTransition.CHILD);
+        _ = _manager.GetCardManager().GetCardMover().StartAnimations(_baseNode, false);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -28,11 +29,9 @@ public class MainState : LayoutState
 
         if (clickedNode.Context.GetCardType() == CardType.INVENTORY)
         {
+            _manager.GetCardManager().GetCardMover().AddAnimation(CardTransition.CLOSE);
+
             _manager.PushState(new InventoryState(_manager));
-
-            await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(_baseNode, _baseNode, CardTransition.CLOSE);
-
-            _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CLOSE);
             return;
         }
 
@@ -77,7 +76,8 @@ public class MainState : LayoutState
             return;
         }
 
-        await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(clickedNode, previousActiveNode, cardTransition);
+        _manager.GetCardManager().GetCardMover().AddAnimation(cardTransition);
+        await _manager.GetCardManager().GetCardMover().StartAnimations(clickedNode, previousActiveNode, true);
         _manager.SetState(nextState);
     }
 }

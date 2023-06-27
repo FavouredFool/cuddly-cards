@@ -17,8 +17,9 @@ public class CloseAnimation : CardAnimation
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, _tweenXFuncFunc, _tweenYFuncFunc, _tweenZFuncFunc) { }
 
 
-    public async override Task AnimateCards(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode)
+    public async override Task AnimateCards(CardNode activeNode, CardNode previousActiveNode)
     {
+        CardNode rootNode = _cardManager.GetRootNode();
         _cardManager.AddToTopLevelMainPile(activeNode);
         _tweenYFunc(activeNode, activeNode.GetNodeCount(CardInfo.CardTraversal.CONTEXT));
 
@@ -49,8 +50,14 @@ public class CloseAnimation : CardAnimation
             .AsyncWaitForCompletion();
     }
 
-    public override void MoveCardsStatic(CardNode activeNode, CardNode rootNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
+        throw new NotImplementedException();
+    }
+
+    public override void MoveCardsStatic(CardNode activeNode)
+    {
+        CardNode rootNode = _cardManager.GetRootNode();
         // move in deck -> move out inventory
 
         _cardManager.AddToTopLevelMainPile(activeNode);
@@ -67,5 +74,10 @@ public class CloseAnimation : CardAnimation
                 _cardMover.MoveCard(rootNode, _playSpaceTopRight);
             }
         }
+    }
+
+    public override void MoveCardsStaticNew(CardNode activeNode)
+    {
+        throw new NotImplementedException();
     }
 }

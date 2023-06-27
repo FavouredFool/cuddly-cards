@@ -16,14 +16,16 @@ public class ToCoverAnimation : CardAnimation
         
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, _tweenXFuncFunc, _tweenYFuncFunc, _tweenZFuncFunc){}
 
-    public override void MoveCardsStatic(CardNode activeNode, CardNode rootNode)
+    public override void MoveCardsStatic(CardNode activeNode)
     {
+        CardNode rootNode = _cardManager.GetRootNode();
         _cardManager.AddToTopLevelMainPile(rootNode);
         _cardMover.MoveCard(rootNode, new Vector2(_playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _playSpaceBottomLeft.y));
     }
 
-    public async override Task AnimateCards(CardNode activeNode, CardNode previousMainNode, CardNode rootNode)
+    public async override Task AnimateCards(CardNode activeNode, CardNode previousMainNode)
     {
+        CardNode rootNode = _cardManager.GetRootNode();
         // -------------- CHILDREN ---------------------
 
         List<CardNode> children = previousMainNode.Children;
@@ -103,5 +105,15 @@ public class ToCoverAnimation : CardAnimation
             .AppendInterval(_verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime + 0.01f)
             .OnComplete(() => { })
             .AsyncWaitForCompletion();
+    }
+
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void MoveCardsStaticNew(CardNode activeNode)
+    {
+        throw new NotImplementedException();
     }
 }

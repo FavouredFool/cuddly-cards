@@ -17,7 +17,8 @@ public class CoverState : LayoutState
     public void StartState()
     {
         _manager.GetCardManager().SetBaseNode(_rootNode);
-        _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(_rootNode, CardTransition.TOCOVER);
+        _manager.GetCardManager().GetCardMover().AddAnimation(CardTransition.TOCOVER);
+        _ = _manager.GetCardManager().GetCardMover().StartAnimations(false);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -35,7 +36,8 @@ public class CoverState : LayoutState
             return;
         }
 
-        await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(clickedNode, _rootNode, CardInfo.CardTransition.FROMCOVER);
+        _manager.GetCardManager().GetCardMover().AddAnimation(CardInfo.CardTransition.FROMCOVER);
+        await _manager.GetCardManager().GetCardMover().StartAnimations(clickedNode, true);
 
         _manager.SetState(new MainState(_manager, clickedNode));
     }

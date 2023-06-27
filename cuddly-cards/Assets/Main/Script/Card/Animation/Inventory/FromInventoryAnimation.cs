@@ -18,7 +18,7 @@ public class FromInventoryAnimation : CardAnimation
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
 
-    public override void MoveCardsStatic(CardNode activeNode, CardNode rootNode)
+    public override void MoveCardsStatic(CardNode activeNode)
     {
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
 
@@ -38,7 +38,7 @@ public class FromInventoryAnimation : CardAnimation
 
     }
 
-    public override async Task AnimateCards(CardNode mainToBe, CardNode backToBe, CardNode rootNode)
+    public override async Task AnimateCards(CardNode mainToBe, CardNode backToBe)
     {
         float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
         float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
@@ -80,5 +80,15 @@ public class FromInventoryAnimation : CardAnimation
             .AppendInterval(_horizontalTime + _verticalTime + 0.01f)
             .OnComplete(() => { })
             .AsyncWaitForCompletion();
+    }
+
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void MoveCardsStaticNew(CardNode activeNode)
+    {
+        throw new NotImplementedException();
     }
 }

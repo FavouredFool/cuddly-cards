@@ -52,6 +52,7 @@ public class CardMover : MonoBehaviour
 
     CardManager _cardManager;
     CardInventory _cardInventory;
+    AnimationManager _animationManager;
 
     List<SubLayout> _subLayouts;
     
@@ -60,6 +61,7 @@ public class CardMover : MonoBehaviour
     {
         _cardManager = GetComponent<CardManager>();
         _cardInventory = GetComponent<CardInventory>();
+        _animationManager = GetComponent<AnimationManager>();
 
         List<CardAnimation> mainAnimations = new()
         {
@@ -126,20 +128,28 @@ public class CardMover : MonoBehaviour
         throw new System.Exception("SubLayout not set");
     }
 
-    public async Task SetLayoutBasedOnTransitionAnimated(CardNode activeNode, CardNode previousActiveNode, CardTransition transition)
+    public void AddAnimation(CardAnimation animation)
     {
-        _isAnimating = true;
-        CardTransitionToSubLayout(transition).PrepareAnimation(transition);
-        await CardTransitionToSubLayout(transition).CardTransitionToAnimation(transition).AnimateCards(activeNode, previousActiveNode, _cardManager.GetRootNode());
-        CardTransitionToSubLayout(transition).FinishAnimation(transition);
-        _isAnimating = false;
+        _animationManager.AddAnimation(animation);
     }
 
-    public void SetLayoutBasedOnTransitionStatic(CardNode activeNode, CardTransition transition)
+
+    public async Task StartAnimations(bool playAnimated)
     {
-        CardTransitionToSubLayout(transition).PrepareStatic(transition);
-        CardTransitionToSubLayout(transition).CardTransitionToAnimation(transition).MoveCardsStatic(activeNode, _cardManager.GetRootNode());
-        CardTransitionToSubLayout(transition).FinishStatic(transition);
+        await StartAnimations(null, playAnimated);
+    }
+    public async Task StartAnimations(CardNode activeNode, bool playAnimated)
+    {
+        await StartAnimations(activeNode, null, playAnimated);
+    }
+    public async Task StartAnimations(CardNode activeNode, CardNode previousActiveNode, bool playAnimated)
+    {
+        await _animationManager.PlayAnimations(activeNode, previousActiveNode, playAnimated);
+    }
+
+    public void AddAnimation(CardTransition transition)
+    {
+        AddAnimation(CardTransitionToSubLayout(transition).CardTransitionToAnimation(transition));
     }
 
     public void SetMainCardsRelativeToParent()

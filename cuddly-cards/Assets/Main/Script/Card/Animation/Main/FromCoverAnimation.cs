@@ -16,8 +16,9 @@ public class FromCoverAnimation : CardAnimation
 
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFunc, __tweenYFunc, __tweenZFunc) { }
 
-    public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
+    public override void MoveCardsStatic(CardNode pressedNode)
     {
+        CardNode rootNode = _cardManager.GetRootNode();
         _cardManager.AddToTopLevelMainPile(pressedNode);
         _cardMover.MoveCard(pressedNode, _playSpaceBottomLeft);
 
@@ -40,8 +41,9 @@ public class FromCoverAnimation : CardAnimation
         }
     }
 
-    public override async Task AnimateCards(CardNode mainNode, CardNode previousActiveNode, CardNode rootNode)
+    public override async Task AnimateCards(CardNode mainNode, CardNode previousActiveNode)
     {
+        CardNode rootNode = _cardManager.GetRootNode();
         _cardManager.AddToTopLevelMainPile(rootNode);
         DOTween.Sequence()
             .AppendInterval(_verticalTime)
@@ -67,5 +69,15 @@ public class FromCoverAnimation : CardAnimation
             .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
             .OnComplete(() => { })
             .AsyncWaitForCompletion();
+    }
+
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void MoveCardsStaticNew(CardNode activeNode)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -17,13 +17,13 @@ public class ExitInventoryPileAnimation : CardAnimation
 
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
-    public override void MoveCardsStatic(CardNode pressedNode, CardNode rootNode)
+    public override void MoveCardsStatic(CardNode pressedNode)
     {
         float xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
         _cardMover.MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
     }
 
-    public override Task AnimateCards(CardNode mainToBe, CardNode previousMain, CardNode rootNode)
+    public override Task AnimateCards(CardNode mainToBe, CardNode previousMain)
     {
         float xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
         DOTween.Sequence()
@@ -31,5 +31,15 @@ public class ExitInventoryPileAnimation : CardAnimation
         .Append(_tweenXFunc(_cardInventory.GetInventoryNode(), xInventoryPosition));
 
         return Task.CompletedTask;
+    }
+
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void MoveCardsStaticNew(CardNode activeNode)
+    {
+        throw new NotImplementedException();
     }
 }

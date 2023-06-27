@@ -10,9 +10,9 @@ public class InventoryState : LayoutState
 
     public async void StartState()
     {
-        await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(null, null, CardInfo.CardTransition.TOINVENTORY);
+        _manager.GetCardManager().GetCardMover().AddAnimation(CardInfo.CardTransition.TOINVENTORY);
 
-        _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(null, CardInfo.CardTransition.TOINVENTORY);
+        await _manager.GetCardManager().GetCardMover().StartAnimations(_manager.GetCardManager().GetBaseNode(), true);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -24,13 +24,10 @@ public class InventoryState : LayoutState
 
         // HERE NEEDS TO BE THE REFERENCE FOR THE ANIMATION FROM ANY STATE'S CLOSED TO OPEN
 
-        _ = _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(_manager.GetCardManager().GetBaseNode(), null, CardInfo.CardTransition.OPEN);
+        _manager.GetCardManager().GetCardMover().AddAnimation(CardInfo.CardTransition.OPEN);
+        _manager.GetCardManager().GetCardMover().AddAnimation(CardInfo.CardTransition.FROMINVENTORY);
 
-        await _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionAnimated(null, null, CardInfo.CardTransition.FROMINVENTORY);
-
-        _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(_manager.GetCardManager().GetBaseNode(), CardInfo.CardTransition.OPEN);
-
-        _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(null, CardInfo.CardTransition.FROMINVENTORY);
+        await _manager.GetCardManager().GetCardMover().StartAnimations(_manager.GetCardManager().GetBaseNode(), true);
 
         _manager.PopState();
     }
