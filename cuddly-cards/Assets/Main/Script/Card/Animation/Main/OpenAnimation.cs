@@ -44,7 +44,7 @@ public class OpenAnimation : CardAnimation
         }
 
         await DOTween.Sequence()
-            .AppendInterval(_verticalTime + _horizontalTime * 2 + _waitTime + 0.01f)
+            .AppendInterval(_verticalTime + _horizontalTime + 0.01f)
             .OnComplete(() => { })
             .AsyncWaitForCompletion();
     }

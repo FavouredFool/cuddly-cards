@@ -77,7 +77,7 @@ public class FromInventoryAnimation : CardAnimation
 
         // THE EMPTY ONCOMPLETE NEEDS TO BE THERE, OTHERWISE IT WILL NOT WORK!
         await DOTween.Sequence()
-            .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
+            .AppendInterval(_horizontalTime + _verticalTime + 0.01f)
             .OnComplete(() => { })
             .AsyncWaitForCompletion();
     }
