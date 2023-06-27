@@ -83,7 +83,7 @@ public class ToInventoryAnimation : CardAnimation
             DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(_tweenXFunc(subNode, generalStartOffset))
-                .Append(subNode.Body.transform.DORotate(new Vector3(0, 0, -_cardMover.GetInventoryCardRotationAmount()), _waitTime))
+                .Append(subNode.Body.transform.DOLocalRotate(new Vector3(0, 0, -_cardMover.GetInventoryCardRotationAmount()), _waitTime))
                 .Append(subNode.Body.transform.DOMove(new Vector3(generalStartOffset + fannedCardSpace, 2 * CardInfo.CARDHEIGHT, subNode.Body.transform.position.z), _horizontalTime));
 
             int totalChildren = subNode.Children.Count;

@@ -15,6 +15,7 @@ public class MainState : LayoutState
 
     public void StartState()
     {
+        _manager.GetCardManager().SetBaseNode(_baseNode);
         _manager.GetCardManager().GetCardMover().SetLayoutBasedOnTransitionStatic(_baseNode, CardTransition.CHILD);
     }
 

@@ -68,6 +68,7 @@ public class CardMover : MonoBehaviour
             new ToCoverAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
             new FromCoverAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
             new CloseAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new OpenAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
         };
 
         List<CardAnimation> inventoryAnimations = new()
@@ -115,6 +116,7 @@ public class CardMover : MonoBehaviour
             case CardTransition.TOCOVER:
             case CardTransition.FROMCOVER:
             case CardTransition.CLOSE:
+            case CardTransition.OPEN:
                 return _subLayouts[0];
             case CardTransition.TOINVENTORY:
             case CardTransition.FROMINVENTORY:

@@ -29,6 +29,8 @@ public class MainLayout : SubLayout
                 return _cardAnimations[3];
             case CardTransition.CLOSE:
                 return _cardAnimations[4];
+            case CardTransition.OPEN:
+                return _cardAnimations[5];
         }
 
         throw new System.Exception("CardAnimation not set");

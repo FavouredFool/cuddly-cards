@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CloseAnimation : CardAnimation
+public class OpenAnimation : CardAnimation
 {
-    public CloseAnimation(
+    public OpenAnimation(
 
         CardManager cardManager,
         float waitTime, float horizontalWaitTime, float verticalWaitTime,
@@ -20,7 +20,9 @@ public class CloseAnimation : CardAnimation
     public async override Task AnimateCards(CardNode activeNode, CardNode previousActiveNode, CardNode rootNode)
     {
         _cardManager.AddToTopLevelMainPile(activeNode);
-        _tweenYFunc(activeNode, activeNode.GetNodeCount(CardInfo.CardTraversal.CONTEXT));
+        DOTween.Sequence()
+            .AppendInterval(_horizontalTime)
+            .Append(_tweenYFunc(activeNode, 1));
 
         if (activeNode != rootNode)
         {
@@ -32,15 +34,13 @@ public class CloseAnimation : CardAnimation
             }
         }
 
-        foreach(CardNode childNode in activeNode.Children)
+        for(int i = 0; i < activeNode.Children.Count; i++)
         {
-            _cardManager.AddToTopLevelMainPile(childNode);
+            _cardManager.AddToTopLevelMainPile(activeNode.Children[i]);
 
             DOTween.Sequence()
-                .Append(_tweenYFunc(childNode, childNode.GetNodeCountUpToNodeInPile(activeNode, CardInfo.CardTraversal.CONTEXT)))
-                .Append(_tweenXFunc(childNode, _playSpaceBottomLeft.x));
-
-            
+                .Append(_tweenXFunc(activeNode.Children[i], i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset()))
+                .Append(_tweenYFunc(activeNode.Children[i], activeNode.Children[i].GetNodeCount(CardInfo.CardTraversal.CONTEXT)));
         }
 
         await DOTween.Sequence()
@@ -51,8 +51,6 @@ public class CloseAnimation : CardAnimation
 
     public override void MoveCardsStatic(CardNode activeNode, CardNode rootNode)
     {
-        // move in deck -> move out inventory
-
         _cardManager.AddToTopLevelMainPile(activeNode);
         _cardMover.MoveCard(activeNode, _playSpaceBottomLeft);
 
@@ -66,6 +64,12 @@ public class CloseAnimation : CardAnimation
                 _cardManager.AddToTopLevelMainPile(rootNode);
                 _cardMover.MoveCard(rootNode, _playSpaceTopRight);
             }
+        }
+
+        for (int i = 0; i < activeNode.Children.Count; i++)
+        {
+            _cardManager.AddToTopLevelMainPile(activeNode.Children[i]);
+            _cardMover.MoveCard(activeNode.Children[i], new Vector2(i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset(), _playSpaceBottomLeft.y));
         }
     }
 }

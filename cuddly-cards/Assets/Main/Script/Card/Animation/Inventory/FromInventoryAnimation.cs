@@ -38,22 +38,43 @@ public class FromInventoryAnimation : CardAnimation
 
     }
 
-    public void FanCardsFromInventorySubcard(CardNode inventorySubcard, float startFanX, float fannedCardSpace)
-    {
-        int totalChildCards = inventorySubcard.Children.Count;
-
-        _cardMover.MoveCard(inventorySubcard, new Vector2(startFanX + fannedCardSpace, _playSpaceBottomLeft.y));
-
-        float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildCards);
-
-        for (int i = 0; i < totalChildCards; i++)
-        {
-            _cardMover.MoveCard(inventorySubcard[i], new Vector2(startFanX + i * CardInfo.CARDWIDTH * cardPercentage, _playSpaceBottomLeft.y));
-        }
-    }
-
     public override async Task AnimateCards(CardNode mainToBe, CardNode backToBe, CardNode rootNode)
     {
+        float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
+        float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
+
+        CardNode inventoryNode = _cardInventory.GetInventoryNode();
+
+        DOTween.Sequence()
+            .Append(inventoryNode.Body.transform.DOMoveY(inventoryNode.GetNodeCount(CardTraversal.CONTEXT) * CardInfo.CARDHEIGHT, _horizontalTime));
+
+        for (int i = 0; i < inventoryNode.Children.Count; i++)
+        {
+            float generalStartOffset = _playSpaceBottomLeft.x + (1 + (1 - i)) * _cardMover.GetBorder() + (1 - i) * fannedCardSpace;
+
+            CardNode subNode = inventoryNode[i];
+
+            subNode.IsTopLevel = true;
+
+            DOTween.Sequence()
+                .Append(_tweenXFunc(subNode, _playSpaceTopRight.x))
+                .Join(subNode.Body.transform.DOMoveY(subNode.GetNodeCountUpToNodeInPile(inventoryNode, CardTraversal.CONTEXT) * CardInfo.CARDHEIGHT, _horizontalTime).SetEase(_cardMover.GetHorizontalEase()))
+                .Join(subNode.Body.transform.DOLocalRotate(new Vector3(0, 0, 0), _waitTime).SetEase(_cardMover.GetHorizontalEase()));
+
+            int totalChildren = subNode.Children.Count;
+
+            for (int j = 0; j < totalChildren; j++)
+            {
+                CardNode childNode = subNode[j];
+
+                DOTween.Sequence()
+                .Append(_tweenXFunc(childNode, _playSpaceTopRight.x))
+                .Join(childNode.Body.transform.DOMoveY(childNode.GetNodeCountUpToNodeInPile(inventoryNode, CardTraversal.CONTEXT) * CardInfo.CARDHEIGHT, _horizontalTime).SetEase(_cardMover.GetHorizontalEase()))
+                .Join(childNode.Body.transform.DOLocalRotate(new Vector3(0, 0, 0), _waitTime).SetEase(_cardMover.GetHorizontalEase()));
+            }
+
+        }
+
         // THE EMPTY ONCOMPLETE NEEDS TO BE THERE, OTHERWISE IT WILL NOT WORK!
         await DOTween.Sequence()
             .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
