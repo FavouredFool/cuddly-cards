@@ -16,12 +16,12 @@ public class CloseAnimation : CardAnimation
 
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, _tweenXFuncFunc, _tweenYFuncFunc, _tweenZFuncFunc) { }
 
-
-    public async override Task AnimateCards(CardNode activeNode, CardNode previousActiveNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
+        Sequence entireSequence = DOTween.Sequence();
         CardNode rootNode = _cardManager.GetRootNode();
         _cardManager.AddToTopLevelMainPile(activeNode);
-        _tweenYFunc(activeNode, activeNode.GetNodeCount(CardInfo.CardTraversal.CONTEXT));
+        entireSequence.Join(_tweenYFunc(activeNode, activeNode.GetNodeCount(CardInfo.CardTraversal.CONTEXT)));
 
         if (activeNode != rootNode)
         {
@@ -33,26 +33,16 @@ public class CloseAnimation : CardAnimation
             }
         }
 
-        foreach(CardNode childNode in activeNode.Children)
+        foreach (CardNode childNode in activeNode.Children)
         {
             _cardManager.AddToTopLevelMainPile(childNode);
 
-            DOTween.Sequence()
+            entireSequence.Join(DOTween.Sequence()
                 .Append(_tweenYFunc(childNode, childNode.GetNodeCountUpToNodeInPile(activeNode, CardInfo.CardTraversal.CONTEXT)))
-                .Append(_tweenXFunc(childNode, _playSpaceBottomLeft.x));
-
-            
+                .Append(_tweenXFunc(childNode, _playSpaceBottomLeft.x)));
         }
 
-        await DOTween.Sequence()
-            .AppendInterval(_verticalTime + _horizontalTime * 2 + _waitTime + 0.01f)
-            .OnComplete(() => { })
-            .AsyncWaitForCompletion();
-    }
-
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
-    {
-        throw new NotImplementedException();
+        return entireSequence;
     }
 
     public override void MoveCardsStatic(CardNode activeNode)
@@ -74,10 +64,5 @@ public class CloseAnimation : CardAnimation
                 _cardMover.MoveCard(rootNode, _playSpaceTopRight);
             }
         }
-    }
-
-    public override void MoveCardsStaticNew(CardNode activeNode)
-    {
-        throw new NotImplementedException();
     }
 }

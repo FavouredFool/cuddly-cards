@@ -40,24 +40,7 @@ public abstract class CardAnimation
         _tweenZFunc = tweenZFunc;
     }
 
-    public Sequence GetAnimationSequence()
-    {
-        return GetAnimationSequence(null, null);
-    }
-    public Sequence GetAnimationSequence(CardNode activeNode)
-    {
-        return GetAnimationSequence(null, null);
-    }
-
     public abstract Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode);
     
-    public void MoveCardsStaticNew()
-    {
-        MoveCardsStaticNew(null);
-    }
-
-    public abstract void MoveCardsStaticNew(CardNode activeNode);
-
     public abstract void MoveCardsStatic(CardNode activeNode);
-    public abstract Task AnimateCards(CardNode activeNode, CardNode previousActiveNode);
 }

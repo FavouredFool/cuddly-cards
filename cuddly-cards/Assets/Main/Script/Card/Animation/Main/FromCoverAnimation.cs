@@ -41,43 +41,31 @@ public class FromCoverAnimation : CardAnimation
         }
     }
 
-    public override async Task AnimateCards(CardNode mainNode, CardNode previousActiveNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
+        Sequence entireSequence = DOTween.Sequence();
+
         CardNode rootNode = _cardManager.GetRootNode();
         _cardManager.AddToTopLevelMainPile(rootNode);
-        DOTween.Sequence()
+        entireSequence.Join(DOTween.Sequence()
             .AppendInterval(_verticalTime)
             .Append(_tweenXFunc(rootNode, _playSpaceBottomLeft.x))
             .AppendInterval(_waitTime + _horizontalTime)
-            .Append(_tweenYFunc(rootNode, 1));
+            .Append(_tweenYFunc(rootNode, 1)));
 
         for (int i = 0; i < rootNode.Children.Count; i++)
         {
             CardNode childNode = rootNode.Children[i];
             _cardManager.AddToTopLevelMainPile(childNode);
 
-            DOTween.Sequence()
+            entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(_tweenXFunc(childNode, _playSpaceBottomLeft.x))
                 .AppendInterval(_waitTime)
                 .Append(_tweenXFunc(childNode, i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset()))
-                .Append(_tweenYFunc(childNode, childNode.GetNodeCount(CardTraversal.CONTEXT)));
+                .Append(_tweenYFunc(childNode, childNode.GetNodeCount(CardTraversal.CONTEXT))));
         }
 
-        // THE EMPTY ONCOMPLETE NEEDS TO BE THERE, OTHERWISE IT WILL NOT WORK!
-        await DOTween.Sequence()
-            .AppendInterval(_verticalTime * 2 + _horizontalTime * 2 + _waitTime + 0.01f)
-            .OnComplete(() => { })
-            .AsyncWaitForCompletion();
-    }
-
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void MoveCardsStaticNew(CardNode activeNode)
-    {
-        throw new NotImplementedException();
+        return entireSequence;
     }
 }

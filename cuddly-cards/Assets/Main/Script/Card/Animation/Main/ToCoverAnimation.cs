@@ -23,8 +23,10 @@ public class ToCoverAnimation : CardAnimation
         _cardMover.MoveCard(rootNode, new Vector2(_playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _playSpaceBottomLeft.y));
     }
 
-    public async override Task AnimateCards(CardNode activeNode, CardNode previousMainNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousMainNode)
     {
+        Sequence entireSequence = DOTween.Sequence();
+
         CardNode rootNode = _cardManager.GetRootNode();
         // -------------- CHILDREN ---------------------
 
@@ -35,20 +37,20 @@ public class ToCoverAnimation : CardAnimation
             CardNode child = children[i];
             _cardManager.AddToTopLevelMainPile(child);
 
-            DOTween.Sequence()
+            entireSequence.Join(DOTween.Sequence()
                 .Append(_tweenYFunc(child, child.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
                 .Append(_tweenXFunc(child, _playSpaceBottomLeft.x))
                 .AppendInterval(2 * _waitTime + _horizontalTime)
-                .Append(_tweenXFunc(child, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
+                .Append(_tweenXFunc(child, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f)));
         }
 
         // -------------- MAIN ---------------------
 
         _cardManager.AddToTopLevelMainPile(previousMainNode);
-        DOTween.Sequence()
+        entireSequence.Join(DOTween.Sequence()
             .Append(_tweenYFunc(previousMainNode, previousMainNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
             .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
-            .Append(_tweenXFunc(previousMainNode, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
+            .Append(_tweenXFunc(previousMainNode, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f)));
 
         // -------------- BACK ---------------------
 
@@ -67,12 +69,12 @@ public class ToCoverAnimation : CardAnimation
 
         foreach (CardNode node in animatingNodesBack)
         {
-            DOTween.Sequence()
+            entireSequence.Join(DOTween.Sequence()
                 .Append(_tweenYFunc(node, node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
                 .AppendInterval(_horizontalTime + _waitTime)
                 .Append(_tweenZFunc(node, _playSpaceBottomLeft.y))
                 .AppendInterval(_waitTime)
-                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
+                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f)));
         }
 
 
@@ -91,29 +93,16 @@ public class ToCoverAnimation : CardAnimation
 
         foreach (CardNode node in animatingNodesRoot)
         {
-            DOTween.Sequence()
+            entireSequence.Join(DOTween.Sequence()
                 .Append(_tweenYFunc(node, node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
                 .Append(_tweenXFunc(node, _playSpaceBottomLeft.x))
                 .AppendInterval(_waitTime)
                 .Append(_tweenZFunc(node, _playSpaceBottomLeft.y))
                 .AppendInterval(_waitTime)
-                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f));
+                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f)));
         }
 
-        // THE EMPTY ONCOMPLETE NEEDS TO BE THERE, OTHERWISE IT WILL NOT WORK!
-        await DOTween.Sequence()
-            .AppendInterval(_verticalTime * 2 + _horizontalTime * 3 + 2 * _waitTime + 0.01f)
-            .OnComplete(() => { })
-            .AsyncWaitForCompletion();
+        return entireSequence;
     }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void MoveCardsStaticNew(CardNode activeNode)
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -23,18 +23,10 @@ public class EnterInventoryPileAnimation : CardAnimation
         _cardMover.MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
     }
 
-    public override Task AnimateCards(CardNode mainToBe, CardNode previousMain)
-    {
-        return Task.CompletedTask;
-    }
-
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
-        throw new NotImplementedException();
-    }
-
-    public override void MoveCardsStaticNew(CardNode activeNode)
-    {
-        throw new NotImplementedException();
+        // why is there no animation here
+        Sequence entireSequence = DOTween.Sequence();
+        return entireSequence;
     }
 }

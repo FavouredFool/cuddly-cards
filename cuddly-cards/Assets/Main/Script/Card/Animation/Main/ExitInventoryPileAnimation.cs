@@ -23,23 +23,14 @@ public class ExitInventoryPileAnimation : CardAnimation
         _cardMover.MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
     }
 
-    public override Task AnimateCards(CardNode mainToBe, CardNode previousMain)
-    {
-        float xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
-        DOTween.Sequence()
-        .AppendInterval(_verticalTime + 2 * _horizontalTime + 2 * _waitTime)
-        .Append(_tweenXFunc(_cardInventory.GetInventoryNode(), xInventoryPosition));
-
-        return Task.CompletedTask;
-    }
-
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
-        throw new NotImplementedException();
-    }
+        float xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
+        Sequence entireSequence = DOTween.Sequence()
+            .AppendInterval(_verticalTime + 2 * _horizontalTime + 2 * _waitTime)
+            .Append(_tweenXFunc(_cardInventory.GetInventoryNode(), xInventoryPosition));
 
-    public override void MoveCardsStaticNew(CardNode activeNode)
-    {
-        throw new NotImplementedException();
+        return entireSequence;
+
     }
 }

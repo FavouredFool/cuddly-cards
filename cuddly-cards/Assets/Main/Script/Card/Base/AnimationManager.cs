@@ -35,23 +35,14 @@ public class AnimationManager : MonoBehaviour
     {
         PrepareAnimation();
 
-        /*
         Sequence allAnimations = DOTween.Sequence();
 
         foreach (CardAnimation animation in _animations)
         {
-            allAnimations.Join(animation.GetAnimationSequence());
+            allAnimations.Join(animation.GetAnimationSequence(activeNode, previousActiveNode));
         }
 
         await allAnimations.Play().OnComplete(() => { }).AsyncWaitForCompletion();
-        */
-
-        foreach (CardAnimation animation in _animations)
-        {
-            _ = animation.AnimateCards(activeNode, previousActiveNode);
-        }
-
-        await DOTween.Sequence().AppendInterval(3).OnComplete(() => { }).AsyncWaitForCompletion();
 
         FinishAnimation();
 
