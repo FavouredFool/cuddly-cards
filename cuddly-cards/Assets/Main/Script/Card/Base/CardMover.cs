@@ -61,16 +61,16 @@ public class CardMover : MonoBehaviour
 
         List<CardAnimation> cardAnimations = new()
         {
-            new ChildAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new BackAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new ToCoverAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new FromCoverAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new CloseAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new OpenAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new ToInventoryAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new FromInventoryAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new EnterInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-            new ExitInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ)
+            new ChildAnimation(_cardManager),
+            new BackAnimation(_cardManager),
+            new ToCoverAnimation(_cardManager),
+            new FromCoverAnimation(_cardManager),
+            new CloseAnimation(_cardManager),
+            new OpenAnimation(_cardManager),
+            new ToInventoryAnimation(_cardManager),
+            new FromInventoryAnimation(_cardManager),
+            new EnterInventoryPileAnimation(_cardManager),
+            new ExitInventoryPileAnimation(_cardManager)
         };
 
         List<SubLayout> subLayouts = new()

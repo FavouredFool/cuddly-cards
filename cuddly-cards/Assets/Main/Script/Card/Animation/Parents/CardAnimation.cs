@@ -22,22 +22,19 @@ public abstract class CardAnimation
     protected Func<CardNode, float, Tween> _tweenZFunc;
 
 
-    public CardAnimation(
-        CardManager cardManager, float waitTime, float horizontalWaitTime, float verticalWaitTime,
-        Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
-        Func<CardNode, float, Tween> tweenXFunc, Func<CardNode, int, Tween> tweenYFunc, Func<CardNode, float, Tween> tweenZFunc)
+    public CardAnimation(CardManager cardManager)
     {
         _cardManager = cardManager;
         _cardMover = _cardManager.GetCardMover();
         _cardInventory = _cardManager.GetCardInventory();
-        _waitTime = waitTime;
-        _horizontalTime = horizontalWaitTime;
-        _verticalTime = verticalWaitTime;
-        _playSpaceBottomLeft = playSpaceBottomLeft;
-        _playSpaceTopRight = playSpaceTopRight;
-        _tweenXFunc = tweenXFunc;
-        _tweenYFunc = tweenYFunc;
-        _tweenZFunc = tweenZFunc;
+        _waitTime = _cardMover.GetWaitTime();
+        _horizontalTime = _cardMover.GetHorizontalTime();
+        _verticalTime = _cardMover.GetVerticalTime();
+        _playSpaceBottomLeft = _cardMover.GetPlaySpaceBottomLeft();
+        _playSpaceTopRight = _cardMover.GetPlaySpaceTopRight();
+        _tweenXFunc = _cardMover.TweenX;
+        _tweenYFunc = _cardMover.TweenY;
+        _tweenZFunc = _cardMover.TweenZ;
     }
 
     public abstract Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode);

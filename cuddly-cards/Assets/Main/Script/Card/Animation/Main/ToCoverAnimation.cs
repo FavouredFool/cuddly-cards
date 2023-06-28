@@ -7,14 +7,7 @@ using static CardInfo;
 
 public class ToCoverAnimation : CardAnimation
 {
-    public ToCoverAnimation(
-
-        CardManager cardManager,
-        float waitTime, float horizontalWaitTime,float verticalWaitTime,
-        Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
-        Func<CardNode, float, Tween> _tweenXFuncFunc, Func<CardNode, int, Tween> _tweenYFuncFunc, Func<CardNode, float, Tween> _tweenZFuncFunc
-        
-        ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, _tweenXFuncFunc, _tweenYFuncFunc, _tweenZFuncFunc){}
+    public ToCoverAnimation(CardManager cardManager) : base(cardManager) { }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousMainNode)
     {

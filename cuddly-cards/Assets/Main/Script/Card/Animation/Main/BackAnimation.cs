@@ -8,14 +8,7 @@ using static CardInfo;
 
 public class BackAnimation : CardAnimation
 {
-    public BackAnimation(
-
-        CardManager cardManager,
-        float waitTime, float horizontalWaitTime, float verticalWaitTime,
-        Vector2 playSpaceBottomLeft, Vector2 playSpaceTopRight,
-        Func<CardNode, float, Tween> __tweenXFuncFuncFunc, Func<CardNode, int, Tween> __tweenYFuncFuncFunc, Func<CardNode, float, Tween> __tweenZFuncFuncFunc
-
-        ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
+    public BackAnimation(CardManager cardManager) : base(cardManager) { }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
