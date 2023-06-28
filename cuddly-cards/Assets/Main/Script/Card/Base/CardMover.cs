@@ -54,16 +54,12 @@ public class CardMover : MonoBehaviour
     CardInventory _cardInventory;
     AnimationManager _animationManager;
 
-    List<SubLayout> _subLayouts;
-    
-
     public void Awake()
     {
         _cardManager = GetComponent<CardManager>();
         _cardInventory = GetComponent<CardInventory>();
-        _animationManager = GetComponent<AnimationManager>();
 
-        List<CardAnimation> mainAnimations = new()
+        List<CardAnimation> cardAnimations = new()
         {
             new ChildAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
             new BackAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
@@ -71,20 +67,13 @@ public class CardMover : MonoBehaviour
             new FromCoverAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
             new CloseAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
             new OpenAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
-        };
-
-        List<CardAnimation> inventoryAnimations = new()
-        {
             new ToInventoryAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
             new FromInventoryAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new EnterInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ),
+            new ExitInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ)
         };
 
-        _subLayouts = new()
-        {
-            new MainLayout(mainAnimations, _cardManager),
-            new InventoryLayout(inventoryAnimations, _cardManager),
-        };
-
+        _animationManager = new AnimationManager(_cardManager, cardAnimations);
     }
 
     public void LateUpdate()
@@ -97,59 +86,6 @@ public class CardMover : MonoBehaviour
         
         SetMainCardsRelativeToParent();
         SetInventoryCardsRelativeToParent();
-    }
-
-    public EnterInventoryPileAnimation InstantiateEnterInventoryPileAnimation()
-    {
-        return new EnterInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ);
-    }
-
-    public ExitInventoryPileAnimation InstantiateExitInventoryPileAnimation()
-    {
-        return new ExitInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ);
-    }
-
-    public SubLayout CardTransitionToSubLayout(CardTransition transition)
-    {
-        switch (transition)
-        {
-            case CardTransition.CHILD:
-            case CardTransition.BACK:
-            case CardTransition.TOCOVER:
-            case CardTransition.FROMCOVER:
-            case CardTransition.CLOSE:
-            case CardTransition.OPEN:
-                return _subLayouts[0];
-            case CardTransition.TOINVENTORY:
-            case CardTransition.FROMINVENTORY:
-                return _subLayouts[1];
-        }
-
-        throw new System.Exception("SubLayout not set");
-    }
-
-    public void AddAnimation(CardAnimation animation)
-    {
-        _animationManager.AddAnimation(animation);
-    }
-
-
-    public async Task StartAnimations(bool playAnimated)
-    {
-        await StartAnimations(null, playAnimated);
-    }
-    public async Task StartAnimations(CardNode activeNode, bool playAnimated)
-    {
-        await StartAnimations(activeNode, null, playAnimated);
-    }
-    public async Task StartAnimations(CardNode activeNode, CardNode previousActiveNode, bool playAnimated)
-    {
-        await _animationManager.PlayAnimations(activeNode, previousActiveNode, playAnimated);
-    }
-
-    public void AddAnimation(CardTransition transition)
-    {
-        AddAnimation(CardTransitionToSubLayout(transition).CardTransitionToAnimation(transition));
     }
 
     public void SetMainCardsRelativeToParent()
@@ -181,33 +117,6 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void SetInventoryPosition()
-    {
-        float xInventoryPosition = _playSpaceTopRight.x;
-        MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
-    }
-
-    public void ResetPosition(CardNode rootNode)
-    {
-        rootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT, delegate (CardNode node)
-        {
-            node.Body.transform.localPosition = Vector3.zero;
-            return true;
-        });
-    }
-
-    public void MoveCard(CardNode card, Vector2 position)
-    {
-        card.Body.transform.localPosition = new Vector3(position.x, card.Body.transform.localPosition.y, position.y);
-    }
-
-    public void SetHeightOfTopLevelNodes()
-    {
-        foreach (CardNode node in _cardManager.GetTopLevelNodesMainPile())
-        {
-            node.Body.SetHeight(node.GetNodeCount(CardInfo.CardTraversal.BODY));
-        }
-    }
 
     public void SetHeightAndRotationOfInventory()
     {
@@ -244,15 +153,43 @@ public class CardMover : MonoBehaviour
     public void SetFannedHeightAndRotationOfInventoryPart(CardNode inventoryPart)
     {
         inventoryPart.Body.SetHeight(2);
-        inventoryPart.Body.transform.localRotation = Quaternion.Euler(0, 0, -_inventoryCardRotationAmount);
+        inventoryPart.Body.transform.localRotation = Quaternion.Euler(0, 0, -GetInventoryCardRotationAmount());
 
         for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
         {
             inventoryPart[i].Body.SetHeight(2);
-            inventoryPart[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -_inventoryCardRotationAmount);
+            inventoryPart[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -GetInventoryCardRotationAmount());
         }
     }
 
+
+    public void SetInventoryPosition()
+    {
+        float xInventoryPosition = _playSpaceTopRight.x;
+        MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
+    }
+
+    public void ResetPosition(CardNode rootNode)
+    {
+        rootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT, delegate (CardNode node)
+        {
+            node.Body.transform.localPosition = Vector3.zero;
+            return true;
+        });
+    }
+
+    public void MoveCard(CardNode card, Vector2 position)
+    {
+        card.Body.transform.localPosition = new Vector3(position.x, card.Body.transform.localPosition.y, position.y);
+    }
+
+    public void SetHeightOfTopLevelNodes()
+    {
+        foreach (CardNode node in _cardManager.GetTopLevelNodesMainPile())
+        {
+            node.Body.SetHeight(node.GetNodeCount(CardInfo.CardTraversal.BODY));
+        }
+    }
 
     public Vector2 GetPlaySpaceBottomLeft()
     {
@@ -322,5 +259,10 @@ public class CardMover : MonoBehaviour
     public float GetInventoryCardRotationAmount()
     {
         return _inventoryCardRotationAmount;
+    }
+
+    public AnimationManager GetAnimationManager()
+    {
+        return _animationManager;
     }
 }

@@ -42,17 +42,19 @@ public class CardManager : MonoBehaviour
         _cardInventory.InitializeInventory(_cardBuilder);
 
         List<CardNode> tests = new();
+        
         for (int i = 0; i < 5; i++)
         {
             tests.Add(new CardNode(new CardContext("Dagger", "sharp like... a dagger i guess", CardInfo.CardType.KEY)));
             tests.Add(new CardNode(new CardContext("A revelation", "you just had a dangerous thought", CardInfo.CardType.KEY)));
         }
-
+        
         for (int i = 0; i < 2; i++)
         {
             tests.Add(new CardNode(new CardContext("The affair", "Not a nice topic to talk about. Don't expect a happy welcome.", CardInfo.CardType.DIALOGUE)));
             tests.Add(new CardNode(new CardContext("Bad friends", "The worst.", CardInfo.CardType.DIALOGUE)));
         }
+        
 
         foreach (CardNode node in tests)
         {
@@ -63,8 +65,6 @@ public class CardManager : MonoBehaviour
         {
             _cardInventory.AddNodeToInventory(tests[i]);
         }
-
-        _cardInventory.SynchronizeInventory();
 
         _stateManager.StartStates();
     }

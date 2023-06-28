@@ -4,20 +4,20 @@ using static CardInfo;
 
 public class MainState : LayoutState
 {
-    StateManager _manager;
+    StateManager _stateManager;
     CardNode _baseNode;
+    AnimationManager _animationManager;
 
     public MainState(StateManager manager, CardNode baseNode)
     {
-        _manager = manager;
+        _stateManager = manager;
         _baseNode = baseNode;
+        _animationManager = _stateManager.GetAnimationManager();
     }
 
     public void StartState()
     {
-        _manager.GetCardManager().SetBaseNode(_baseNode);
-        _manager.GetCardManager().GetCardMover().AddAnimation(CardTransition.CHILD);
-        _ = _manager.GetCardManager().GetCardMover().StartAnimations(_baseNode, false);
+        _stateManager.GetCardManager().SetBaseNode(_baseNode);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -29,13 +29,13 @@ public class MainState : LayoutState
 
         if (clickedNode.Context.GetCardType() == CardType.INVENTORY)
         {
-            _manager.GetCardManager().GetCardMover().AddAnimation(CardTransition.CLOSE);
+            _animationManager.AddAnimation(CardTransition.CLOSE);
 
-            _manager.PushState(new InventoryState(_manager));
+            _stateManager.PushState(new InventoryState(_stateManager));
             return;
         }
 
-        CardNode rootNode = _manager.GetCardManager().GetRootNode();
+        CardNode rootNode = _stateManager.GetCardManager().GetRootNode();
         CardNode previousActiveNode = _baseNode;
 
         CardInfo.CardTransition cardTransition;
@@ -44,31 +44,31 @@ public class MainState : LayoutState
         // closeUp
         if (!clickedNode.Context.GetHasBeenSeen())
         {
-            _manager.PushState(new CloseUpState(_manager, clickedNode, true));
+            _stateManager.PushState(new CloseUpState(_stateManager, clickedNode, true));
             return;
         }
         else if (clickedNode == previousActiveNode)
         {
-            _manager.PushState(new CloseUpState(_manager, clickedNode, false));
+            _stateManager.PushState(new CloseUpState(_stateManager, clickedNode, false));
             return;
         }
         else if (previousActiveNode.Children.Contains(clickedNode))
         {
             // pressed child
             cardTransition = CardInfo.CardTransition.CHILD;
-            nextState = new MainState(_manager, clickedNode);
+            nextState = new MainState(_stateManager, clickedNode);
         }
         else if (previousActiveNode.Parent == clickedNode)
         {
             // pressed back
             cardTransition = CardInfo.CardTransition.BACK;
-            nextState = new MainState(_manager, clickedNode);
+            nextState = new MainState(_stateManager, clickedNode);
         }
         else if (clickedNode == rootNode)
         {
             // pressed root
             cardTransition = CardInfo.CardTransition.TOCOVER;
-            nextState = new CoverState(_manager);
+            nextState = new CoverState(_stateManager);
         }
         else
         {
@@ -76,8 +76,8 @@ public class MainState : LayoutState
             return;
         }
 
-        _manager.GetCardManager().GetCardMover().AddAnimation(cardTransition);
-        await _manager.GetCardManager().GetCardMover().StartAnimations(clickedNode, previousActiveNode, true);
-        _manager.SetState(nextState);
+        _animationManager.AddAnimation(cardTransition);
+        await _animationManager.PlayAnimations(clickedNode, previousActiveNode, true);
+        _stateManager.SetState(nextState);
     }
 }

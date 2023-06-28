@@ -5,20 +5,20 @@ using static CardInfo;
 
 public class CoverState : LayoutState
 {
-    StateManager _manager;
+    StateManager _stateManager;
     CardNode _rootNode;
+    AnimationManager _animationManager;
 
     public CoverState(StateManager manager)
     {
-        _manager = manager;
+        _stateManager = manager;
         _rootNode = manager.GetCardManager().GetRootNode();
+        _animationManager = _stateManager.GetAnimationManager();
     }
 
     public void StartState()
     {
-        _manager.GetCardManager().SetBaseNode(_rootNode);
-        _manager.GetCardManager().GetCardMover().AddAnimation(CardTransition.TOCOVER);
-        _ = _manager.GetCardManager().GetCardMover().StartAnimations(false);
+        _stateManager.GetCardManager().SetBaseNode(_rootNode);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -32,13 +32,13 @@ public class CoverState : LayoutState
         // --- Put the closeup state on the stack
         if (!clickedNode.Context.GetHasBeenSeen())
         {
-            _manager.PushState(new CloseUpState(_manager, clickedNode, true));
+            _stateManager.PushState(new CloseUpState(_stateManager, clickedNode, true));
             return;
         }
 
-        _manager.GetCardManager().GetCardMover().AddAnimation(CardInfo.CardTransition.FROMCOVER);
-        await _manager.GetCardManager().GetCardMover().StartAnimations(clickedNode, true);
+        _animationManager.AddAnimation(CardInfo.CardTransition.FROMCOVER);
+        await _animationManager.PlayAnimations(clickedNode, true);
 
-        _manager.SetState(new MainState(_manager, clickedNode));
+        _stateManager.SetState(new MainState(_stateManager, clickedNode));
     }
 }

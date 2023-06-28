@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class ToInventoryAnimation : CardAnimation
+public class ToInventoryAnimation : InventoryAnimation
 {
     public ToInventoryAnimation(
 

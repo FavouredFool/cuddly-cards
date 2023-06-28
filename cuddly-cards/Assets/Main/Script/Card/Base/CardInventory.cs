@@ -30,13 +30,6 @@ public class CardInventory : MonoBehaviour
        
     }
 
-    public void SynchronizeInventory()
-    {
-        _cardManager.GetCardMover().SetInventoryPosition();
-        _cardManager.GetCardMover().SetHeightAndRotationOfInventory();
-        _cardManager.GetCardMover().SetInventoryCardsRelativeToParent();
-    }
-
     public void AddNodeToInventory(CardNode node)
     {
         CardType type = node.Context.GetCardType();

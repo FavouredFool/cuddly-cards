@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class FromInventoryAnimation : CardAnimation
+public class FromInventoryAnimation : InventoryAnimation
 {
     public FromInventoryAnimation(
 
@@ -35,7 +35,6 @@ public class FromInventoryAnimation : CardAnimation
         }
         
         _cardMover.MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
-
     }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
@@ -74,7 +73,6 @@ public class FromInventoryAnimation : CardAnimation
                 .Join(childNode.Body.transform.DOMoveY(childNode.GetNodeCountUpToNodeInPile(inventoryNode, CardTraversal.CONTEXT) * CardInfo.CARDHEIGHT, _horizontalTime).SetEase(_cardMover.GetHorizontalEase()))
                 .Join(childNode.Body.transform.DOLocalRotate(new Vector3(0, 0, 0), _waitTime).SetEase(_cardMover.GetHorizontalEase())));
             }
-
         }
 
         return entireSequence;

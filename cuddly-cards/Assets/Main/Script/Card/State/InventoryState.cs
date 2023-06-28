@@ -1,18 +1,20 @@
 
 public class InventoryState : LayoutState
 {
-    StateManager _manager;
+    StateManager _stateManager;
+    AnimationManager _animationManager;
 
-    public InventoryState(StateManager manager)
+    public InventoryState(StateManager stateManager)
     {
-        _manager = manager;
+        _stateManager = stateManager;
+        _animationManager = stateManager.GetAnimationManager();
     }
 
     public async void StartState()
     {
-        _manager.GetCardManager().GetCardMover().AddAnimation(CardInfo.CardTransition.TOINVENTORY);
+        _animationManager.AddAnimation(CardInfo.CardTransition.TOINVENTORY);
 
-        await _manager.GetCardManager().GetCardMover().StartAnimations(_manager.GetCardManager().GetBaseNode(), true);
+        await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode(), true);
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -24,11 +26,11 @@ public class InventoryState : LayoutState
 
         // HERE NEEDS TO BE THE REFERENCE FOR THE ANIMATION FROM ANY STATE'S CLOSED TO OPEN
 
-        _manager.GetCardManager().GetCardMover().AddAnimation(CardInfo.CardTransition.OPEN);
-        _manager.GetCardManager().GetCardMover().AddAnimation(CardInfo.CardTransition.FROMINVENTORY);
+        _animationManager.AddAnimation(CardInfo.CardTransition.OPEN);
+        _animationManager.AddAnimation(CardInfo.CardTransition.FROMINVENTORY);
 
-        await _manager.GetCardManager().GetCardMover().StartAnimations(_manager.GetCardManager().GetBaseNode(), true);
+        await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode(), true);
 
-        _manager.PopState();
+        _stateManager.PopState();
     }
 }

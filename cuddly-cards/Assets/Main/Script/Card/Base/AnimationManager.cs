@@ -2,23 +2,35 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using static CardInfo;
 
-public class AnimationManager : MonoBehaviour
+public class AnimationManager
 {
     CardMover _cardMover;
     CardInput _cardInput;
     CardManager _cardManager;
 
-    List<CardAnimation> _animations;
+    List<CardAnimation> _activeAnimations;
+    List<CardAnimation> _allAnimations;
 
-    public void Awake()
+    public AnimationManager(CardManager cardManager, List<CardAnimation> animations)
     {
-        _cardMover = GetComponent<CardMover>();
-        _cardInput = GetComponent<CardInput>();
-        _cardManager = GetComponent<CardManager>();
-        _animations = new();
+        _cardManager = cardManager;
+        _cardMover = cardManager.GetCardMover();
+        _cardInput = cardManager.GetCardInput();
+
+        _allAnimations = animations;
+        _activeAnimations = new();
     }
 
+    public async Task PlayAnimations(bool isAnimated)
+    {
+        await PlayAnimations(null, isAnimated);
+    }
+    public async Task PlayAnimations(CardNode activeNode, bool isAnimated)
+    {
+        await PlayAnimations(activeNode, null, isAnimated);
+    }
     public async Task PlayAnimations(CardNode activeNode, CardNode previousActiveNode, bool isAnimated)
     {
         if (isAnimated)
@@ -37,7 +49,7 @@ public class AnimationManager : MonoBehaviour
 
         Sequence allAnimations = DOTween.Sequence();
 
-        foreach (CardAnimation animation in _animations)
+        foreach (CardAnimation animation in _activeAnimations)
         {
             allAnimations.Join(animation.GetAnimationSequence(activeNode, previousActiveNode));
         }
@@ -54,7 +66,13 @@ public class AnimationManager : MonoBehaviour
     {
         PrepareStatic();
 
-        foreach (CardAnimation animation in _animations)
+        // instead of moving everything statically separately - couldn't there be one big pile of predefined static positions that could be used?
+        // - Cover position / mainPosition / dialoguePosition gets switched by baseNode type -> closed if inventory open
+        // InventoryPosition gets added based on open or closed -> relative to cover its either on screen or offscreen
+        // no going through the statics of each state (which overlaps completely anyway btw.)
+
+
+        foreach (CardAnimation animation in _activeAnimations)
         {
             animation.MoveCardsStatic(activeNode);
         }
@@ -89,9 +107,9 @@ public class AnimationManager : MonoBehaviour
     {
         _cardMover.SetHeightOfTopLevelNodes();
 
-        _cardMover.SetMainCardsRelativeToParent();
-
         _cardMover.SetHeightAndRotationOfInventory();
+
+        _cardMover.SetMainCardsRelativeToParent();
 
         _cardMover.SetInventoryCardsRelativeToParent();
 
@@ -100,14 +118,18 @@ public class AnimationManager : MonoBehaviour
         ClearAnimations();
     }
 
-    public void AddAnimation(CardAnimation animation)
+    public void AddAnimation(CardTransition cardTransition)
     {
-        _animations.Add(animation);
+        _activeAnimations.Add(CardTransitionToAnimation(cardTransition));
     }
 
     public void ClearAnimations()
     {
-        _animations.Clear();
+        _activeAnimations.Clear();
     }
 
+    public CardAnimation CardTransitionToAnimation(CardTransition transition)
+    {
+        return _allAnimations[(int)transition];
+    }
 }
