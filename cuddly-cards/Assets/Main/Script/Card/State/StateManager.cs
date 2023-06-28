@@ -24,14 +24,7 @@ public class StateManager : StateMachine
 
     public void StartStates()
     {
-        // Set all things once initially
-        _cardMover.SetInventoryPosition();
-
-        _cardMover.GetAnimationManager().AddAnimation(CardInfo.CardTransition.TOCOVER);
-        _ = _cardMover.GetAnimationManager().PlayAnimations(false);
-
         SetState(new CoverState(this));
-        
     }
 
     public void HandleClick(CardNode clickedNode)

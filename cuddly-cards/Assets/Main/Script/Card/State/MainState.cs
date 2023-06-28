@@ -18,6 +18,7 @@ public class MainState : LayoutState
     public void StartState()
     {
         _stateManager.GetCardManager().SetBaseNode(_baseNode);
+        _animationManager.SetCardsStatic();
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -69,6 +70,7 @@ public class MainState : LayoutState
             // pressed root
             cardTransition = CardInfo.CardTransition.TOCOVER;
             nextState = new CoverState(_stateManager);
+            _animationManager.AddAnimation(CardTransition.EXITINVENTORYPILE);
         }
         else
         {
@@ -77,7 +79,8 @@ public class MainState : LayoutState
         }
 
         _animationManager.AddAnimation(cardTransition);
-        await _animationManager.PlayAnimations(clickedNode, previousActiveNode, true);
+
+        await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
         _stateManager.SetState(nextState);
     }
 }

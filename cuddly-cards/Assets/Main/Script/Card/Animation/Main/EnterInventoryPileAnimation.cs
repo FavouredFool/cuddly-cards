@@ -17,16 +17,13 @@ public class EnterInventoryPileAnimation : CardAnimation
 
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
-    public override void MoveCardsStatic(CardNode pressedNode)
-    {
-        float xInventoryPosition = _playSpaceTopRight.x;
-        _cardMover.MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
-    }
-
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
-        // why is there no animation here
-        Sequence entireSequence = DOTween.Sequence();
+        float xInventoryPosition = _playSpaceTopRight.x;
+        Sequence entireSequence = DOTween.Sequence()
+            .AppendInterval(_verticalTime)
+            .Append(_tweenXFunc(_cardInventory.GetInventoryNode(), xInventoryPosition));
+
         return entireSequence;
     }
 }

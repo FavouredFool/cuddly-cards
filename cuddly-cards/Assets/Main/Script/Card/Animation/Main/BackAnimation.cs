@@ -17,31 +17,6 @@ public class BackAnimation : CardAnimation
 
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
-    public override void MoveCardsStatic(CardNode pressedNode)
-    {
-        CardNode rootNode = _cardManager.GetRootNode();
-        _cardManager.AddToTopLevelMainPile(pressedNode);
-        _cardMover.MoveCard(pressedNode, _playSpaceBottomLeft);
-
-        if (pressedNode != rootNode)
-        {
-            _cardManager.AddToTopLevelMainPile(pressedNode.Parent);
-            _cardMover.MoveCard(pressedNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
-
-            if (pressedNode.Parent != rootNode)
-            {
-                _cardManager.AddToTopLevelMainPile(rootNode);
-                _cardMover.MoveCard(rootNode, _playSpaceTopRight);
-            }
-        }
-
-        for (int i = 0; i < pressedNode.Children.Count; i++)
-        {
-            _cardManager.AddToTopLevelMainPile(pressedNode.Children[i]);
-            _cardMover.MoveCard(pressedNode.Children[i], new Vector2(i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset(), _playSpaceBottomLeft.y));
-        }
-    }
-
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
         Sequence entireSequence = DOTween.Sequence();

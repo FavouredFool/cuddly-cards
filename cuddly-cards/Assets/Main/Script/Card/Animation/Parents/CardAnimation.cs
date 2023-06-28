@@ -41,6 +41,4 @@ public abstract class CardAnimation
     }
 
     public abstract Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode);
-    
-    public abstract void MoveCardsStatic(CardNode activeNode);
 }

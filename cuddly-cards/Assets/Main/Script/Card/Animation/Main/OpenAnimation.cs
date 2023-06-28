@@ -48,29 +48,4 @@ public class OpenAnimation : CardAnimation
         }
         return entireSequence;
     }
-
-    public override void MoveCardsStatic(CardNode activeNode)
-    {
-        CardNode rootNode = _cardManager.GetRootNode();
-        _cardManager.AddToTopLevelMainPile(activeNode);
-        _cardMover.MoveCard(activeNode, _playSpaceBottomLeft);
-
-        if (activeNode != rootNode)
-        {
-            _cardManager.AddToTopLevelMainPile(activeNode.Parent);
-            _cardMover.MoveCard(activeNode.Parent, new Vector2(_playSpaceBottomLeft.x, _playSpaceTopRight.y));
-
-            if (activeNode.Parent != rootNode)
-            {
-                _cardManager.AddToTopLevelMainPile(rootNode);
-                _cardMover.MoveCard(rootNode, _playSpaceTopRight);
-            }
-        }
-
-        for (int i = 0; i < activeNode.Children.Count; i++)
-        {
-            _cardManager.AddToTopLevelMainPile(activeNode.Children[i]);
-            _cardMover.MoveCard(activeNode.Children[i], new Vector2(i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset(), _playSpaceBottomLeft.y));
-        }
-    }
 }

@@ -16,13 +16,6 @@ public class ToCoverAnimation : CardAnimation
         
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, _tweenXFuncFunc, _tweenYFuncFunc, _tweenZFuncFunc){}
 
-    public override void MoveCardsStatic(CardNode activeNode)
-    {
-        CardNode rootNode = _cardManager.GetRootNode();
-        _cardManager.AddToTopLevelMainPile(rootNode);
-        _cardMover.MoveCard(rootNode, new Vector2(_playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f, _playSpaceBottomLeft.y));
-    }
-
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousMainNode)
     {
         Sequence entireSequence = DOTween.Sequence();

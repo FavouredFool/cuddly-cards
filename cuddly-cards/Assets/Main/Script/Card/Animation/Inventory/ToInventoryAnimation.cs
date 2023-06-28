@@ -17,36 +17,6 @@ public class ToInventoryAnimation : InventoryAnimation
 
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
-
-    public override void MoveCardsStatic(CardNode activeNode)
-    {
-        CardNode inventoryNode = _cardInventory.GetInventoryNode();
-
-
-        // Set all cardnodes toplevel
-        inventoryNode[0].IsTopLevel = true;
-        foreach (CardNode node in inventoryNode[0].Children)
-        {
-            node.IsTopLevel = true;
-        }
-        inventoryNode[1].IsTopLevel = true;
-        foreach (CardNode node in inventoryNode[1].Children)
-        {
-            node.IsTopLevel = true;
-        }
-
-        float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
-        float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
-
-        float dialogueOffset = _playSpaceBottomLeft.x + 2 * _cardMover.GetBorder() + fannedCardSpace;
-        FanCardsFromInventorySubcardStatic(inventoryNode[0], dialogueOffset, fannedCardSpace);
-
-        float keyOffset = _playSpaceBottomLeft.x + _cardMover.GetBorder();
-        FanCardsFromInventorySubcardStatic(inventoryNode[1], keyOffset, fannedCardSpace);
-        
-        _cardMover.MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
-    }
-
     public void FanCardsFromInventorySubcardStatic(CardNode inventorySubcard, float startFanX, float fannedCardSpace)
     {
         int totalChildCards = inventorySubcard.Children.Count;

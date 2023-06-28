@@ -19,6 +19,7 @@ public class CoverState : LayoutState
     public void StartState()
     {
         _stateManager.GetCardManager().SetBaseNode(_rootNode);
+        _animationManager.SetCardsStatic();
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -37,7 +38,8 @@ public class CoverState : LayoutState
         }
 
         _animationManager.AddAnimation(CardInfo.CardTransition.FROMCOVER);
-        await _animationManager.PlayAnimations(clickedNode, true);
+        _animationManager.AddAnimation(CardInfo.CardTransition.ENTERINVENTORYPILE);
+        await _animationManager.PlayAnimations(clickedNode);
 
         _stateManager.SetState(new MainState(_stateManager, clickedNode));
     }

@@ -14,7 +14,9 @@ public class InventoryState : LayoutState
     {
         _animationManager.AddAnimation(CardInfo.CardTransition.TOINVENTORY);
 
-        await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode(), true);
+        await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode());
+
+        _animationManager.SetCardsStatic();
     }
 
     public async void HandleClick(CardNode clickedNode)
@@ -29,7 +31,7 @@ public class InventoryState : LayoutState
         _animationManager.AddAnimation(CardInfo.CardTransition.OPEN);
         _animationManager.AddAnimation(CardInfo.CardTransition.FROMINVENTORY);
 
-        await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode(), true);
+        await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode());
 
         _stateManager.PopState();
     }

@@ -17,26 +17,6 @@ public class FromInventoryAnimation : InventoryAnimation
 
         ) : base(cardManager, waitTime, horizontalWaitTime, verticalWaitTime, playSpaceBottomLeft, playSpaceTopRight, __tweenXFuncFuncFunc, __tweenYFuncFuncFunc, __tweenZFuncFuncFunc) { }
 
-
-    public override void MoveCardsStatic(CardNode activeNode)
-    {
-        CardNode inventoryNode = _cardInventory.GetInventoryNode();
-
-        // Set no cardnodes toplevel
-        inventoryNode[0].IsTopLevel = false;
-        foreach (CardNode node in inventoryNode[0].Children)
-        {
-            node.IsTopLevel = false;
-        }
-        inventoryNode[1].IsTopLevel = false;
-        foreach (CardNode node in inventoryNode[1].Children)
-        {
-            node.IsTopLevel = false;
-        }
-        
-        _cardMover.MoveCard(inventoryNode, new Vector2(_playSpaceTopRight.x, _playSpaceBottomLeft.y));
-    }
-
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
         Sequence entireSequence = DOTween.Sequence();

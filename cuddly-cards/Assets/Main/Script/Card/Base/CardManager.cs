@@ -134,4 +134,9 @@ public class CardManager : MonoBehaviour
     {
         return _cardInventory;
     }
+
+    public StateManager GetStateManager()
+    {
+        return _stateManager;
+    }
 }
