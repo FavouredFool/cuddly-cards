@@ -73,7 +73,13 @@ public class CardMover : MonoBehaviour
             new ExitInventoryPileAnimation(_cardManager, _waitTime, _horizontalTime, _verticalTime, _playSpaceBottomLeft, _playSpaceTopRight, TweenX, TweenY, TweenZ)
         };
 
-        _animationManager = new AnimationManager(_cardManager, cardAnimations);
+        List<SubLayout> subLayouts = new()
+        {
+            new MainLayout(_cardManager),
+            new InventoryLayout(_cardManager),
+        };
+
+        _animationManager = new AnimationManager(_cardManager, cardAnimations, subLayouts);
     }
 
     public void LateUpdate()
