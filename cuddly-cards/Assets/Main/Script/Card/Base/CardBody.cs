@@ -14,29 +14,37 @@ public class CardBody : MonoBehaviour
     [SerializeField]
     Image _image;
 
-    Vector3 _originalLocalPosition;
+    Vector3 _originalPosition;
+    Quaternion _originalRotation;
 
     bool _isHovered = false;
 
     private void Start()
     {
-        _originalLocalPosition = transform.localPosition;
+        _originalPosition = transform.position;
+        _originalRotation = transform.rotation;
     }
 
     private void Update()
     {
+        // Doing this every frame for every card really isnt cool
+
+        // Reference to cardnode to check if the card is toplevel (this stuff is not necessary if the card isnt)
+
         SetHoveredHeight();
+
+        _originalRotation = transform.rotation;
     }
 
     public void SetHoveredHeight()
     {
         if (!_isHovered)
         {
-            transform.localPosition = _originalLocalPosition;
+            transform.position = _originalPosition;
         }
         else
         {
-            transform.localPosition = _originalLocalPosition + Vector3.forward * CardInfo.CARDWIDTH * CardInfo.CARDRATIO * 0.33f;
+            transform.position = _originalPosition + 0.33f * CardInfo.CARDRATIO * CardInfo.CARDWIDTH * Vector3.forward;
         }
     }
 
@@ -44,7 +52,7 @@ public class CardBody : MonoBehaviour
     {
         if (!_isHovered)
         {
-            _originalLocalPosition = transform.localPosition;
+            _originalPosition = transform.position;
         }
 
         _isHovered = false;
@@ -87,5 +95,15 @@ public class CardBody : MonoBehaviour
     public void NodeIsHovered(float movementAmount)
     {
          _isHovered = true;
+    }
+
+    public Vector3 GetOriginalPosition()
+    {
+        return _originalPosition;
+    }
+
+    public Quaternion GetOriginalRotation()
+    {
+        return _originalRotation;
     }
 }

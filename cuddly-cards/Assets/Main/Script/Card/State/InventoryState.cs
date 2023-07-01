@@ -15,10 +15,6 @@ public class InventoryState : LayoutState
 
     public async void StartState()
     {
-        _animationManager.AddAnimation(CardInfo.CardTransition.TOINVENTORY);
-
-        await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode());
-
         _animationManager.SetCardsStatic();
     }
 
@@ -26,6 +22,13 @@ public class InventoryState : LayoutState
     {
         if (clickedNode == null)
         {
+            return;
+        }
+
+        if (clickedNode.Context.GetCardType() == CardType.KEY || clickedNode.Context.GetCardType() == CardType.DIALOGUE)
+        {
+            // Close Up!
+            _stateManager.PushState(new CloseUpState(_stateManager, clickedNode, false));
             return;
         }
 

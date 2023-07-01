@@ -6,6 +6,7 @@ public class CloseUpState : LayoutState
     CloseUpManager _closeUpManager;
     CardNode _closeUpNode;
     Vector3 _originalPosition;
+    Quaternion _originalRotation;
     bool _blockInputs;
     bool _clickAfterFinish;
 
@@ -20,7 +21,8 @@ public class CloseUpState : LayoutState
     public async void StartState()
     {
         _closeUpNode.Context.SetHasBeenSeen(true);
-        _originalPosition = _closeUpNode.Body.transform.position;
+        _originalPosition = _closeUpNode.Body.GetOriginalPosition();
+        _originalRotation = _closeUpNode.Body.GetOriginalRotation();
 
         _blockInputs = true;
         await _closeUpManager.SetCloseUpAnimated(_closeUpNode);
@@ -39,10 +41,10 @@ public class CloseUpState : LayoutState
         }
         
         _blockInputs = true;
-        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition);
+        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation);
         _blockInputs = false;
 
-        _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition);
+        _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation);
 
         _manager.PopState();
 

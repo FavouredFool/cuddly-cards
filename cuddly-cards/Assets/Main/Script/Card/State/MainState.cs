@@ -32,6 +32,10 @@ public class MainState : LayoutState
         {
             _animationManager.AddAnimation(CardTransition.CLOSE);
 
+            _animationManager.AddAnimation(CardInfo.CardTransition.TOINVENTORY);
+
+            await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode());
+
             _stateManager.PushState(new InventoryState(_stateManager));
             return;
         }

@@ -49,14 +49,13 @@ public class CloseUpManager : MonoBehaviour
         GetDescriptionText().text = closeUpNode.Context.GetDescription();
     }
 
-    public void RevertCloseUpStatic(CardNode closeUpNode, Vector3 originalPosition)
+    public void RevertCloseUpStatic(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation)
     {
         // out animation
         GetCloseUpCanvas().SetActive(false);
         GetCameraMovement().transform.rotation = Quaternion.Euler(GetCameraMovement().GetCardTableRotation(), 0, 0);
 
-        closeUpNode.Body.transform.position = originalPosition;
-        closeUpNode.Body.transform.rotation = Quaternion.identity;
+        closeUpNode.Body.transform.SetPositionAndRotation(originalPosition, originalRotation);
     }
 
     public async Task SetCloseUpAnimated(CardNode closeUpNode)
@@ -70,12 +69,12 @@ public class CloseUpManager : MonoBehaviour
         await closeUpNode.Body.transform.DORotateQuaternion(endRotation, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
     }
 
-    public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition)
+    public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation)
     {
         _closeUpCanvas.SetActive(false);
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
         closeUpNode.Body.transform.DOMove(originalPosition, _transitionTime).SetEase(_easing);
-        await closeUpNode.Body.transform.DORotateQuaternion(Quaternion.identity, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
+        await closeUpNode.Body.transform.DORotateQuaternion(originalRotation, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
     }
 
     public CameraMovement GetCameraMovement()
