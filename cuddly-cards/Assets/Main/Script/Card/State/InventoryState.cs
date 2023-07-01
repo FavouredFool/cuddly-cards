@@ -1,4 +1,7 @@
 
+using UnityEngine;
+using static CardInfo;
+
 public class InventoryState : LayoutState
 {
     StateManager _stateManager;
@@ -34,5 +37,16 @@ public class InventoryState : LayoutState
         await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode());
 
         _stateManager.PopState();
+    }
+
+    public void HandleHover(CardNode hoveredNode)
+    {
+        // würde es sich hier lohnen den Hover auf eigene Klassen für jeden Kartentyp zu deligieren?
+        CardType hoveredType = hoveredNode.Context.GetCardType();
+        if (hoveredType == CardType.KEY || hoveredType == CardType.DIALOGUE)
+        {
+            // move upward certain amount -> Cardmover
+            _stateManager.GetCardManager().GetCardMover().HoverInventoryCards(hoveredNode);
+        }
     }
 }

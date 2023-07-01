@@ -69,6 +69,15 @@ public class CardManager : MonoBehaviour
         _stateManager.StartStates();
     }
 
+    public void NodeHovered(CardNode hoveredNode)
+    {
+        if (hoveredNode == null)
+        {
+            return;
+        }
+        _stateManager.HandleHover(hoveredNode);
+    }
+
     public void NodeClicked(CardNode clickedNode)
     {
         _stateManager.HandleClick(clickedNode);        

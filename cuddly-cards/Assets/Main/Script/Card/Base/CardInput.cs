@@ -20,19 +20,26 @@ public class CardInput : MonoBehaviour
 
     public void Update()
     {
+        HoverCard();
+
         if (Input.GetMouseButtonDown(0))
         {
             EvaluateClick();
         }
     }
 
+    public void HoverCard()
+    {
+        _cardManager.NodeHovered(GetHoveredCard());
+    }
+
     public void EvaluateClick()
     {
         // note that the card can be null to express that a click has happened without a target card
-        _cardManager.NodeClicked(EvaluateClickedCard());
+        _cardManager.NodeClicked(GetHoveredCard());
     }
 
-    public CardNode EvaluateClickedCard()
+    public CardNode GetHoveredCard()
     {
         Ray shotRay = _camera.ScreenPointToRay(Input.mousePosition);
 

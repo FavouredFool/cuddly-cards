@@ -14,6 +14,42 @@ public class CardBody : MonoBehaviour
     [SerializeField]
     Image _image;
 
+    Vector3 _originalLocalPosition;
+
+    bool _isHovered = false;
+
+    private void Start()
+    {
+        _originalLocalPosition = transform.localPosition;
+    }
+
+    private void Update()
+    {
+        SetHoveredHeight();
+    }
+
+    public void SetHoveredHeight()
+    {
+        if (!_isHovered)
+        {
+            transform.localPosition = _originalLocalPosition;
+        }
+        else
+        {
+            transform.localPosition = _originalLocalPosition + Vector3.forward * CardInfo.CARDWIDTH * CardInfo.CARDRATIO * 0.33f;
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (!_isHovered)
+        {
+            _originalLocalPosition = transform.localPosition;
+        }
+
+        _isHovered = false;
+    }
+
     public void SetLabel(string labelText)
     {
         _textField.text = labelText;
@@ -37,5 +73,19 @@ public class CardBody : MonoBehaviour
             CardInfo.CARDHEIGHT * height,
             transform.localPosition.z
         );
+    }
+
+    public void SetHeight(float heightFloat)
+    {
+        transform.localPosition = new Vector3(
+            transform.localPosition.x,
+            CardInfo.CARDHEIGHT * heightFloat,
+            transform.localPosition.z
+        );
+    }
+
+    public void NodeIsHovered(float movementAmount)
+    {
+         _isHovered = true;
     }
 }

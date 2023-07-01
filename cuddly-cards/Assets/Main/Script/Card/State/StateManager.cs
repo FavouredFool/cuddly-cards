@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,11 @@ public class StateManager : StateMachine
     public void StartStates()
     {
         SetState(new CoverState(this));
+    }
+
+    internal void HandleHover(CardNode hoveredNode)
+    {
+        _states.Peek().HandleHover(hoveredNode);
     }
 
     public void HandleClick(CardNode clickedNode)

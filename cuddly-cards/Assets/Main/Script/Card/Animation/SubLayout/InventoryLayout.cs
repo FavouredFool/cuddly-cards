@@ -44,15 +44,15 @@ public class InventoryLayout : SubLayout
 
 
             // Set all cardnodes toplevel
-            inventoryNode[0].IsTopLevel = true;
+            _cardManager.AddToTopLevelMainPile(inventoryNode[0]);
             foreach (CardNode node in inventoryNode[0].Children)
             {
-                node.IsTopLevel = true;
+                _cardManager.AddToTopLevelMainPile(node);
             }
-            inventoryNode[1].IsTopLevel = true;
+            _cardManager.AddToTopLevelMainPile(inventoryNode[1]);
             foreach (CardNode node in inventoryNode[1].Children)
             {
-                node.IsTopLevel = true;
+                _cardManager.AddToTopLevelMainPile(node);
             }
 
             float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
@@ -63,8 +63,6 @@ public class InventoryLayout : SubLayout
 
             float keyOffset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.GetBorder();
             FanCardsFromInventorySubcardStatic(inventoryNode[1], keyOffset, fannedCardSpace);
-
-
         }
     }
 

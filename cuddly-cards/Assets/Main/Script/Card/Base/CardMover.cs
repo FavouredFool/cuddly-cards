@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -38,6 +39,8 @@ public class CardMover : MonoBehaviour
     float _border = 1f;
     [SerializeField]
     float _inventoryCardRotationAmount = 0.9f;
+    [SerializeField]
+    float _onHoverMovement = 0.5f;
 
     [Header("Easing")]
     [SerializeField]
@@ -80,6 +83,11 @@ public class CardMover : MonoBehaviour
         };
 
         _animationManager = new AnimationManager(_cardManager, cardAnimations, subLayouts);
+    }
+
+    public void HoverInventoryCards(CardNode hoveredNode)
+    {
+        hoveredNode.Body.NodeIsHovered(_onHoverMovement);
     }
 
     public void LateUpdate()
@@ -163,7 +171,7 @@ public class CardMover : MonoBehaviour
 
         for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
         {
-            inventoryPart[i].Body.SetHeight(2);
+            inventoryPart[i].Body.SetHeight(2 + (i + 1) * -0.01f);
             inventoryPart[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -GetInventoryCardRotationAmount());
         }
     }

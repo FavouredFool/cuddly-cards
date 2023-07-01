@@ -83,4 +83,9 @@ public class MainState : LayoutState
         await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
         _stateManager.SetState(nextState);
     }
+
+    public void HandleHover(CardNode hoveredNode)
+    {
+        return;
+    }
 }

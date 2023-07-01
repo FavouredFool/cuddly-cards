@@ -50,6 +50,10 @@ public class CloseUpState : LayoutState
         {
             _manager.GetStates().Peek().HandleClick(_closeUpNode);
         }
-        
+    }
+
+    public void HandleHover(CardNode hoveredNode)
+    {
+        return;
     }
 }

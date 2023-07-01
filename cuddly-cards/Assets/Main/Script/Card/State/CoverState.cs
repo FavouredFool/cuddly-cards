@@ -43,4 +43,9 @@ public class CoverState : LayoutState
 
         _stateManager.SetState(new MainState(_stateManager, clickedNode));
     }
+
+    public void HandleHover(CardNode hoveredNode)
+    {
+        return;
+    }
 }
