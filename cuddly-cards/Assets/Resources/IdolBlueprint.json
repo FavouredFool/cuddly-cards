@@ -37,12 +37,6 @@
             "depth": "1"
         },
         {
-            "label": "The Fog",
-            "description": "Somebody might want to talk about this.",
-            "type": "DIALOGUE",
-            "depth": "1"
-        },
-        {
             "label": "The Little Mermaid",
             "description": "A beacon of light, sound, and life in a desolate-seeming town.",
             "type": "PLACE",
@@ -58,6 +52,12 @@
             "label": "Inside the Tavern",
             "description": "People play cards, a musician plays the violin, a bartender peels a lemon. An evening like any other. A good evening.",
             "type": "PLACE",
+            "depth": "3"
+        },
+        {
+            "label": "A Challenge",
+            "description": "AAAAnd FIGHT!",
+            "type": "LOCK",
             "depth": "3"
         },
         {

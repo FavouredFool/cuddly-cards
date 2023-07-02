@@ -39,7 +39,6 @@ public class MainState : LayoutState
             case CardType.KEY:
             case CardType.DIALOGUE:
 
-                // pick up cards into inventory
                 if (!clickedNode.Context.GetHasBeenSeen())
                 {
                     _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
@@ -48,6 +47,21 @@ public class MainState : LayoutState
 
                 _cardInventory.MoveNodeFromMainToInventory(clickedNode);
 
+                return;
+
+            case CardType.LOCK:
+
+                if (!clickedNode.Context.GetHasBeenSeen())
+                {
+                    _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
+                    return;
+                }
+
+                _animationManager.AddAnimation(CardTransition.CLOSE);
+                _animationManager.AddAnimation(CardInfo.CardTransition.DISPLAYKEY);
+
+                await _animationManager.PlayAnimations(_cardManager.BaseNode);
+                _stateManager.PushState(new LockState(_cardManager));
                 return;
 
             default:

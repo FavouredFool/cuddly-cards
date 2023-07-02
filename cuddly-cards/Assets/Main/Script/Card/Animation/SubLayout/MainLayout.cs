@@ -17,6 +17,7 @@ public class MainLayout : SubLayout
             case CoverState:
                 ResetCover(baseNode);
                 break;
+            case LockState:
             case InventoryState:
                 ResetClose(baseNode);
                 break;

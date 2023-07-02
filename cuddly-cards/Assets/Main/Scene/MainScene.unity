@@ -1317,7 +1317,7 @@ MonoBehaviour:
   _playSpaceTopRight: {x: 3, y: 1.5}
   _childrenDistance: 1.125
   _childrenStartOffset: 1.648
-  _verticalTime: 0.195
+  _verticalTime: 0.191
   _horizontalTime: 0.35
   _waitTime: 0.1
   _border: 1.25

@@ -19,49 +19,80 @@ public class InventoryLayout : SubLayout
             _cardMover.MoveCard(_cardInventory.GetInventoryNode(), new Vector2(_cardMover.GetPlaySpaceTopRight().x, _cardMover.GetPlaySpaceBottomLeft().y));
         }
 
-        if (_stateManager.States.Peek() is not InventoryState)
+        switch (_stateManager.States.Peek())
         {
-            // kept in
-            CardNode inventoryNode = _cardInventory.GetInventoryNode();
-
-            // Set no cardnodes toplevel
-            inventoryNode[0].IsTopLevel = false;
-            foreach (CardNode node in inventoryNode[0].Children)
-            {
-                node.IsTopLevel = false;
-            }
-            inventoryNode[1].IsTopLevel = false;
-            foreach (CardNode node in inventoryNode[1].Children)
-            {
-                node.IsTopLevel = false;
-            }
+            case InventoryState:
+                ResetInventoryState();
+                break;
+            case LockState:
+                ResetLockState();
+                break;
+            default:
+                ResetDefaultState();
+                break;
         }
-        else
+    }
+
+    public void ResetInventoryState()
+    {
+        // fanned out
+        CardNode inventoryNode = _cardInventory.GetInventoryNode();
+
+        // Set all cardnodes toplevel
+        _cardManager.AddToTopLevelMainPile(inventoryNode[0]);
+        foreach (CardNode node in inventoryNode[0].Children)
         {
-            // fanned out
-            CardNode inventoryNode = _cardInventory.GetInventoryNode();
+            _cardManager.AddToTopLevelMainPile(node);
+        }
+        _cardManager.AddToTopLevelMainPile(inventoryNode[1]);
+        foreach (CardNode node in inventoryNode[1].Children)
+        {
+            _cardManager.AddToTopLevelMainPile(node);
+        }
 
+        float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
+        float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
 
-            // Set all cardnodes toplevel
-            _cardManager.AddToTopLevelMainPile(inventoryNode[0]);
-            foreach (CardNode node in inventoryNode[0].Children)
-            {
-                _cardManager.AddToTopLevelMainPile(node);
-            }
-            _cardManager.AddToTopLevelMainPile(inventoryNode[1]);
-            foreach (CardNode node in inventoryNode[1].Children)
-            {
-                _cardManager.AddToTopLevelMainPile(node);
-            }
+        float dialogueOffset = _cardMover.GetPlaySpaceBottomLeft().x + 2 * _cardMover.GetBorder() + fannedCardSpace;
+        FanCardsFromInventorySubcardStatic(inventoryNode[0], dialogueOffset, fannedCardSpace);
 
-            float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
-            float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
+        float keyOffset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.GetBorder();
+        FanCardsFromInventorySubcardStatic(inventoryNode[1], keyOffset, fannedCardSpace);
+    }
 
-            float dialogueOffset = _cardMover.GetPlaySpaceBottomLeft().x + 2 * _cardMover.GetBorder() + fannedCardSpace;
-            FanCardsFromInventorySubcardStatic(inventoryNode[0], dialogueOffset, fannedCardSpace);
+    public void ResetLockState()
+    {
+        // fanned out
+        CardNode inventoryNode = _cardInventory.GetInventoryNode();
 
-            float keyOffset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.GetBorder();
-            FanCardsFromInventorySubcardStatic(inventoryNode[1], keyOffset, fannedCardSpace);
+        _cardManager.AddToTopLevelMainPile(inventoryNode[1]);
+        foreach (CardNode node in inventoryNode[1].Children)
+        {
+            _cardManager.AddToTopLevelMainPile(node);
+        }
+
+        float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
+        float fannedCardSpace = (totalSpace - 2 * _cardMover.GetBorder());
+
+        float keyOffset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.GetBorder();
+        FanCardsFromInventorySubcardStatic(inventoryNode[1], keyOffset, fannedCardSpace);
+    }
+
+    public void ResetDefaultState()
+    {
+        // kept in
+        CardNode inventoryNode = _cardInventory.GetInventoryNode();
+
+        // Set no cardnodes toplevel
+        inventoryNode[0].IsTopLevel = false;
+        foreach (CardNode node in inventoryNode[0].Children)
+        {
+            node.IsTopLevel = false;
+        }
+        inventoryNode[1].IsTopLevel = false;
+        foreach (CardNode node in inventoryNode[1].Children)
+        {
+            node.IsTopLevel = false;
         }
     }
 
