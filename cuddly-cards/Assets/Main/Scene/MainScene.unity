@@ -1317,11 +1317,11 @@ MonoBehaviour:
   _playSpaceTopRight: {x: 3, y: 1.5}
   _childrenDistance: 1.125
   _childrenStartOffset: 1.648
-  _verticalTime: 0.203
+  _verticalTime: 0.195
   _horizontalTime: 0.35
   _waitTime: 0.1
   _border: 1.25
-  _inventoryCardRotationAmount: 0.9
+  _inventoryCardRotationAmount: 0.5
   _onHoverMovement: 0.5
   _horizontalEasing: 10
   _verticalEasing: 4

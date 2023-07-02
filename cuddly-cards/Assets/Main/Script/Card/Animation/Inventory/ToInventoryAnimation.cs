@@ -34,6 +34,7 @@ public class ToInventoryAnimation : InventoryAnimation
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
 
         entireSequence.Join(DOTween.Sequence()
+            .Append(_tweenYFunc(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT) + 1))
             .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
             .Append(inventoryNode.Body.transform.DOMoveY(CardInfo.CARDHEIGHT, _horizontalTime)));
 
@@ -46,7 +47,7 @@ public class ToInventoryAnimation : InventoryAnimation
             subNode.IsTopLevel = true;
 
             entireSequence.Join(DOTween.Sequence()
-                .AppendInterval(_verticalTime)
+                .Append(_tweenYFunc(subNode, subNode.GetNodeCountUpToNodeInPile(inventoryNode, CardTraversal.CONTEXT) + 1))
                 .Append(_tweenXFunc(subNode, generalStartOffset))
                 .Append(subNode.Body.transform.DOLocalRotate(new Vector3(0, 0, -_cardMover.GetInventoryCardRotationAmount()), _waitTime))
                 .Append(subNode.Body.transform.DOMove(new Vector3(generalStartOffset + fannedCardSpace, 2 * CardInfo.CARDHEIGHT, subNode.Body.transform.position.z), _horizontalTime)));
@@ -60,7 +61,7 @@ public class ToInventoryAnimation : InventoryAnimation
                 float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren);
 
                 entireSequence.Join(DOTween.Sequence()
-                    .AppendInterval(_verticalTime)
+                    .Append(_tweenYFunc(childNode, childNode.GetNodeCountUpToNodeInPile(inventoryNode, CardTraversal.CONTEXT) + 1))
                     .Append(_tweenXFunc(childNode, generalStartOffset))
                     .Append(childNode.Body.transform.DOLocalRotate(new Vector3(0, 0, -_cardMover.GetInventoryCardRotationAmount()), _waitTime))
                     .Append(childNode.Body.transform.DOMove(new Vector3(generalStartOffset + (totalChildren - 1 - j) * CardInfo.CARDWIDTH * cardPercentage, 2 * CardInfo.CARDHEIGHT, childNode.Body.transform.position.z), _horizontalTime)));
