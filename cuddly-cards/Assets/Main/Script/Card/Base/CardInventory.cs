@@ -2,32 +2,30 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class CardInventory : MonoBehaviour
+public class CardInventory
 {
     CardNode _inventoryNode;
     CardManager _cardManager;
 
-    public void Awake()
+    public CardInventory(CardManager cardManager)
     {
-        _cardManager = GetComponent<CardManager>();
+        _cardManager = cardManager;
     }
 
     public void InitializeInventory(CardBuilder builder)
     {
         _inventoryNode = new(new("Inventory", "lots of things in here", CardType.INVENTORY));
-        _inventoryNode.Body = builder.BuildCardBody(_inventoryNode.Context);
+        _inventoryNode.Body = builder.BuildCardBody(_inventoryNode.Context, _cardManager.CardFolder);
         _inventoryNode.IsTopLevel = true;
 
         CardNode dialogueParentNode = new(new("Dialogue", "I need to talk about this.", CardType.INVENTORY));
-        dialogueParentNode.Body = builder.BuildCardBody(dialogueParentNode.Context);
+        dialogueParentNode.Body = builder.BuildCardBody(dialogueParentNode.Context, _cardManager.CardFolder);
 
         CardNode keyParentNode = new(new("Keys", "All the things I have and know.", CardType.INVENTORY));
-        keyParentNode.Body = builder.BuildCardBody(keyParentNode.Context);
+        keyParentNode.Body = builder.BuildCardBody(keyParentNode.Context, _cardManager.CardFolder);
 
         _inventoryNode.AddChild(dialogueParentNode);
         _inventoryNode.AddChild(keyParentNode);
-
-       
     }
 
     public void AddNodeToInventory(CardNode node)

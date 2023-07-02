@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 
-public class CardReader : MonoBehaviour
+public class CardReader
 {
-    [SerializeField]
+    int _count;
     TextAsset _textBlueprint;
 
-    int _count;
+    public CardReader(TextAsset text)
+    {
+        _textBlueprint = text;
+    }
 
     public CardNode ReadCards()
     {

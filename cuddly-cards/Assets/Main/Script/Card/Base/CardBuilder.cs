@@ -5,30 +5,29 @@ using static CardInfo;
 
 public class CardBuilder : MonoBehaviour
 {
+    [Header("Card Blueprint")]
     [SerializeField]
     GameObject _cardBlueprint;
 
+    [Header("All Cardtypes")]
     [SerializeField]
     List<CardScriptableType> _types;
 
-    [SerializeField]
-    Transform _cardFolder;
-
-    public void BuildAllCards(CardNode rootNode)
+    public void BuildAllCards(CardNode rootNode, Transform folder)
     {
         rootNode.TraverseChildren(CardTraversal.CONTEXT,
             delegate (CardNode cardNode)
             {
                 CardContext context = cardNode.Context;
-                cardNode.Body = BuildCardBody(context);
+                cardNode.Body = BuildCardBody(context, folder);
                 return true;
             }
         );
     }
 
-    public CardBody BuildCardBody(CardContext cardContext)
+    public CardBody BuildCardBody(CardContext cardContext, Transform folder)
     {
-        CardBody body = Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, _cardFolder).GetComponent<CardBody>();
+        CardBody body = GameObject.Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, folder).GetComponent<CardBody>();
 
         body.SetLabel(cardContext.GetLabel());
         body.gameObject.name = "Card: \"" + cardContext.GetLabel() + "\"";

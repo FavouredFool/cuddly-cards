@@ -16,9 +16,6 @@ public class CloseUpManager : MonoBehaviour
     GameObject _closeUpCanvas;
 
     [SerializeField]
-    CardManager _cardManager;
-
-    [SerializeField]
     TMP_Text _descriptionText;
 
     [Header("Animation")]

@@ -7,9 +7,6 @@ using static CardInfo;
 
 public class CardMover : MonoBehaviour
 {
-    [SerializeField]
-    Transform _cardFolder;
-
     [Header("CardPositions")]
     [SerializeField]
     Vector2 _playSpaceBottomLeft = new Vector2(-2.5f, 0);
@@ -54,15 +51,12 @@ public class CardMover : MonoBehaviour
     public bool IsAnimatingFlag { get { return _isAnimating; } set { _isAnimating = value; } }
 
     CardManager _cardManager;
-    CardInventory _cardInventory;
-    AnimationManager _animationManager;
 
-    public void Awake()
+    public CardManager CardManager { get { return _cardManager; } set { _cardManager = value; } }
+
+    public List<CardAnimation> GetCardAnimations()
     {
-        _cardManager = GetComponent<CardManager>();
-        _cardInventory = GetComponent<CardInventory>();
-
-        List<CardAnimation> cardAnimations = new()
+        return new()
         {
             new ChildAnimation(_cardManager),
             new BackAnimation(_cardManager),
@@ -75,14 +69,15 @@ public class CardMover : MonoBehaviour
             new EnterInventoryPileAnimation(_cardManager),
             new ExitInventoryPileAnimation(_cardManager)
         };
+    }
 
-        List<SubLayout> subLayouts = new()
+    public List<SubLayout> GetSubLayouts()
+    {
+        return new()
         {
             new MainLayout(_cardManager),
             new InventoryLayout(_cardManager),
         };
-
-        _animationManager = new AnimationManager(_cardManager, cardAnimations, subLayouts);
     }
 
     public void HoverInventoryCards(CardNode hoveredNode)
@@ -120,7 +115,7 @@ public class CardMover : MonoBehaviour
     {
         int size = 1;
 
-        foreach (CardNode childNode in _cardInventory.GetInventoryNode().Children)
+        foreach (CardNode childNode in _cardManager.CardInventory.GetInventoryNode().Children)
         {
             if (childNode.IsTopLevel)
             {
@@ -134,7 +129,7 @@ public class CardMover : MonoBehaviour
 
     public void SetHeightAndRotationOfInventory()
     {
-        CardNode inventoryNode = _cardInventory.GetInventoryNode();
+        CardNode inventoryNode = _cardManager.CardInventory.GetInventoryNode();
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
 
         for (int i = 0; i < inventoryNode.Children.Count; i++)
@@ -180,7 +175,7 @@ public class CardMover : MonoBehaviour
     public void SetInventoryPosition()
     {
         float xInventoryPosition = _playSpaceTopRight.x;
-        MoveCard(_cardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
+        MoveCard(_cardManager.CardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
     }
 
     public void ResetPosition(CardNode rootNode)
@@ -273,10 +268,5 @@ public class CardMover : MonoBehaviour
     public float GetInventoryCardRotationAmount()
     {
         return _inventoryCardRotationAmount;
-    }
-
-    public AnimationManager GetAnimationManager()
-    {
-        return _animationManager;
     }
 }

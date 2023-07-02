@@ -7,7 +7,7 @@ using static CardInfo;
 public class AnimationManager
 {
     CardMover _cardMover;
-    CardInput _cardInput;
+    CardInputManager _cardInput;
     CardManager _cardManager;
     CardInventory _cardInventory;
     StateManager _stateManager;
@@ -16,19 +16,19 @@ public class AnimationManager
     List<CardAnimation> _allAnimations;
     List<SubLayout> _subLayouts;
 
-    public AnimationManager(CardManager cardManager, List<CardAnimation> animations, List<SubLayout> subLayouts)
+    public AnimationManager(CardManager cardManager)
     {
         _cardManager = cardManager;
-        _cardMover = cardManager.GetCardMover();
-        _cardInput = cardManager.GetCardInput();
-        _cardInventory = cardManager.GetCardInventory();
+        _cardMover = cardManager.CardMover;
+        _cardInput = cardManager.CardInputManager;
+        _cardInventory = cardManager.CardInventory;
 
-        _stateManager = cardManager.GetStateManager();
+        _stateManager = cardManager.StateManager;
 
-        _allAnimations = animations;
+        _allAnimations = _cardMover.GetCardAnimations();
+        _subLayouts = _cardMover.GetSubLayouts();
+
         _activeAnimations = new();
-
-        _subLayouts = subLayouts;
     }
 
     public async Task PlayAnimations()
@@ -66,7 +66,7 @@ public class AnimationManager
 
         foreach (SubLayout subLayout in _subLayouts)
         {
-            subLayout.SetLayoutStatic(_cardManager.GetBaseNode());
+            subLayout.SetLayoutStatic(_cardManager.BaseNode);
         }
 
         FinishStatic();
@@ -92,7 +92,7 @@ public class AnimationManager
 
         _cardManager.ClearTopLevelNodesMainPile();
 
-        _cardMover.ResetPosition(_cardManager.GetRootNode());
+        _cardMover.ResetPosition(_cardManager.RootNode);
     }
 
     public void FinishStatic()

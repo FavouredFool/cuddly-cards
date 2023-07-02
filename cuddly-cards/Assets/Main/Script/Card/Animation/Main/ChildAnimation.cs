@@ -14,7 +14,7 @@ public class ChildAnimation : CardAnimation
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        CardNode rootNode = _cardManager.GetRootNode();
+        CardNode rootNode = _cardManager.RootNode;
 
         CardNode discardToBe = previousActiveNode.Parent;
         CardNode discard = discardToBe != null && discardToBe != rootNode ? rootNode : null;

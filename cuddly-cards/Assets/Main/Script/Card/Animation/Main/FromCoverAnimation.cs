@@ -13,7 +13,7 @@ public class FromCoverAnimation : CardAnimation
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        CardNode rootNode = _cardManager.GetRootNode();
+        CardNode rootNode = _cardManager.RootNode;
         _cardManager.AddToTopLevelMainPile(rootNode);
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(_verticalTime)

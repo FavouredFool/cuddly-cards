@@ -5,24 +5,17 @@ using static CardInfo;
 
 public class CoverState : LayoutState
 {
-    StateManager _stateManager;
-    CardNode _rootNode;
-    AnimationManager _animationManager;
-
-    public CoverState(StateManager manager)
+    public CoverState(CardManager cardManager) : base(cardManager)
     {
-        _stateManager = manager;
-        _rootNode = manager.GetCardManager().GetRootNode();
-        _animationManager = _stateManager.GetAnimationManager();
     }
 
-    public void StartState()
+    public override void StartState()
     {
-        _stateManager.GetCardManager().SetBaseNode(_rootNode);
+        _cardManager.BaseNode = _cardManager.RootNode;
         _animationManager.SetCardsStatic();
     }
 
-    public async void HandleClick(CardNode clickedNode)
+    public override async void HandleClick(CardNode clickedNode)
     {
         if (clickedNode == null || clickedNode.Context.GetCardType() == CardType.INVENTORY)
         {
@@ -33,7 +26,7 @@ public class CoverState : LayoutState
         // --- Put the closeup state on the stack
         if (!clickedNode.Context.GetHasBeenSeen())
         {
-            _stateManager.PushState(new CloseUpState(_stateManager, clickedNode, true));
+            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
             return;
         }
 
@@ -41,10 +34,10 @@ public class CoverState : LayoutState
         _animationManager.AddAnimation(CardInfo.CardTransition.ENTERINVENTORYPILE);
         await _animationManager.PlayAnimations(clickedNode);
 
-        _stateManager.SetState(new MainState(_stateManager, clickedNode));
+        _stateManager.SetState(new MainState(_cardManager, clickedNode));
     }
 
-    public void HandleHover(CardNode hoveredNode)
+    public override void HandleHover(CardNode hoveredNode)
     {
         return;
     }

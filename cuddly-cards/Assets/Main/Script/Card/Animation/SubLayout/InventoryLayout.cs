@@ -6,12 +6,11 @@ public class InventoryLayout : SubLayout
 {
     public InventoryLayout(CardManager cardManager) : base(cardManager)
     {
-
     }
 
     public override void SetLayoutStatic(CardNode baseNode)
     {
-        if (_stateManager.GetStates().Peek() is CoverState)
+        if (_stateManager.States.Peek() is CoverState)
         {
             _cardMover.MoveCard(_cardInventory.GetInventoryNode(), new Vector2(_cardMover.GetPlaySpaceTopRight().x + (_cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x), _cardMover.GetPlaySpaceBottomLeft().y));
         }
@@ -20,7 +19,7 @@ public class InventoryLayout : SubLayout
             _cardMover.MoveCard(_cardInventory.GetInventoryNode(), new Vector2(_cardMover.GetPlaySpaceTopRight().x, _cardMover.GetPlaySpaceBottomLeft().y));
         }
 
-        if (_stateManager.GetStates().Peek() is not InventoryState)
+        if (_stateManager.States.Peek() is not InventoryState)
         {
             // kept in
             CardNode inventoryNode = _cardInventory.GetInventoryNode();

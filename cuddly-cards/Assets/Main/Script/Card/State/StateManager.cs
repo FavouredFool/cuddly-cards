@@ -3,29 +3,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateManager : StateMachine
+public class StateManager
 {
-    [SerializeField]
-    CloseUpManager _closeUpManager;
+    readonly CardManager _cardManager;
 
-    CardManager _cardManager;
-    CardMover _cardMover;
-    CardInventory _cardInventory;
-    CardInput _cardInput;
+    protected Stack<LayoutState> _states;
 
-    private new void Awake()
+    public Stack<LayoutState> States { get { return _states; } }
+
+    public StateManager(CardManager cardManager)
     {
-        base.Awake();
-
-        _cardManager = GetComponent<CardManager>();
-        _cardMover = GetComponent<CardMover>();
-        _cardInventory = GetComponent<CardInventory>();
-        _cardInput = GetComponent<CardInput>();
+        _cardManager = cardManager;
+        _states = new();
     }
 
     public void StartStates()
     {
-        SetState(new CoverState(this));
+        SetState(new CoverState(_cardManager));
+    }
+
+    public void SetState(LayoutState state)
+    {
+        _states.Clear();
+        _states.Push(state);
+        state.StartState();
+    }
+
+    public void PushState(LayoutState state)
+    {
+        _states.Push(state);
+        state.StartState();
+    }
+
+    public void PopState()
+    {
+        _states.Pop();
+        _states.Peek().StartState();
     }
 
     internal void HandleHover(CardNode hoveredNode)
@@ -36,20 +49,5 @@ public class StateManager : StateMachine
     public void HandleClick(CardNode clickedNode)
     {
         _states.Peek().HandleClick(clickedNode);
-    }
-
-    public CardManager GetCardManager()
-    {
-        return _cardManager;
-    }
-
-    public CloseUpManager GetCloseUpManager()
-    {
-        return _closeUpManager;
-    }
-
-    public AnimationManager GetAnimationManager()
-    {
-        return _cardMover.GetAnimationManager();
     }
 }

@@ -12,7 +12,7 @@ public class MainLayout : SubLayout
     {
         // das schaut nur den obersten State an -> könnte Probleme mit Inventory oder CloseUp machen?
 
-        switch (_stateManager.GetStates().Peek())
+        switch (_stateManager.States.Peek())
         {
             case CoverState:
                 ResetCover(baseNode);
@@ -34,7 +34,7 @@ public class MainLayout : SubLayout
 
     public void ResetClose(CardNode baseNode)
     {
-        CardNode rootNode = _cardManager.GetRootNode();
+        CardNode rootNode = _cardManager.RootNode;
         // move in deck -> move out inventory
 
         _cardManager.AddToTopLevelMainPile(baseNode);
@@ -55,7 +55,7 @@ public class MainLayout : SubLayout
 
     public void ResetDefault(CardNode baseNode)
     {
-        CardNode rootNode = _cardManager.GetRootNode();
+        CardNode rootNode = _cardManager.RootNode;
         _cardManager.AddToTopLevelMainPile(baseNode);
         _cardMover.MoveCard(baseNode, _cardMover.GetPlaySpaceBottomLeft());
 

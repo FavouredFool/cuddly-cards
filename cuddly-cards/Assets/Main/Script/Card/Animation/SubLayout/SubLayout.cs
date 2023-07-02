@@ -12,9 +12,9 @@ public abstract class SubLayout
     public SubLayout(CardManager cardManager)
     {
         _cardManager = cardManager;
-        _cardMover = cardManager.GetCardMover();
-        _cardInventory = cardManager.GetCardInventory();
-        _stateManager = cardManager.GetStateManager();
+        _cardMover = cardManager.CardMover;
+        _cardInventory = cardManager.CardInventory;
+        _stateManager = cardManager.StateManager;
     }
 
     public abstract void SetLayoutStatic(CardNode baseNode);

@@ -25,8 +25,8 @@ public abstract class CardAnimation
     public CardAnimation(CardManager cardManager)
     {
         _cardManager = cardManager;
-        _cardMover = _cardManager.GetCardMover();
-        _cardInventory = _cardManager.GetCardInventory();
+        _cardMover = _cardManager.CardMover;
+        _cardInventory = _cardManager.CardInventory;
         _waitTime = _cardMover.GetWaitTime();
         _horizontalTime = _cardMover.GetHorizontalTime();
         _verticalTime = _cardMover.GetVerticalTime();

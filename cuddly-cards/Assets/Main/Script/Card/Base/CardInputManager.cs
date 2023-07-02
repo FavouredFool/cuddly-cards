@@ -1,21 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class CardInput : MonoBehaviour
-{
-    [SerializeField]
-    Camera _camera;
-    
+public class CardInputManager : MonoBehaviour
+{    
     List<Collider> _colliders;
 
     CardManager _cardManager;
-    CardInventory _cardInventory;
+
+    public CardManager CardManager { get { return _cardManager; } set { _cardManager = value; } }
 
     public void Awake()
     {
         _colliders = new();
-        _cardManager = GetComponent<CardManager>();
-        _cardInventory = GetComponent<CardInventory>();
     }
 
     public void Update()
@@ -41,7 +37,7 @@ public class CardInput : MonoBehaviour
 
     public CardNode GetHoveredCard()
     {
-        Ray shotRay = _camera.ScreenPointToRay(Input.mousePosition);
+        Ray shotRay = _cardManager.Camera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(shotRay, out RaycastHit hit))
         {

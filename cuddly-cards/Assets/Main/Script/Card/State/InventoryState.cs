@@ -4,21 +4,16 @@ using static CardInfo;
 
 public class InventoryState : LayoutState
 {
-    StateManager _stateManager;
-    AnimationManager _animationManager;
-
-    public InventoryState(StateManager stateManager)
+    public InventoryState(CardManager cardManager) : base(cardManager)
     {
-        _stateManager = stateManager;
-        _animationManager = stateManager.GetAnimationManager();
     }
 
-    public async void StartState()
+    public override void StartState()
     {
         _animationManager.SetCardsStatic();
     }
 
-    public async void HandleClick(CardNode clickedNode)
+    public override async void HandleClick(CardNode clickedNode)
     {
         if (clickedNode == null)
         {
@@ -28,7 +23,7 @@ public class InventoryState : LayoutState
         if (clickedNode.Context.GetCardType() == CardType.KEY || clickedNode.Context.GetCardType() == CardType.DIALOGUE)
         {
             // Close Up!
-            _stateManager.PushState(new CloseUpState(_stateManager, clickedNode, false));
+            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
             return;
         }
 
@@ -37,19 +32,19 @@ public class InventoryState : LayoutState
         _animationManager.AddAnimation(CardInfo.CardTransition.OPEN);
         _animationManager.AddAnimation(CardInfo.CardTransition.FROMINVENTORY);
 
-        await _animationManager.PlayAnimations(_stateManager.GetCardManager().GetBaseNode());
+        await _animationManager.PlayAnimations(_cardManager.BaseNode);
 
         _stateManager.PopState();
     }
 
-    public void HandleHover(CardNode hoveredNode)
+    public override void HandleHover(CardNode hoveredNode)
     {
         // würde es sich hier lohnen den Hover auf eigene Klassen für jeden Kartentyp zu deligieren?
         CardType hoveredType = hoveredNode.Context.GetCardType();
         if (hoveredType == CardType.KEY || hoveredType == CardType.DIALOGUE)
         {
             // move upward certain amount -> Cardmover
-            _stateManager.GetCardManager().GetCardMover().HoverInventoryCards(hoveredNode);
+            _cardMover.HoverInventoryCards(hoveredNode);
         }
     }
 }

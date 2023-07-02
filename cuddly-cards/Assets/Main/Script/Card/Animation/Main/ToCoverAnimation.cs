@@ -13,7 +13,8 @@ public class ToCoverAnimation : CardAnimation
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        CardNode rootNode = _cardManager.GetRootNode();
+        CardNode rootNode = _cardManager.RootNode;
+
         // -------------- CHILDREN ---------------------
 
         List<CardNode> children = previousMainNode.Children;

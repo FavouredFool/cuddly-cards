@@ -14,7 +14,7 @@ public class BackAnimation : CardAnimation
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        CardNode rootNode = _cardManager.GetRootNode();
+        CardNode rootNode = _cardManager.RootNode;
         CardNode backToBe = activeNode.Parent;
         List<CardNode> childsToBe = activeNode.Children;
         List<CardNode> previousChilds = previousActiveNode.Children;

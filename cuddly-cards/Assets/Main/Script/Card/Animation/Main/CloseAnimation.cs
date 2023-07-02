@@ -12,7 +12,7 @@ public class CloseAnimation : CardAnimation
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
         Sequence entireSequence = DOTween.Sequence();
-        CardNode rootNode = _cardManager.GetRootNode();
+        CardNode rootNode = _cardManager.RootNode;
         _cardManager.AddToTopLevelMainPile(activeNode);
         entireSequence.Join(_tweenYFunc(activeNode, activeNode.GetNodeCount(CardInfo.CardTraversal.CONTEXT)));
 
