@@ -28,23 +28,32 @@ public class CardInventory
         _inventoryNode.AddChild(keyParentNode);
     }
 
+    public void MoveNodeFromMainToInventory(CardNode node)
+    {
+        // this would need to be done with animations and such. ALSO LOCK INPUTS DURING THIS TIME!
+
+        // Remove node from main
+        _cardManager.RemoveNodeFromMainNodes(node);
+        AddNodeToInventory(node);
+
+        // refresh everything
+        _cardManager.AnimationManager.SetCardsStatic();
+    }
+
     public void AddNodeToInventory(CardNode node)
     {
-        CardType type = node.Context.GetCardType();
         CardNode parentNode;
 
-        if (type == CardType.DIALOGUE)
+        switch (node.Context.GetCardType())
         {
-            parentNode = _inventoryNode[0];
-        }
-        else if (type == CardType.KEY)
-        {
-            parentNode = _inventoryNode[1];
-        }
-        else
-        {
-            Debug.LogError("WRONG TYPE");
-            return;
+            case CardType.DIALOGUE:
+                parentNode = _inventoryNode.Children[0];
+                break;
+            case CardType.KEY:
+                parentNode = _inventoryNode.Children[1];
+                break;
+            default:
+                throw new System.Exception("This CardType should not be added to the inventory");
         }
 
         parentNode.AddChild(node);

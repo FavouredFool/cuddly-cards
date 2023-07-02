@@ -147,4 +147,10 @@ public class CardManager : MonoBehaviour
     {
         return _topLevelNodesMainPile;
     }
+
+    public void RemoveNodeFromMainNodes(CardNode nodeToRemove)
+    {
+        nodeToRemove.Parent.Children.Remove(nodeToRemove);
+        nodeToRemove.Parent = null;
+    }
 }

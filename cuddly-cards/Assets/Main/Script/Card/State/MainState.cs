@@ -23,18 +23,42 @@ public class MainState : LayoutState
             return;
         }
 
-        if (clickedNode.Context.GetCardType() == CardType.INVENTORY)
+        CardType cardType = clickedNode.Context.GetCardType();
+
+        switch (cardType)
         {
-            _animationManager.AddAnimation(CardTransition.CLOSE);
+            case CardType.INVENTORY:
 
-            _animationManager.AddAnimation(CardInfo.CardTransition.TOINVENTORY);
+                _animationManager.AddAnimation(CardTransition.CLOSE);
+                _animationManager.AddAnimation(CardInfo.CardTransition.TOINVENTORY);
+                await _animationManager.PlayAnimations(_cardManager.BaseNode);
+                _stateManager.PushState(new InventoryState(_cardManager));
 
-            await _animationManager.PlayAnimations(_cardManager.BaseNode);
+                return;
 
-            _stateManager.PushState(new InventoryState(_cardManager));
-            return;
+            case CardType.KEY:
+            case CardType.DIALOGUE:
+
+                // pick up cards into inventory
+                if (!clickedNode.Context.GetHasBeenSeen())
+                {
+                    _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
+                }
+
+                _cardInventory.MoveNodeFromMainToInventory(clickedNode);
+
+                return;
+
+            default:
+
+                EvaluateDefaultCardAction(clickedNode);
+
+                return;
         }
+    }
 
+    public async void EvaluateDefaultCardAction(CardNode clickedNode)
+    {
         CardNode rootNode = _cardManager.RootNode;
         CardNode previousActiveNode = _baseNode;
 

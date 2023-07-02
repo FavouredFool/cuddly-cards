@@ -13,6 +13,36 @@
             "depth": "1"
         },
         {
+            "label": "A Pocket Watch",
+            "description": "A pretty thing. It shows 3 in the morning.",
+            "type": "KEY",
+            "depth": "2"
+        },
+        {
+            "label": "A Knife",
+            "description": "Dont cut yourself.",
+            "type": "KEY",
+            "depth": "2"
+        },
+        {
+            "label": "A well done steak",
+            "description": "People are allowed to have their preferences.",
+            "type": "KEY",
+            "depth": "2"
+        },
+        {
+            "label": "The Quiet",
+            "description": "A silence in three parts.",
+            "type": "DIALOGUE",
+            "depth": "1"
+        },
+        {
+            "label": "The Fog",
+            "description": "Somebody might want to talk about this.",
+            "type": "DIALOGUE",
+            "depth": "1"
+        },
+        {
             "label": "The Little Mermaid",
             "description": "A beacon of light, sound, and life in a desolate-seeming town.",
             "type": "PLACE",

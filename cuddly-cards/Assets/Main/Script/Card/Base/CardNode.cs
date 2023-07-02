@@ -13,8 +13,6 @@ public class CardNode
 
 	private readonly CardContext _context;
 	private CardBody _body;
-	
-	private int _level;
 
 	private CardNode _parent;
 	private List<CardNode> _children;
@@ -25,22 +23,18 @@ public class CardNode
 	{
 		_context = context;
 		_children = new List<CardNode>();
-		_level = 0;
 	}
 
 	public CardNode(CardContext context, CardNode parent) : this(context)
 	{
 		_parent = parent;
-		_level = _parent != null ? _parent.Level + 1 : 0;
 	}
 
-	public int Level { set { _level = value; } get { return _level; } }
 	public CardContext Context { get { return _context; } }
 	public CardBody Body { set { _body = value; } get { return _body; } }
 	public CardNode Parent { set { _parent = value; } get { return _parent; } }
 	public List<CardNode> Children { get { return _children; } }
 	public bool IsTopLevel { set { _isTopLevel = value; } get { return _isTopLevel; } }
-
 
 	public CardNode this[int key]
 	{
@@ -50,7 +44,6 @@ public class CardNode
 	public void AddChild(CardNode node)
 	{
 		node.Parent = this;
-        node.Level = Level + 1;
 
 		_children.Add(node);
 	}
