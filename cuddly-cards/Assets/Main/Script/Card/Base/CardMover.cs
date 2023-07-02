@@ -67,7 +67,8 @@ public class CardMover : MonoBehaviour
             new ToInventoryAnimation(_cardManager),
             new FromInventoryAnimation(_cardManager),
             new EnterInventoryPileAnimation(_cardManager),
-            new ExitInventoryPileAnimation(_cardManager)
+            new ExitInventoryPileAnimation(_cardManager),
+            new CollectCardAnimation(_cardManager),
         };
     }
 

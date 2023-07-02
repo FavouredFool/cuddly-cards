@@ -1317,7 +1317,7 @@ MonoBehaviour:
   _playSpaceTopRight: {x: 3, y: 1.5}
   _childrenDistance: 1.125
   _childrenStartOffset: 1.648
-  _verticalTime: 0.2
+  _verticalTime: 0.203
   _horizontalTime: 0.35
   _waitTime: 0.1
   _border: 1.25
@@ -2012,7 +2012,6 @@ MonoBehaviour:
   _cameraMovement: {fileID: 436137023}
   _cardCloseUpTransform: {fileID: 1032639564}
   _closeUpCanvas: {fileID: 1928861884}
-  _cardManager: {fileID: 1221586264}
   _descriptionText: {fileID: 1642152226}
   _closeUpRotation: -25
   _transitionTime: 0.5

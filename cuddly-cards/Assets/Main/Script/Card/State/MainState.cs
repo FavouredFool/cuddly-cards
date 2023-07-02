@@ -43,6 +43,7 @@ public class MainState : LayoutState
                 if (!clickedNode.Context.GetHasBeenSeen())
                 {
                     _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
+                    return;
                 }
 
                 _cardInventory.MoveNodeFromMainToInventory(clickedNode);

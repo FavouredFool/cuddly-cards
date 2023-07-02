@@ -28,16 +28,19 @@ public class CardInventory
         _inventoryNode.AddChild(keyParentNode);
     }
 
-    public void MoveNodeFromMainToInventory(CardNode node)
+    public async void MoveNodeFromMainToInventory(CardNode node)
     {
-        // this would need to be done with animations and such. ALSO LOCK INPUTS DURING THIS TIME!
+        AnimationManager animationManager = _cardManager.AnimationManager;
 
-        // Remove node from main
+        animationManager.AddAnimation(CardTransition.COLLECTCARD);
+
+        await animationManager.PlayAnimations(node);
+
         _cardManager.RemoveNodeFromMainNodes(node);
         AddNodeToInventory(node);
 
         // refresh everything
-        _cardManager.AnimationManager.SetCardsStatic();
+        animationManager.SetCardsStatic();
     }
 
     public void AddNodeToInventory(CardNode node)
