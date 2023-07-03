@@ -48,6 +48,7 @@ public class AnimationManager
     {
         PrepareAnimation();
 
+        // maximale Recursion depth für Sequences erreicht?
         Sequence allAnimations = DOTween.Sequence();
 
         foreach (CardAnimation animation in _activeAnimations)

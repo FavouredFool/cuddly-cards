@@ -22,13 +22,13 @@ public class CardMover : MonoBehaviour
 
 
     [Header("CardMovement")]
-    [SerializeField, Range(0f, 1)]
+    [SerializeField]
     float _verticalTime = 0.5f;
 
     [SerializeField]
     float _horizontalTime = 1f;
 
-    [SerializeField, Range(0f, 210)]
+    [SerializeField]
     float _waitTime = 1f;
 
     [Header("Inventory")]
@@ -222,6 +222,11 @@ public class CardMover : MonoBehaviour
     }
 
     public Tween TweenY(CardNode main, int height)
+    {
+        return main.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
+    }
+
+    public Tween TweenY(CardNode main, float height)
     {
         return main.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
     }

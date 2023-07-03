@@ -66,8 +66,8 @@ public class ChildAnimation : CardAnimation
             entireSequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.LiftAndMoveChildToBase(previousChild, previousActiveNode))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.MoveBaseToBack(previousChild))
-                .Append(_subAnimations.MoveNodeToHeight(previousChild, height)));
+                .Append(_subAnimations.MoveNodeFarther(previousChild))
+                .Append(_subAnimations.RaiseNodeToHeight(previousChild, height)));
         }
 
         // ------------- BackToBe ----------------
@@ -76,8 +76,8 @@ public class ChildAnimation : CardAnimation
         entireSequence.Join(DOTween.Sequence()
             .Append(_subAnimations.LiftNodePile(previousActiveNode))
             .AppendInterval(_horizontalTime + _waitTime)
-            .Append(_subAnimations.MoveBaseToBack(previousActiveNode))
-            .Append(_subAnimations.MoveNodeToHeight(previousActiveNode, previousActiveNode.GetNodeCount(CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT))));
+            .Append(_subAnimations.MoveNodeFarther(previousActiveNode))
+            .Append(_subAnimations.RaiseNodeToHeight(previousActiveNode, previousActiveNode.GetNodeCount(CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT))));
 
 
         // ------------- Discard & DiscardToBe ----------------
@@ -98,19 +98,19 @@ public class ChildAnimation : CardAnimation
                 _cardManager.AddToTopLevelMainPile(node);
             }
 
-            entireSequence.Join(_subAnimations.MoveNodeToHeight(rootNode, discardHeight));
+            entireSequence.Join(_subAnimations.RaiseNodeToHeight(rootNode, discardHeight));
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.MoveNodeToHeight(discardToBe, discardToBeHeight))
+                .Append(_subAnimations.RaiseNodeToHeight(discardToBe, discardToBeHeight))
                 .AppendInterval(_horizontalTime + _waitTime)
-                .Append(_subAnimations.MoveChildToDiscard(discardToBe)));
+                .Append(_subAnimations.MoveNodeToRight(discardToBe)));
         }
         else if (discardToBe != null)
         {
             _cardManager.AddToTopLevelMainPile(discardToBe);
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
-                .Append(_subAnimations.MoveChildToDiscard(discardToBe)));
+                .Append(_subAnimations.MoveNodeToRight(discardToBe)));
         }
 
         return entireSequence;

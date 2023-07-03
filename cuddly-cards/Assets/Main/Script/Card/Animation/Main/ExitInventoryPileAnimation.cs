@@ -12,12 +12,10 @@ public class ExitInventoryPileAnimation : CardAnimation
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
-        float xInventoryPosition = _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x);
         Sequence entireSequence = DOTween.Sequence()
             .AppendInterval(_verticalTime + 2 * _horizontalTime + 2 * _waitTime)
-            .Append(_tweenXFunc(_cardInventory.GetInventoryNode(), xInventoryPosition));
+            .Append(_subAnimations.MoveNodeToOutOfFrameRight(_cardInventory.GetInventoryNode()));
 
         return entireSequence;
-
     }
 }

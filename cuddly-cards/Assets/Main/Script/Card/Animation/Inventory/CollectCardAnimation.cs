@@ -50,11 +50,11 @@ public class CollectCardAnimation : InventoryAnimation
 
         entireSequence.Join(
             DOTween.Sequence()
-                .Append(_tweenYFunc(activeNode, maxHeight))
+                .Append(_subAnimations.RaiseNodeToHeight(activeNode, maxHeight))
                 .AppendInterval(_waitTime)
-                .Append(_tweenXFunc(activeNode, _cardMover.GetPlaySpaceTopRight().x))
+                .Append(_subAnimations.MoveNodeToRight(activeNode))
                 .AppendInterval(_waitTime)
-                .Append(_tweenYFunc(activeNode, finalHeight))
+                .Append(_subAnimations.RaiseNodeToHeight(activeNode, finalHeight))
             );
 
 
@@ -79,11 +79,9 @@ public class CollectCardAnimation : InventoryAnimation
 
         entireSequence.Join(
             DOTween.Sequence()
-                .Append(_tweenYFunc(inventoryNode, inventoryHeight))
-                .AppendInterval(_waitTime)
-                .AppendInterval(_horizontalTime)
-                .AppendInterval(_waitTime)
-                .Append(_tweenYFunc(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT) + 1))
+                .Append(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryHeight))
+                .AppendInterval(2 * _waitTime + _horizontalTime)
+                .Append(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT) + 1))
             );
 
         // move all cards that were to the right of activeNode one space to the left
@@ -92,12 +90,11 @@ public class CollectCardAnimation : InventoryAnimation
         {
             // ich setze nur die hier top level. Root ist hierbei nicht top-level was etwas weird ist
             _cardManager.AddToTopLevelMainPile(parentNode.Children[i]);
-            
+
             entireSequence.Join(
             DOTween.Sequence()
-                .AppendInterval(_verticalTime)
-                .AppendInterval(_waitTime)
-                .Append(_tweenXFunc(parentNode.Children[i], _cardMover.GetChildrenDistance() * (i-1) - _cardMover.GetChildrenStartOffset()))
+                .AppendInterval(_verticalTime + _waitTime)
+                .Append(_subAnimations.MoveChildOneToRight(parentNode.Children[i]))
             );
         }
 

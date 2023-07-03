@@ -18,7 +18,7 @@ public class OpenAnimation : CardAnimation
 
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(_horizontalTime)
-            .Append(_tweenYFunc(activeNode, 1)));
+            .Append(_subAnimations.RaiseNodeToHeight(activeNode, 1)));
 
         if (activeNode != rootNode)
         {
@@ -35,8 +35,8 @@ public class OpenAnimation : CardAnimation
             _cardManager.AddToTopLevelMainPile(activeNode.Children[i]);
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_tweenXFunc(activeNode.Children[i], i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset()))
-                .Append(_tweenYFunc(activeNode.Children[i], activeNode.Children[i].GetNodeCount(CardInfo.CardTraversal.CONTEXT))));
+                .Append(_subAnimations.MoveBaseToChild(activeNode.Children[i], activeNode.Children[i]))
+                .Append(_subAnimations.LowerNodePile(activeNode.Children[i])));
         }
         return entireSequence;
     }

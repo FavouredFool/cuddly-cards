@@ -14,7 +14,8 @@ public class CloseAnimation : CardAnimation
         Sequence entireSequence = DOTween.Sequence();
         CardNode rootNode = _cardManager.RootNode;
         _cardManager.AddToTopLevelMainPile(activeNode);
-        entireSequence.Join(_tweenYFunc(activeNode, activeNode.GetNodeCount(CardInfo.CardTraversal.CONTEXT)));
+
+        entireSequence.Join(_subAnimations.LiftNodePile(activeNode));
 
         if (activeNode != rootNode)
         {
@@ -31,8 +32,8 @@ public class CloseAnimation : CardAnimation
             _cardManager.AddToTopLevelMainPile(childNode);
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_tweenYFunc(childNode, childNode.GetNodeCountUpToNodeInPile(activeNode, CardInfo.CardTraversal.CONTEXT)))
-                .Append(_tweenXFunc(childNode, _playSpaceBottomLeft.x)));
+                .Append(_subAnimations.RaiseNodePileRelative(childNode, activeNode))
+                .Append(_subAnimations.MoveNodeToLeft(childNode)));
         }
 
         return entireSequence;

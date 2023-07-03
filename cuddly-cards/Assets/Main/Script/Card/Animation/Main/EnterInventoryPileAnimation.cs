@@ -12,10 +12,9 @@ public class EnterInventoryPileAnimation : CardAnimation
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
-        float xInventoryPosition = _playSpaceTopRight.x;
         Sequence entireSequence = DOTween.Sequence()
             .AppendInterval(_verticalTime)
-            .Append(_tweenXFunc(_cardInventory.GetInventoryNode(), xInventoryPosition));
+            .Append(_subAnimations.MoveNodeToRight(_cardInventory.GetInventoryNode()));
 
         return entireSequence;
     }
