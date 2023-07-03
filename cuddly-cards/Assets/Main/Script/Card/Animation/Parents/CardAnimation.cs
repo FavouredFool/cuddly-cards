@@ -10,6 +10,8 @@ public abstract class CardAnimation
     protected CardMover _cardMover;
     protected CardInventory _cardInventory;
 
+    protected SubAnimations _subAnimations;
+
     protected float _waitTime;
     protected float _horizontalTime;
     protected float _verticalTime;
@@ -35,6 +37,7 @@ public abstract class CardAnimation
         _tweenXFunc = _cardMover.TweenX;
         _tweenYFunc = _cardMover.TweenY;
         _tweenZFunc = _cardMover.TweenZ;
+        _subAnimations = _cardMover.SubAnimations;
     }
 
     public abstract Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode);

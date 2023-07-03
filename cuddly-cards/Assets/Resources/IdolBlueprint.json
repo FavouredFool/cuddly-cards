@@ -61,6 +61,12 @@
             "depth": "3"
         },
         {
+            "label": "A way past the challenge",
+            "description": "Hate dem challances",
+            "type": "PLACE",
+            "depth": "3"
+        },
+        {
             "label": "The Stairs",
             "description": "A narrow walkway, moving upwards in a U-turn and ending in a tight corridor.",
             "type": "PLACE",

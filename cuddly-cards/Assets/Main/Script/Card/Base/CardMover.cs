@@ -47,15 +47,18 @@ public class CardMover : MonoBehaviour
     Ease _verticalEasing;
 
     bool _isAnimating = false;
-
     public bool IsAnimatingFlag { get { return _isAnimating; } set { _isAnimating = value; } }
 
     CardManager _cardManager;
-
     public CardManager CardManager { get { return _cardManager; } set { _cardManager = value; } }
+
+    SubAnimations _subAnimations;
+    public SubAnimations SubAnimations { get { return _subAnimations; } set { _subAnimations = value; } }
 
     public List<CardAnimation> GetCardAnimations()
     {
+        _subAnimations = new SubAnimations(_cardManager);
+
         return new()
         {
             new ChildAnimation(_cardManager),

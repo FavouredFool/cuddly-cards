@@ -32,24 +32,23 @@ public class BackAnimation : CardAnimation
                 // ------------- PREVIOUS MAIN ----------------
 
                 entireSequence.Join(DOTween.Sequence()
-                    .Append(_tweenYFunc(previousActiveNode, previousActiveNode.GetNodeCountUpToNodeInPile(activeNode, CardTraversal.CONTEXT)))
+                    .Append(_subAnimations.MoveNodePileRelative(previousActiveNode, activeNode))
                     .AppendInterval(_horizontalTime + _waitTime)
-                    .Append(_tweenXFunc(previousActiveNode, newChild.Parent.Children.IndexOf(newChild) * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset()))
-                    .Append(_tweenYFunc(previousActiveNode, previousActiveNode.GetNodeCountUpToNodeInPile(previousActiveNode, CardTraversal.CONTEXT))));
+                    .Append(_subAnimations.MoveBaseToChild(previousActiveNode, previousActiveNode))
+                    .Append(_subAnimations.MoveNodePileRelative(previousActiveNode, previousActiveNode)));
 
                 // ------------- PREVIOUS CHILDREN ----------------
                 for (int j = previousChilds.Count - 1; j >= 0; j--)
                 {
                     CardNode oldChild = previousChilds[j];
-
                     _cardManager.AddToTopLevelMainPile(oldChild);
 
                     entireSequence.Join(DOTween.Sequence()
-                        .Append(_tweenYFunc(oldChild, oldChild.GetNodeCountUpToNodeInPile(activeNode, CardTraversal.CONTEXT)))
-                        .Append(_tweenXFunc(oldChild, _playSpaceBottomLeft.x))
+                        .Append(_subAnimations.MoveNodePileRelative(oldChild, activeNode))
+                        .Append(_subAnimations.MoveChildToBase(oldChild))
                         .AppendInterval(_waitTime)
-                        .Append(_tweenXFunc(oldChild, newChild.Parent.Children.IndexOf(newChild) * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset()))
-                        .Append(_tweenYFunc(oldChild, oldChild.GetNodeCountUpToNodeInPile(previousActiveNode, CardTraversal.CONTEXT))));
+                        .Append(_subAnimations.MoveBaseToChild(oldChild, previousActiveNode))
+                        .Append(_subAnimations.MoveNodePileRelative(oldChild, previousActiveNode)));  
                 }
 
             }
