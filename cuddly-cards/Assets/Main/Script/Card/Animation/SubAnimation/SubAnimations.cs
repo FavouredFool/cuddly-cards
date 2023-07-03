@@ -12,8 +12,6 @@ public class SubAnimations
     CardManager _cardManager;
     CardInventory _cardInventory;
 
-    SubAnimations _subAnimations;
-
     float _waitTime;
     float _horizontalTime;
     float _verticalTime;
@@ -55,6 +53,13 @@ public class SubAnimations
     }
 
     #region Inventory
+
+    public Tween MoveInventoryCardWhileFanning(int height)
+    {
+        return DOTween.Sequence()
+            .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
+            .Append(RaiseNodeToHeight(_cardInventory.GetInventoryNode(), height));
+    }
 
     public Tween FanOutCardsFromRight(CardNode subNode, float startOffset, float fannedCardSpace)
     {

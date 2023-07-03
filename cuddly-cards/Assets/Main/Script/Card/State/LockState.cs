@@ -4,12 +4,16 @@ using static CardInfo;
 
 public class LockState : LayoutState
 {
-    public LockState(CardManager cardManager) : base (cardManager)
+    CardNode _baseNode;
+
+    public LockState(CardManager cardManager, CardNode baseNode) : base (cardManager)
     {
+        _baseNode = baseNode;
     }
 
     public override void StartState()
     {
+        _cardManager.BaseNode = _baseNode;
         _animationManager.SetCardsStatic();
     }
 
@@ -56,22 +60,23 @@ public class LockState : LayoutState
             // Inventar muss eingefahren werden -> Neue Transition
             // pressed back
 
-            _animationManager.AddAnimation(CardTransition.RETRACTKEY);
+            _animationManager.AddAnimation(CardTransition.BACK);
             // modular?
             //_animationManager.AddAnimation(CardTransition.OPEN);
 
             await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
+
             _stateManager.SetState(new MainState(_cardManager, clickedNode));
             return;
         }
         else if (clickedNode == rootNode)
         {
-            _animationManager.AddAnimation(CardTransition.TOCOVER);
+            //_animationManager.AddAnimation(CardTransition.TOCOVER);
 
             //_animationManager.AddAnimation(CardTransition.OPEN);
 
-            await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
-            _stateManager.SetState(new CoverState(_cardManager));
+            //await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
+            //_stateManager.SetState(new CoverState(_cardManager));
 
             return;
         }

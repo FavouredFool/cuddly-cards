@@ -57,11 +57,11 @@ public class MainState : LayoutState
                     return;
                 }
 
-                _animationManager.AddAnimation(CardTransition.CLOSE);
+                _animationManager.AddAnimation(CardTransition.NOCHILDREN);
                 _animationManager.AddAnimation(CardInfo.CardTransition.DISPLAYKEY);
 
-                await _animationManager.PlayAnimations(_cardManager.BaseNode);
-                _stateManager.PushState(new LockState(_cardManager));
+                await _animationManager.PlayAnimations(clickedNode, _baseNode);
+                _stateManager.PushState(new LockState(_cardManager, clickedNode));
                 return;
 
             default:
@@ -119,6 +119,7 @@ public class MainState : LayoutState
         _animationManager.AddAnimation(cardTransition);
 
         await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
+
         _stateManager.SetState(nextState);
     }
 

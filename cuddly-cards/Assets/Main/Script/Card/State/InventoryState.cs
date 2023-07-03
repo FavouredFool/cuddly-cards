@@ -44,7 +44,6 @@ public class InventoryState : LayoutState
         if (hoveredType == CardType.KEY || hoveredType == CardType.DIALOGUE)
         {
             // move upward certain amount -> Cardmover
-            _cardMover.HoverInventoryCards(hoveredNode);
         }
     }
 }

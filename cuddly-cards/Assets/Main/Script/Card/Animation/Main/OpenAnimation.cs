@@ -38,6 +38,7 @@ public class OpenAnimation : CardAnimation
                 .Append(_subAnimations.MoveBaseToChild(activeNode.Children[i], activeNode.Children[i]))
                 .Append(_subAnimations.LowerNodePile(activeNode.Children[i])));
         }
+
         return entireSequence;
     }
 }
