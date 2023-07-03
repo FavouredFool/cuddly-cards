@@ -15,6 +15,8 @@ public class ToCoverAnimation : CardAnimation
 
         CardNode rootNode = _cardManager.RootNode;
 
+        CardNode backNode = previousMainNode.Parent;
+
         // -------------- CHILDREN ---------------------
 
         List<CardNode> children = previousMainNode.Children;
@@ -25,23 +27,25 @@ public class ToCoverAnimation : CardAnimation
             _cardManager.AddToTopLevelMainPile(child);
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_tweenYFunc(child, child.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
-                .Append(_tweenXFunc(child, _playSpaceBottomLeft.x))
+                .Append(_subAnimations.RaiseNodePileRelative(child, rootNode))
+                .Append(_subAnimations.MoveNodeToLeft(child))
                 .AppendInterval(2 * _waitTime + _horizontalTime)
-                .Append(_tweenXFunc(child, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f)));
+                .Append(_subAnimations.MoveNodeToMiddle(child)));
         }
 
-        // -------------- MAIN ---------------------
 
+
+        // -------------- MAIN ---------------------
+        
         _cardManager.AddToTopLevelMainPile(previousMainNode);
         entireSequence.Join(DOTween.Sequence()
-            .Append(_tweenYFunc(previousMainNode, previousMainNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
+            .Append(_subAnimations.RaiseNodePileRelative(previousMainNode, rootNode))
             .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
-            .Append(_tweenXFunc(previousMainNode, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f)));
-
+            .Append(_subAnimations.MoveNodeToMiddle(previousMainNode)));
+        
         // -------------- BACK ---------------------
-
-        CardNode backNode = previousMainNode.Parent;
+        
+        
         _cardManager.AddToTopLevelMainPile(backNode);
 
         List<CardNode> lowerTopMostCardsBack = previousMainNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
@@ -57,16 +61,16 @@ public class ToCoverAnimation : CardAnimation
         foreach (CardNode node in animatingNodesBack)
         {
             entireSequence.Join(DOTween.Sequence()
-                .Append(_tweenYFunc(node, node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
+                .Append(_subAnimations.RaiseNodePileRelative(node, rootNode))
                 .AppendInterval(_horizontalTime + _waitTime)
-                .Append(_tweenZFunc(node, _playSpaceBottomLeft.y))
+                .Append(_subAnimations.MoveNodeNearer(node))
                 .AppendInterval(_waitTime)
-                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f)));
+                .Append(_subAnimations.MoveNodeToMiddle(node)));
         }
 
 
         // -------------- ROOT ---------------------
-
+        
         _cardManager.AddToTopLevelMainPile(rootNode);
         List<CardNode> lowerTopMostCardsRoot = backNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
 
@@ -81,14 +85,14 @@ public class ToCoverAnimation : CardAnimation
         foreach (CardNode node in animatingNodesRoot)
         {
             entireSequence.Join(DOTween.Sequence()
-                .Append(_tweenYFunc(node, node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT)))
-                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x))
+                .Append(_subAnimations.RaiseNodePileRelative(node, rootNode))
+                .Append(_subAnimations.MoveNodeToLeft(node))
                 .AppendInterval(_waitTime)
-                .Append(_tweenZFunc(node, _playSpaceBottomLeft.y))
+                .Append(_subAnimations.MoveNodeNearer(node))
                 .AppendInterval(_waitTime)
-                .Append(_tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f)));
+                .Append(_subAnimations.MoveNodeToMiddle(node)));
         }
-
+        
         return entireSequence;
     }
 
