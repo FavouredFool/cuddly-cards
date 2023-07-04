@@ -32,19 +32,18 @@ public class CardBody : MonoBehaviour
 
     public void SetHeight(int height)
     {
-        transform.localPosition = new Vector3(
-            transform.localPosition.x,
-            CardInfo.CARDHEIGHT * height,
-            transform.localPosition.z
-        );
+        SetHeightFloat(height);
     }
 
-    public void SetHeight(float heightFloat)
+    public void SetHeightFloat(float heightFloat)
     {
-        transform.localPosition = new Vector3(
-            transform.localPosition.x,
+        var localPosition = transform.localPosition;
+
+        localPosition = new Vector3(
+            localPosition.x,
             CardInfo.CARDHEIGHT * heightFloat,
-            transform.localPosition.z
+            localPosition.z
         );
+        transform.localPosition = localPosition;
     }
 }

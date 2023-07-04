@@ -24,7 +24,7 @@ public class LockState : LayoutState
             return;
         }
 
-        CardType cardType = clickedNode.Context.GetCardType();
+        CardType cardType = clickedNode.Context.CardType;
 
         switch (cardType)
         {
@@ -33,7 +33,19 @@ public class LockState : LayoutState
 
             case CardType.KEY:
             case CardType.DIALOGUE:
-                _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
+
+                // Compare the clicked nodes name to the desired KEy
+
+                if (_baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
+                {
+                    Debug.Log("FOUND IT");
+                    _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
+                }
+                else
+                {
+                    _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
+                }
+
                 return;
 
             default:

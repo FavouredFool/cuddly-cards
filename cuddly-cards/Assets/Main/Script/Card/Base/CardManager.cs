@@ -9,7 +9,7 @@ public class CardManager : MonoBehaviour
     [SerializeField]
     TextAsset _textBlueprint;
 
-    [Header("Organisation")]
+    [Header("Organization")]
     [SerializeField]
     Transform _cardFolder;
 
@@ -23,61 +23,49 @@ public class CardManager : MonoBehaviour
     [SerializeField]
     Camera _camera;
 
+    public Transform CardFolder => _cardFolder;
+    public Camera Camera => _camera;
+    public CardInputManager CardInputManager { get => _cardInputManager; private set => _cardInputManager = value; }
+    public CloseUpManager CloseUpManager { get => _closeUpManager; private set => _closeUpManager = value; }
 
-    public Transform CardFolder { get { return _cardFolder; } }
-    public Camera Camera { get { return _camera; } }
+    public CardBuilder CardBuilder { get; private set; }
+    public CardMover CardMover { get; private set; }
+    public CardReader CardReader { get; private set; }
+    public CardInventory CardInventory { get; private set; }
+    public StateManager StateManager { get; private set; }
+    public AnimationManager AnimationManager { get; private set; }
+    public CardNode RootNode { get; private set; }
+    public CardNode BaseNode { get; set; }
 
-    CardBuilder _cardBuilder;
-    CardMover _cardMover;
-    CardReader _cardReader;
-    CardInventory _cardInventory;
-    StateManager _stateManager;
-    AnimationManager _animationManager;
-
-    public CardBuilder CardBuilder { get { return _cardBuilder; } private set { _cardBuilder = value; } }
-    public CardMover CardMover { get { return _cardMover; } private set { _cardMover = value; } }
-    public CardInputManager CardInputManager { get { return _cardInputManager; } private set { _cardInputManager = value; } }
-    public CardReader CardReader { get { return _cardReader; } private set { _cardReader = value; } }
-    public CardInventory CardInventory { get { return _cardInventory; } private set { _cardInventory = value; } }
-    public StateManager StateManager { get { return _stateManager; } private set { _stateManager = value; } }
-    public CloseUpManager CloseUpManager { get { return _closeUpManager; } private set { _closeUpManager = value; } }
-    public AnimationManager AnimationManager { get { return _animationManager; } private set { _animationManager = value; } }
-
-    CardNode _rootNode;
-    CardNode _baseNode;
-
-    public CardNode RootNode { get { return _rootNode; } private set { _rootNode = value; } }
-    public CardNode BaseNode { get { return _baseNode; } set { _baseNode = value; } }
 
     List<CardNode> _topLevelNodesMainPile;
 
     public void Awake()
     {
-        _topLevelNodesMainPile = new();
+        _topLevelNodesMainPile = new List<CardNode>();
 
-        _cardBuilder = GetComponent<CardBuilder>();
-        _cardMover = GetComponent<CardMover>();
-        _cardMover.CardManager = this;
+        CardBuilder = GetComponent<CardBuilder>();
+        CardMover = GetComponent<CardMover>();
+        CardMover.CardManager = this;
         _cardInputManager.CardManager = this;
-        
 
-        _cardReader = new CardReader(_textBlueprint);
-        _stateManager = new StateManager(this);
-        _cardInventory = new CardInventory(this);
-        _animationManager = new AnimationManager(this);
+        CardReader = new CardReader(_textBlueprint);
+        StateManager = new StateManager(this);
+        CardInventory = new CardInventory(this);
+        AnimationManager = new AnimationManager(this);
     }
 
     public void Start()
     {
-        _baseNode = _rootNode = _cardReader.ReadCards();
+        BaseNode = RootNode = CardReader.ReadCards();
 
-        _cardBuilder.BuildAllCards(_rootNode, _cardFolder);
+        CardBuilder.BuildAllCards(RootNode, _cardFolder);
 
-        _cardInventory.InitializeInventory(_cardBuilder);
+        CardInventory.InitializeInventory(CardBuilder);
 
         CreateLocksAndDialogueOnStartUp();
 
-        _stateManager.StartStates();
+        StateManager.StartStates();
     }
 
     public void CreateLocksAndDialogueOnStartUp()
@@ -99,12 +87,12 @@ public class CardManager : MonoBehaviour
 
         foreach (CardNode node in tests)
         {
-            node.Body = _cardBuilder.BuildCardBody(node.Context, _cardFolder);
+            node.Body = CardBuilder.BuildCardBody(node.Context, _cardFolder);
         }
 
-        for (int i = 0; i < tests.Count; i++)
+        foreach (CardNode cardNode in tests)
         {
-            _cardInventory.AddNodeToInventory(tests[i]);
+            CardInventory.AddNodeToInventory(cardNode);
         }
     }
 
@@ -114,18 +102,18 @@ public class CardManager : MonoBehaviour
         {
             return;
         }
-        _stateManager.HandleHover(hoveredNode);
+
+        StateManager.HandleHover(hoveredNode);
     }
 
     public void NodeClicked(CardNode clickedNode)
     {
-        _stateManager.HandleClick(clickedNode);        
+        StateManager.HandleClick(clickedNode);        
     }
 
     public List<CardNode> GetClickableNodes()
     {
-        List<CardNode> clickables = new(GetTopLevelNodesMainPile());
-        clickables.Add(_cardInventory.GetInventoryNode());
+        List<CardNode> clickables = new(GetTopLevelNodesMainPile()) { CardInventory.GetInventoryNode() };
 
         return clickables;
     }
@@ -134,7 +122,7 @@ public class CardManager : MonoBehaviour
     {
         _topLevelNodesMainPile.Clear();
 
-        _rootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT,
+        RootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT,
             delegate (CardNode node)
         {
             node.IsTopLevel = _topLevelNodesMainPile.Contains(node);

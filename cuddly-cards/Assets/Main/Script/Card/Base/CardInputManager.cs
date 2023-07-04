@@ -5,13 +5,11 @@ public class CardInputManager : MonoBehaviour
 {    
     List<Collider> _colliders;
 
-    CardManager _cardManager;
-
-    public CardManager CardManager { get { return _cardManager; } set { _cardManager = value; } }
+    public CardManager CardManager { get; set; }
 
     public void Awake()
     {
-        _colliders = new();
+        _colliders = new List<Collider>();
     }
 
     public void Update()
@@ -26,35 +24,24 @@ public class CardInputManager : MonoBehaviour
 
     public void HoverCard()
     {
-        _cardManager.NodeHovered(GetHoveredCard());
+        CardManager.NodeHovered(GetHoveredCard());
     }
 
     public void EvaluateClick()
     {
         // note that the card can be null to express that a click has happened without a target card
-        _cardManager.NodeClicked(GetHoveredCard());
+        CardManager.NodeClicked(GetHoveredCard());
     }
 
     public CardNode GetHoveredCard()
     {
-        Ray shotRay = _cardManager.Camera.ScreenPointToRay(Input.mousePosition);
+        Ray shotRay = CardManager.Camera.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(shotRay, out RaycastHit hit))
-        {
-            if (hit.collider == null)
-            {
-                return null;
-            }
+        if (!Physics.Raycast(shotRay, out RaycastHit hit)) return null;
+        if (hit.collider == null) return null;
+        if (!_colliders.Contains(hit.collider)) return null;
 
-            if (!_colliders.Contains(hit.collider))
-            {
-                return null;
-            }
-
-            return _cardManager.GetClickableNodes()[_colliders.IndexOf(hit.collider)];
-        }
-
-        return null;
+        return CardManager.GetClickableNodes()[_colliders.IndexOf(hit.collider)];
     }
 
     public void SetColliders()
@@ -64,24 +51,24 @@ public class CardInputManager : MonoBehaviour
             RemoveColliders();
         }
 
-        foreach (CardNode node in _cardManager.GetClickableNodes())
+        foreach (CardNode node in CardManager.GetClickableNodes())
         {
-            BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+            BoxCollider nodeCollider = gameObject.AddComponent<BoxCollider>();
 
             float totalHeight = node.GetNodeCount(CardInfo.CardTraversal.BODY) * CardInfo.CARDHEIGHT;
 
-            collider.center = node.Body.transform.position - new Vector3(0, totalHeight / 2f, 0);
-            collider.size = new Vector3(1f, totalHeight, CardInfo.CARDRATIO);
+            nodeCollider.center = node.Body.transform.position - new Vector3(0, totalHeight / 2f, 0);
+            nodeCollider.size = new Vector3(1f, totalHeight, CardInfo.CARDRATIO);
 
-            _colliders.Add(collider);
+            _colliders.Add(nodeCollider);
         }
     }
 
     public void RemoveColliders()
     {
-        foreach (BoxCollider collider in _colliders)
+        foreach (Collider nodeCollider in _colliders)
         {
-            Destroy(collider);
+            Destroy(nodeCollider);
         }
 
         _colliders.Clear();

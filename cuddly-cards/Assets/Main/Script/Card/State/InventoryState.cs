@@ -20,7 +20,7 @@ public class InventoryState : LayoutState
             return;
         }
 
-        if (clickedNode.Context.GetCardType() == CardType.KEY || clickedNode.Context.GetCardType() == CardType.DIALOGUE)
+        if (clickedNode.Context.CardType == CardType.KEY || clickedNode.Context.CardType == CardType.DIALOGUE)
         {
             // Close Up!
             _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
@@ -40,8 +40,8 @@ public class InventoryState : LayoutState
     public override void HandleHover(CardNode hoveredNode)
     {
         // würde es sich hier lohnen den Hover auf eigene Klassen für jeden Kartentyp zu deligieren?
-        CardType hoveredType = hoveredNode.Context.GetCardType();
-        if (hoveredType == CardType.KEY || hoveredType == CardType.DIALOGUE)
+        CardType hoveredType = hoveredNode.Context.CardType;
+        if (hoveredType is CardType.KEY or CardType.DIALOGUE)
         {
             // move upward certain amount -> Cardmover
         }

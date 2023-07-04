@@ -35,7 +35,11 @@ public class CardReader
     public CardNode InitNodes(List<DeserializedObjectElement> elementList, int recursionDepth)
     {
         DeserializedObjectElement activeElement = elementList[_count];
+
         CardContext context = new(activeElement.Label, activeElement.Description, activeElement.Type);
+
+        if (activeElement.DesiredKey != null) context.DesiredKey = activeElement.DesiredKey;
+
         CardNode node = new(context);
 
         _count += 1;

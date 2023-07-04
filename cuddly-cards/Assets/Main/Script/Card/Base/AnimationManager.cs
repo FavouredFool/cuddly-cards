@@ -6,27 +6,22 @@ using static CardInfo;
 
 public class AnimationManager
 {
-    CardMover _cardMover;
-    CardInputManager _cardInput;
-    CardManager _cardManager;
-    CardInventory _cardInventory;
-    StateManager _stateManager;
+    readonly CardMover _cardMover;
+    readonly CardInputManager _cardInput;
+    readonly CardManager _cardManager;
 
-    List<CardAnimation> _activeAnimations;
-    List<SubLayout> _subLayouts;
+    readonly List<CardAnimation> _activeAnimations;
+    readonly List<SubLayout> _subLayouts;
 
     public AnimationManager(CardManager cardManager)
     {
         _cardManager = cardManager;
         _cardMover = cardManager.CardMover;
         _cardInput = cardManager.CardInputManager;
-        _cardInventory = cardManager.CardInventory;
-
-        _stateManager = cardManager.StateManager;
 
         _subLayouts = _cardMover.GetSubLayouts();
 
-        _activeAnimations = new();
+        _activeAnimations = new List<CardAnimation>();
     }
 
     public async Task PlayAnimations()
@@ -46,7 +41,6 @@ public class AnimationManager
     {
         PrepareAnimation();
 
-        // maximale Recursion depth für Sequences erreicht?
         Sequence allAnimations = DOTween.Sequence();
 
         foreach (CardAnimation animation in _activeAnimations)
@@ -54,6 +48,7 @@ public class AnimationManager
             allAnimations.Join(animation.GetAnimationSequence(activeNode, previousActiveNode));
         }
 
+        // OnComplete is necessary because of a problem with Dotween
         await allAnimations.Play().OnComplete(() => { }).AsyncWaitForCompletion();
 
         FinishAnimation();

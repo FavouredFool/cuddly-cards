@@ -16,9 +16,11 @@ public class CloseUpState : LayoutState
 
     public override async void StartState()
     {
-        _closeUpNode.Context.SetHasBeenSeen(true);
-        _originalPosition = _closeUpNode.Body.transform.position;
-        _originalRotation = _closeUpNode.Body.transform.rotation;
+        _closeUpNode.Context.HasBeenSeen = true;
+
+        Transform transform = _closeUpNode.Body.transform;
+        _originalPosition = transform.position;
+        _originalRotation = transform.rotation;
 
         _blockInputs = true;
         await _closeUpManager.SetCloseUpAnimated(_closeUpNode);

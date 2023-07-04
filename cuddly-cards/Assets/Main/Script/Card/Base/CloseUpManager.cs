@@ -43,7 +43,7 @@ public class CloseUpManager : MonoBehaviour
         closeUpNode.Body.transform.SetPositionAndRotation(endPosition, endRotation);
 
         GetCloseUpCanvas().SetActive(true);
-        GetDescriptionText().text = closeUpNode.Context.GetDescription();
+        GetDescriptionText().text = closeUpNode.Context.Description;
     }
 
     public void RevertCloseUpStatic(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation)

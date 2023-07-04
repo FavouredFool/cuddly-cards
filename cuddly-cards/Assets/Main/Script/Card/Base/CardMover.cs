@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
@@ -36,8 +37,6 @@ public class CardMover : MonoBehaviour
     float _border = 1f;
     [SerializeField]
     float _inventoryCardRotationAmount = 0.9f;
-    [SerializeField]
-    float _onHoverMovement = 0.5f;
 
     [Header("Easing")]
     [SerializeField]
@@ -46,26 +45,22 @@ public class CardMover : MonoBehaviour
     [SerializeField]
     Ease _verticalEasing;
 
-    bool _isAnimating = false;
-    public bool IsAnimatingFlag { get { return _isAnimating; } set { _isAnimating = value; } }
+    public bool IsAnimatingFlag { get; set; } = false;
 
-    CardManager _cardManager;
-    public CardManager CardManager { get { return _cardManager; } set { _cardManager = value; } }
-
-    SubAnimations _subAnimations;
-    public SubAnimations SubAnimations { get => _subAnimations; set => _subAnimations = value; }
+    public CardManager CardManager { get; set; }
+    public SubAnimations SubAnimations { get; set; }
 
     public void Start()
     {
-        _subAnimations = new SubAnimations(_cardManager);
+        SubAnimations = new SubAnimations(CardManager);
     }
 
     public List<SubLayout> GetSubLayouts()
     {
-        return new()
+        return new List<SubLayout>
         {
-            new MainLayout(_cardManager),
-            new InventoryLayout(_cardManager),
+            new MainLayout(CardManager),
+            new InventoryLayout(CardManager),
         };
     }
 
@@ -83,15 +78,9 @@ public class CardMover : MonoBehaviour
 
     public void SetMainCardsRelativeToParent()
     {
-        List<CardNode> topLevelNodes = _cardManager.GetTopLevelNodesMainPile();
-        foreach (CardNode topLevel in topLevelNodes)
+        foreach (CardNode topLevel in CardManager.GetTopLevelNodesMainPile())
         {
-            int size = 1;
-
-            foreach (CardNode childNode in topLevel.Children)
-            {
-                size += childNode.SetPositionsRecursive(size);
-            }
+            topLevel.Children.Aggregate(1, (current, childNode) => current + childNode.SetPositionsRecursive(current));
         }
     }
 
@@ -99,7 +88,7 @@ public class CardMover : MonoBehaviour
     {
         int size = 1;
 
-        foreach (CardNode childNode in _cardManager.CardInventory.GetInventoryNode().Children)
+        foreach (CardNode childNode in CardManager.CardInventory.GetInventoryNode().Children)
         {
             if (childNode.IsTopLevel)
             {
@@ -113,7 +102,7 @@ public class CardMover : MonoBehaviour
 
     public void SetHeightAndRotationOfInventory()
     {
-        CardNode inventoryNode = _cardManager.CardInventory.GetInventoryNode();
+        CardNode inventoryNode = CardManager.CardInventory.GetInventoryNode();
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
 
         for (int i = 0; i < inventoryNode.Children.Count; i++)
@@ -150,16 +139,9 @@ public class CardMover : MonoBehaviour
 
         for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
         {
-            inventoryPart[i].Body.SetHeight(2 + (i + 1) * -0.01f);
+            inventoryPart[i].Body.SetHeightFloat(2 + (i + 1) * -0.01f);
             inventoryPart[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -GetInventoryCardRotationAmount());
         }
-    }
-
-
-    public void SetInventoryPosition()
-    {
-        float xInventoryPosition = _playSpaceTopRight.x;
-        MoveCard(_cardManager.CardInventory.GetInventoryNode(), new Vector2(xInventoryPosition, _playSpaceBottomLeft.y));
     }
 
     public void ResetPosition(CardNode rootNode)
@@ -178,7 +160,7 @@ public class CardMover : MonoBehaviour
 
     public void SetHeightOfTopLevelNodes()
     {
-        foreach (CardNode node in _cardManager.GetTopLevelNodesMainPile())
+        foreach (CardNode node in CardManager.GetTopLevelNodesMainPile())
         {
             node.Body.SetHeight(node.GetNodeCount(CardInfo.CardTraversal.BODY));
         }
@@ -200,11 +182,6 @@ public class CardMover : MonoBehaviour
     }
 
     public Tween TweenY(CardNode main, int height)
-    {
-        return main.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
-    }
-
-    public Tween TweenY(CardNode main, float height)
     {
         return main.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, _verticalTime).SetEase(_verticalEasing);
     }

@@ -15,7 +15,7 @@ public class CollectCardAnimation : InventoryAnimation
         Sequence entireSequence = DOTween.Sequence();
 
         CardNode parentNode = activeNode.Parent;
-        CardType cardType = activeNode.Context.GetCardType();
+        CardType cardType = activeNode.Context.CardType;
 
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
 

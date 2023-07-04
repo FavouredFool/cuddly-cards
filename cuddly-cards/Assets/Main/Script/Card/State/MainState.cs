@@ -23,7 +23,7 @@ public class MainState : LayoutState
             return;
         }
 
-        CardType cardType = clickedNode.Context.GetCardType();
+        CardType cardType = clickedNode.Context.CardType;
 
         switch (cardType)
         {
@@ -39,7 +39,7 @@ public class MainState : LayoutState
             case CardType.KEY:
             case CardType.DIALOGUE:
 
-                if (!clickedNode.Context.GetHasBeenSeen())
+                if (!clickedNode.Context.HasBeenSeen)
                 {
                     _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
                     return;
@@ -51,7 +51,7 @@ public class MainState : LayoutState
 
             case CardType.LOCK:
 
-                if (!clickedNode.Context.GetHasBeenSeen())
+                if (!clickedNode.Context.HasBeenSeen)
                 {
                     _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
                     return;
@@ -80,7 +80,7 @@ public class MainState : LayoutState
         LayoutState nextState;
 
         // closeUp
-        if (!clickedNode.Context.GetHasBeenSeen())
+        if (!clickedNode.Context.HasBeenSeen)
         {
             _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
             return;

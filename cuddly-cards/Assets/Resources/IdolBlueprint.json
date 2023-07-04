@@ -58,7 +58,8 @@
             "label": "A Challenge",
             "description": "AAAAnd FIGHT!",
             "type": "LOCK",
-            "depth": "3"
+            "depth": "3",
+            "desiredKey": "A Pocket Watch"
         },
         {
             "label": "U WON!",

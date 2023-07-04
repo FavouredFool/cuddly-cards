@@ -29,14 +29,14 @@ public class CardBuilder : MonoBehaviour
     {
         CardBody body = GameObject.Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, folder).GetComponent<CardBody>();
 
-        body.SetLabel(cardContext.GetLabel());
-        body.gameObject.name = "Card: \"" + cardContext.GetLabel() + "\"";
+        body.SetLabel(cardContext.Label);
+        body.gameObject.name = "Card: \"" + cardContext.Label + "\"";
 
-        CardScriptableType type = _types.Where(e => e.GetCardType().Equals(cardContext.GetCardType())).FirstOrDefault();
+        CardScriptableType type = _types.FirstOrDefault(e => e.GetCardType().Equals(cardContext.CardType));
 
         if (type == null)
         {
-            Debug.LogError("Found no fitting type for card: " + cardContext.GetCardType());
+            Debug.LogError("Found no fitting type for card: " + cardContext.CardType);
         }
 
         body.SetColor(type.GetCardColor());
