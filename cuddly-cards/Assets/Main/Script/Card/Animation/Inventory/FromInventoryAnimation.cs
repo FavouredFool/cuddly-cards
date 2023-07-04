@@ -8,7 +8,9 @@ using static CardInfo;
 
 public class FromInventoryAnimation : InventoryAnimation
 {
-    public FromInventoryAnimation(CardManager cardManager) : base(cardManager) { }
+    public FromInventoryAnimation(CardManager cardManager) : base(cardManager)
+    {
+    }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
     {
@@ -16,11 +18,14 @@ public class FromInventoryAnimation : InventoryAnimation
 
         CardNode inventoryNode = _cardInventory.GetInventoryNode();
 
+
         entireSequence.Join(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT)));
 
         for (int i = 0; i < inventoryNode.Children.Count; i++)
         {
-            entireSequence.Join(_subAnimations.FanInCardsToRight(inventoryNode[i]));
+            entireSequence.Join(DOTween.Sequence()
+                .Append(_subAnimations.FanInCardsToRight(inventoryNode[i]))
+                );
         }
 
         return entireSequence;

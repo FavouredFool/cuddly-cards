@@ -4,7 +4,7 @@ using static CardInfo;
 
 public class MainState : LayoutState
 {
-    CardNode _baseNode;
+    readonly CardNode _baseNode;
     public MainState(CardManager cardManager, CardNode baseNode) :base (cardManager)
     {
         _baseNode = baseNode;

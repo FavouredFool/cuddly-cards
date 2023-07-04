@@ -9,10 +9,10 @@ public class CardMover : MonoBehaviour
 {
     [Header("CardPositions")]
     [SerializeField]
-    Vector2 _playSpaceBottomLeft = new Vector2(-2.5f, 0);
+    Vector2 _playSpaceBottomLeft = new(-2.5f, 0);
 
     [SerializeField]
-    Vector2 _playSpaceTopRight = new Vector2(2.875f, 2.5f);
+    Vector2 _playSpaceTopRight = new(2.875f, 2.5f);
 
     [SerializeField, Range(0, 2f)]
     float _childrenDistance = 1.125f;
@@ -53,7 +53,7 @@ public class CardMover : MonoBehaviour
     public CardManager CardManager { get { return _cardManager; } set { _cardManager = value; } }
 
     SubAnimations _subAnimations;
-    public SubAnimations SubAnimations { get { return _subAnimations; } set { _subAnimations = value; } }
+    public SubAnimations SubAnimations { get => _subAnimations; set => _subAnimations = value; }
 
     public void Start()
     {
