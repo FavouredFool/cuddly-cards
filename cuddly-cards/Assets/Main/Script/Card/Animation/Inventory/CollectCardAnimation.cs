@@ -17,7 +17,7 @@ public class CollectCardAnimation : InventoryAnimation
         CardNode parentNode = activeNode.Parent;
         CardType cardType = activeNode.Context.CardType;
 
-        CardNode inventoryNode = _cardInventory.GetInventoryNode();
+        CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
 
         // activeNode vertical nach oben, relativ dem höchsten stack rechts der Node.
 
@@ -41,7 +41,7 @@ public class CollectCardAnimation : InventoryAnimation
         switch (cardType)
         {
             case CardType.DIALOGUE:
-                finalHeight = _cardInventory.GetInventoryNode()[1].GetNodeCount(CardTraversal.CONTEXT) + 1;
+                finalHeight = _cardManager.CardInventory.InventoryNode[1].GetNodeCount(CardTraversal.CONTEXT) + 1;
                 break;
             case CardType.KEY:
                 finalHeight = 1;

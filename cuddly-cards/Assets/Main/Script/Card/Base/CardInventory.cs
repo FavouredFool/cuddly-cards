@@ -4,8 +4,8 @@ using static CardInfo;
 
 public class CardInventory
 {
-    CardNode _inventoryNode;
-    CardManager _cardManager;
+    public CardNode InventoryNode { get; set; }
+    readonly CardManager _cardManager;
 
     public CardInventory(CardManager cardManager)
     {
@@ -14,9 +14,9 @@ public class CardInventory
 
     public void InitializeInventory(CardBuilder builder)
     {
-        _inventoryNode = new CardNode(new CardContext("Inventory", "lots of things in here", CardType.INVENTORY));
-        _inventoryNode.Body = builder.BuildCardBody(_inventoryNode.Context, _cardManager.CardFolder);
-        _inventoryNode.IsTopLevel = true;
+        InventoryNode = new CardNode(new CardContext("Inventory", "lots of things in here", CardType.INVENTORY));
+        InventoryNode.Body = builder.BuildCardBody(InventoryNode.Context, _cardManager.CardFolder);
+        InventoryNode.IsTopLevel = true;
 
         CardNode dialogueParentNode = new(new CardContext("Dialogue", "I need to talk about this.", CardType.INVENTORY));
         dialogueParentNode.Body = builder.BuildCardBody(dialogueParentNode.Context, _cardManager.CardFolder);
@@ -24,8 +24,8 @@ public class CardInventory
         CardNode keyParentNode = new(new CardContext("Keys", "All the things I have and know.", CardType.INVENTORY));
         keyParentNode.Body = builder.BuildCardBody(keyParentNode.Context, _cardManager.CardFolder);
 
-        _inventoryNode.AddChild(dialogueParentNode);
-        _inventoryNode.AddChild(keyParentNode);
+        InventoryNode.AddChild(dialogueParentNode);
+        InventoryNode.AddChild(keyParentNode);
     }
 
     public async void MoveNodeFromMainToInventory(CardNode node)
@@ -45,16 +45,11 @@ public class CardInventory
     {
         CardNode parentNode = node.Context.CardType switch
         {
-            CardType.DIALOGUE => _inventoryNode.Children[0],
-            CardType.KEY => _inventoryNode.Children[1],
+            CardType.DIALOGUE => InventoryNode.Children[0],
+            CardType.KEY => InventoryNode.Children[1],
             _ => throw new System.Exception("This CardType should not be added to the inventory")
         };
 
         parentNode.AddChild(node);
-    }
-
-    public CardNode GetInventoryNode()
-    {
-        return _inventoryNode;
     }
 }

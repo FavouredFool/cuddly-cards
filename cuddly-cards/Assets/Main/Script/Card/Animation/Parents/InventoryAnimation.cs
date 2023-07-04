@@ -7,6 +7,6 @@ using static CardInfo;
 
 public abstract class InventoryAnimation : CardAnimation
 {
-    public InventoryAnimation(CardManager cardManager) : base(cardManager) { }
+    protected InventoryAnimation(CardManager cardManager) : base(cardManager) { }
 
 }

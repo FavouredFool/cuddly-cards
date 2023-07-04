@@ -50,6 +50,22 @@ public class CardMover : MonoBehaviour
     public CardManager CardManager { get; set; }
     public SubAnimations SubAnimations { get; set; }
 
+    public Ease HorizontalEasing => _horizontalEasing;
+    public Ease VerticalEasing => _verticalEasing;
+
+    public Vector2 PlaySpaceBottomLeft => _playSpaceBottomLeft;
+    public Vector2 PlaySpaceTopRight => _playSpaceTopRight;
+
+    public float InventoryCardRotationAmount => _inventoryCardRotationAmount;
+    public float Border => _border;
+
+    public float ChildrenStartOffset => _childrenStartOffset;
+    public float ChildrenDistance => _childrenDistance;
+
+    public float WaitTime => _waitTime;
+    public float HorizontalTime => _horizontalTime;
+    public float VerticalTime => _verticalTime;
+
     public void Start()
     {
         SubAnimations = new SubAnimations(CardManager);
@@ -88,7 +104,7 @@ public class CardMover : MonoBehaviour
     {
         int size = 1;
 
-        foreach (CardNode childNode in CardManager.CardInventory.GetInventoryNode().Children)
+        foreach (CardNode childNode in CardManager.CardInventory.InventoryNode.Children)
         {
             if (childNode.IsTopLevel)
             {
@@ -102,7 +118,7 @@ public class CardMover : MonoBehaviour
 
     public void SetHeightAndRotationOfInventory()
     {
-        CardNode inventoryNode = CardManager.CardInventory.GetInventoryNode();
+        CardNode inventoryNode = CardManager.CardInventory.InventoryNode;
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
 
         for (int i = 0; i < inventoryNode.Children.Count; i++)
@@ -135,12 +151,12 @@ public class CardMover : MonoBehaviour
     public void SetFannedHeightAndRotationOfInventoryPart(CardNode inventoryPart)
     {
         inventoryPart.Body.SetHeight(2);
-        inventoryPart.Body.transform.localRotation = Quaternion.Euler(0, 0, -GetInventoryCardRotationAmount());
+        inventoryPart.Body.transform.localRotation = Quaternion.Euler(0, 0, -InventoryCardRotationAmount);
 
         for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
         {
             inventoryPart[i].Body.SetHeightFloat(2 + (i + 1) * -0.01f);
-            inventoryPart[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -GetInventoryCardRotationAmount());
+            inventoryPart[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -InventoryCardRotationAmount);
         }
     }
 
@@ -189,50 +205,5 @@ public class CardMover : MonoBehaviour
     public Tween TweenZ(CardNode main, float posZ)
     {
         return main.Body.transform.DOMoveZ(posZ, _horizontalTime).SetEase(_horizontalEasing);
-    }
-
-    public float GetChildrenDistance()
-    {
-        return _childrenDistance;
-    }
-
-    public float GetChildrenStartOffset()
-    {
-        return _childrenStartOffset;
-    }
-
-    public float GetWaitTime()
-    {
-        return _waitTime;
-    }
-
-    public float GetVerticalTime()
-    {
-        return _verticalTime;
-    }
-
-    public float GetHorizontalTime()
-    {
-        return _horizontalTime;
-    }
-
-    public Ease GetVerticalEase()
-    {
-        return _verticalEasing;
-    }
-
-    public Ease GetHorizontalEase()
-    {
-        return _horizontalEasing;
-    }
-
-    public float GetBorder()
-    {
-        return _border;
-    }
-
-    public float GetInventoryCardRotationAmount()
-    {
-        return _inventoryCardRotationAmount;
     }
 }

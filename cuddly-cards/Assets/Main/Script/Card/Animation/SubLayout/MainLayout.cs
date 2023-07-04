@@ -75,7 +75,7 @@ public class MainLayout : SubLayout
         for (int i = 0; i < baseNode.Children.Count; i++)
         {
             _cardManager.AddToTopLevelMainPile(baseNode.Children[i]);
-            _cardMover.MoveCard(baseNode.Children[i], new Vector2(i * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset(), _cardMover.GetPlaySpaceBottomLeft().y));
+            _cardMover.MoveCard(baseNode.Children[i], new Vector2(i * _cardMover.ChildrenDistance - _cardMover.ChildrenStartOffset, _cardMover.GetPlaySpaceBottomLeft().y));
         }
     }
 }

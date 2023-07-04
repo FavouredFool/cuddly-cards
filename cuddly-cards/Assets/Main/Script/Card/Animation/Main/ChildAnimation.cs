@@ -33,7 +33,7 @@ public class ChildAnimation : CardAnimation
                 DOTween.Sequence()
                 .Append(_subAnimations.LiftAndMoveChildToBase(childsToBe[i], previousActiveNode))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.FanOutChildFromBase(childsToBe[i], previousActiveNode))
+                .Append(_subAnimations.FanOutChildFromBase(childsToBe[i]))
             );
         }
 

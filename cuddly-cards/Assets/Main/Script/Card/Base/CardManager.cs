@@ -113,7 +113,7 @@ public class CardManager : MonoBehaviour
 
     public List<CardNode> GetClickableNodes()
     {
-        List<CardNode> clickables = new(GetTopLevelNodesMainPile()) { CardInventory.GetInventoryNode() };
+        List<CardNode> clickables = new(GetTopLevelNodesMainPile()) { CardInventory.InventoryNode };
 
         return clickables;
     }

@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using static CardInfo;
 
 public class ExitInventoryPileAnimation : CardAnimation
@@ -14,21 +15,18 @@ public class ExitInventoryPileAnimation : CardAnimation
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        entireSequence.Join(GetMoveOutOfFrameTween(_cardInventory.GetInventoryNode()));
+        entireSequence.Join(GetMoveOutOfFrameTween(_cardManager.CardInventory.InventoryNode));
 
-        foreach (CardNode subPartNode in _cardInventory.GetInventoryNode().Children)
+        foreach (CardNode subPartNode in _cardManager.CardInventory.InventoryNode.Children)
         {
             if (subPartNode.IsTopLevel)
             {
                 entireSequence.Join(GetMoveOutOfFrameTween(subPartNode));
             }
 
-            foreach (CardNode childNode in subPartNode.Children)
+            foreach (var childNode in subPartNode.Children.Where(childNode => childNode.IsTopLevel))
             {
-                if (childNode.IsTopLevel)
-                {
-                    entireSequence.Join(GetMoveOutOfFrameTween(childNode));
-                }
+                entireSequence.Join(GetMoveOutOfFrameTween(childNode));
             }
         }
 

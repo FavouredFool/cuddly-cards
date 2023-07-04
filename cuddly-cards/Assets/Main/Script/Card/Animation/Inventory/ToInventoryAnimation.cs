@@ -14,16 +14,16 @@ public class ToInventoryAnimation : InventoryAnimation
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        CardNode inventoryNode = _cardInventory.GetInventoryNode();
+        CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
 
-        float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
-        float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
+        float totalSpace = _cardMover.PlaySpaceTopRight.x - _cardMover.PlaySpaceBottomLeft.x;
+        float fannedCardSpace = (totalSpace - 3 * _cardMover.Border) * 0.5f;
 
         entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(1, true));
 
         for (int i = 0; i < inventoryNode.Children.Count; i++)
         {
-            float generalStartOffset = _playSpaceBottomLeft.x + (1 + (1 - i)) * _cardMover.GetBorder() + (1 - i) * fannedCardSpace;
+            float generalStartOffset = _cardMover.PlaySpaceBottomLeft.x + (1 + (1 - i)) * _cardMover.Border + (1 - i) * fannedCardSpace;
 
             entireSequence.Join(_subAnimations.FanOutCardsFromRight(inventoryNode[i], generalStartOffset, fannedCardSpace));
         }

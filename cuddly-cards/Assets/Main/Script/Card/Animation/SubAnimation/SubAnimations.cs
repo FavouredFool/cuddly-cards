@@ -8,29 +8,29 @@ using static CardInfo;
 public class SubAnimations
 {
     // All animations atomized
-    CardMover _cardMover;
-    CardManager _cardManager;
-    CardInventory _cardInventory;
+    readonly CardMover _cardMover;
+    readonly CardManager _cardManager;
+    readonly CardInventory _cardInventory;
 
-    float _waitTime;
-    float _horizontalTime;
-    float _verticalTime;
+    readonly float _waitTime;
+    readonly float _horizontalTime;
+    readonly float _verticalTime;
 
-    Vector2 _playSpaceBottomLeft;
-    Vector2 _playSpaceTopRight;
+    readonly Vector2 _playSpaceBottomLeft;
+    readonly Vector2 _playSpaceTopRight;
 
-    Func<CardNode, float, Tween> _tweenXFunc;
-    Func<CardNode, int, Tween> _tweenYFunc;
-    Func<CardNode, float, Tween> _tweenZFunc;
+    readonly Func<CardNode, float, Tween> _tweenXFunc;
+    readonly Func<CardNode, int, Tween> _tweenYFunc;
+    readonly Func<CardNode, float, Tween> _tweenZFunc;
 
     public SubAnimations(CardManager cardManager)
     {
         _cardManager = cardManager;
         _cardMover = _cardManager.CardMover;
         _cardInventory = _cardManager.CardInventory;
-        _waitTime = _cardMover.GetWaitTime();
-        _horizontalTime = _cardMover.GetHorizontalTime();
-        _verticalTime = _cardMover.GetVerticalTime();
+        _waitTime = _cardMover.WaitTime;
+        _horizontalTime = _cardMover.HorizontalTime;
+        _verticalTime = _cardMover.VerticalTime;
         _playSpaceBottomLeft = _cardMover.GetPlaySpaceBottomLeft();
         _playSpaceTopRight = _cardMover.GetPlaySpaceTopRight();
         _tweenXFunc = _cardMover.TweenX;
@@ -38,7 +38,7 @@ public class SubAnimations
         _tweenZFunc = _cardMover.TweenZ;
     }
 
-    public Tween FanOutChildFromBase(CardNode newChild, CardNode previousActiveNode)
+    public Tween FanOutChildFromBase(CardNode newChild)
     {
         return DOTween.Sequence()
             .Append(MoveBaseToChild(newChild, newChild))
@@ -57,19 +57,19 @@ public class SubAnimations
     public Tween MoveInventoryCardWhileFanning(int height, bool synchronizeLoweringWithFanning)
     {
         float waitTime = _verticalTime + 2 * _horizontalTime + _waitTime;
-        Ease ease = _cardMover.GetVerticalEase();
+        Ease ease = _cardMover.VerticalEasing;
         float time = _verticalTime;
 
         if(synchronizeLoweringWithFanning)
         {
             waitTime -= _horizontalTime;
-            ease = _cardMover.GetHorizontalEase();
+            ease = _cardMover.HorizontalEasing;
             time = _horizontalTime;
         }
 
         return DOTween.Sequence()
             .AppendInterval(waitTime)
-            .Append(_cardInventory.GetInventoryNode().Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, time).SetEase(ease));
+            .Append(_cardInventory.InventoryNode.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, time).SetEase(ease));
     }
 
     public Tween FanOutCardsFromRight(CardNode subNode, float startOffset, float fannedCardSpace)
@@ -108,7 +108,7 @@ public class SubAnimations
     public Tween FanInCardsToRight(CardNode subNode)
     {
         Sequence entireSequence = DOTween.Sequence();
-        CardNode inventoryNode = _cardInventory.GetInventoryNode();
+        CardNode inventoryNode = _cardInventory.InventoryNode;
 
         subNode.IsTopLevel = true;
 
@@ -153,7 +153,7 @@ public class SubAnimations
     #region Move X
     public Tween MoveBaseToChild(CardNode movedChild, CardNode positionReferencedChild)
     {
-        return _tweenXFunc(movedChild, positionReferencedChild.Parent.Children.IndexOf(positionReferencedChild) * _cardMover.GetChildrenDistance() - _cardMover.GetChildrenStartOffset());
+        return _tweenXFunc(movedChild, positionReferencedChild.Parent.Children.IndexOf(positionReferencedChild) * _cardMover.ChildrenDistance - _cardMover.ChildrenStartOffset);
     }
 
     public Tween MoveNodeToLeft(CardNode node)
@@ -179,7 +179,7 @@ public class SubAnimations
     public Tween MoveChildOneToRight(CardNode node)
     {
         int index = node.Parent.Children.IndexOf(node);
-        return _tweenXFunc(node, _cardMover.GetChildrenDistance() * (index - 1) - _cardMover.GetChildrenStartOffset());
+        return _tweenXFunc(node, _cardMover.ChildrenDistance * (index - 1) - _cardMover.ChildrenStartOffset);
     }
 
     #endregion
@@ -211,12 +211,12 @@ public class SubAnimations
 
     public Tween RotateOffset(CardNode node)
     {
-        return node.Body.transform.DOLocalRotate(new Vector3(0, 0, -_cardMover.GetInventoryCardRotationAmount()), _waitTime).SetEase(_cardMover.GetHorizontalEase());
+        return node.Body.transform.DOLocalRotate(new Vector3(0, 0, -_cardMover.InventoryCardRotationAmount), _waitTime).SetEase(_cardMover.HorizontalEasing);
     }
 
     public Tween RotateToIdentity(CardNode node)
     {
-        return node.Body.transform.DOLocalRotate(new Vector3(0, 0, 0), _waitTime).SetEase(_cardMover.GetHorizontalEase());
+        return node.Body.transform.DOLocalRotate(new Vector3(0, 0, 0), _waitTime).SetEase(_cardMover.HorizontalEasing);
     }
 
     #endregion

@@ -14,7 +14,7 @@ public class EnterInventoryPileAnimation : CardAnimation
     {
         Sequence entireSequence = DOTween.Sequence()
             .AppendInterval(_verticalTime)
-            .Append(_subAnimations.MoveNodeToRight(_cardInventory.GetInventoryNode()));
+            .Append(_subAnimations.MoveNodeToRight(_cardManager.CardInventory.InventoryNode));
 
         return entireSequence;
     }

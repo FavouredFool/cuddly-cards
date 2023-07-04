@@ -16,7 +16,7 @@ public class RetractKeysAnimation : InventoryAnimation
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        CardNode inventoryNode = _cardInventory.GetInventoryNode();
+        CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
 
         entireSequence.Join(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT)));
 
