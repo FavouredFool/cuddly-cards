@@ -57,7 +57,7 @@ public class LockState : LayoutState
         else if (previousActiveNode.Parent == clickedNode)
         {
             _animationManager.AddAnimation(new BackAnimation(_cardManager));
-            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, 1));
+            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager));
 
             nextState = new MainState(_cardManager, clickedNode);
 
@@ -65,7 +65,7 @@ public class LockState : LayoutState
         else if (clickedNode == rootNode)
         {
             _animationManager.AddAnimation(new ToCoverAnimation(_cardManager));
-            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, 2));
+            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager));
             _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
 
             nextState = new CoverState(_cardManager);
