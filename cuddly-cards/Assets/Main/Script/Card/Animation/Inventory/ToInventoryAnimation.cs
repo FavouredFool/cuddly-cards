@@ -19,7 +19,7 @@ public class ToInventoryAnimation : InventoryAnimation
         float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
         float fannedCardSpace = (totalSpace - 3 * _cardMover.GetBorder()) * 0.5f;
 
-        entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(1));
+        entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(1, true));
 
         for (int i = 0; i < inventoryNode.Children.Count; i++)
         {

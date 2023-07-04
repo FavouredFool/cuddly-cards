@@ -54,11 +54,22 @@ public class SubAnimations
 
     #region Inventory
 
-    public Tween MoveInventoryCardWhileFanning(int height)
+    public Tween MoveInventoryCardWhileFanning(int height, bool synchronizeLoweringWithFanning)
     {
+        float waitTime = _verticalTime + 2 * _horizontalTime + _waitTime;
+        Ease ease = _cardMover.GetVerticalEase();
+        float time = _verticalTime;
+
+        if(synchronizeLoweringWithFanning)
+        {
+            waitTime -= _horizontalTime;
+            ease = _cardMover.GetHorizontalEase();
+            time = _horizontalTime;
+        }
+
         return DOTween.Sequence()
-            .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
-            .Append(RaiseNodeToHeight(_cardInventory.GetInventoryNode(), height));
+            .AppendInterval(waitTime)
+            .Append(_cardInventory.GetInventoryNode().Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, time).SetEase(ease));
     }
 
     public Tween FanOutCardsFromRight(CardNode subNode, float startOffset, float fannedCardSpace)

@@ -19,7 +19,7 @@ public class DisplayKeysAnimation : InventoryAnimation
         float totalSpace = _playSpaceTopRight.x - _playSpaceBottomLeft.x;
         float fannedCardSpace = totalSpace - 2 * _cardMover.GetBorder();
 
-        entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(inventoryNode[0].GetNodeCount(CardTraversal.CONTEXT) + 1));
+        entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(inventoryNode[0].GetNodeCount(CardTraversal.CONTEXT) + 1, false));
 
         float generalStartOffset = _playSpaceBottomLeft.x + _cardMover.GetBorder();
 
