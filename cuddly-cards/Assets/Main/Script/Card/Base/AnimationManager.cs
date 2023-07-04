@@ -13,7 +13,6 @@ public class AnimationManager
     StateManager _stateManager;
 
     List<CardAnimation> _activeAnimations;
-    List<CardAnimation> _allAnimations;
     List<SubLayout> _subLayouts;
 
     public AnimationManager(CardManager cardManager)
@@ -25,7 +24,6 @@ public class AnimationManager
 
         _stateManager = cardManager.StateManager;
 
-        _allAnimations = _cardMover.GetCardAnimations();
         _subLayouts = _cardMover.GetSubLayouts();
 
         _activeAnimations = new();
@@ -111,18 +109,13 @@ public class AnimationManager
         ClearAnimations();
     }
 
-    public void AddAnimation(CardTransition cardTransition)
+    public void AddAnimation(CardAnimation cardAnimation)
     {
-        _activeAnimations.Add(CardTransitionToAnimation(cardTransition));
+        _activeAnimations.Add(cardAnimation);
     }
 
     public void ClearAnimations()
     {
         _activeAnimations.Clear();
-    }
-
-    public CardAnimation CardTransitionToAnimation(CardTransition transition)
-    {
-        return _allAnimations[(int)transition];
     }
 }

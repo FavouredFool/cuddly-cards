@@ -29,8 +29,8 @@ public class MainState : LayoutState
         {
             case CardType.INVENTORY:
 
-                _animationManager.AddAnimation(CardTransition.CLOSE);
-                _animationManager.AddAnimation(CardInfo.CardTransition.TOINVENTORY);
+                _animationManager.AddAnimation(new CloseAnimation(_cardManager));
+                _animationManager.AddAnimation(new ToInventoryAnimation(_cardManager));
                 await _animationManager.PlayAnimations(_cardManager.BaseNode);
                 _stateManager.PushState(new InventoryState(_cardManager));
 
@@ -57,8 +57,8 @@ public class MainState : LayoutState
                     return;
                 }
 
-                _animationManager.AddAnimation(CardTransition.NOCHILDREN);
-                _animationManager.AddAnimation(CardInfo.CardTransition.DISPLAYKEY);
+                _animationManager.AddAnimation(new NoChildrenAnimation(_cardManager));
+                _animationManager.AddAnimation(new DisplayKeysAnimation(_cardManager));
 
                 await _animationManager.PlayAnimations(clickedNode, _baseNode);
                 _stateManager.PushState(new LockState(_cardManager, clickedNode));
@@ -77,7 +77,6 @@ public class MainState : LayoutState
         CardNode rootNode = _cardManager.RootNode;
         CardNode previousActiveNode = _baseNode;
 
-        CardInfo.CardTransition cardTransition;
         LayoutState nextState;
 
         // closeUp
@@ -94,29 +93,27 @@ public class MainState : LayoutState
         else if (previousActiveNode.Children.Contains(clickedNode))
         {
             // pressed child
-            cardTransition = CardInfo.CardTransition.CHILD;
+            _animationManager.AddAnimation(new ChildAnimation(_cardManager));
             nextState = new MainState(_cardManager, clickedNode);
         }
         else if (previousActiveNode.Parent == clickedNode)
         {
             // pressed back
-            cardTransition = CardInfo.CardTransition.BACK;
+            _animationManager.AddAnimation(new BackAnimation(_cardManager));
             nextState = new MainState(_cardManager, clickedNode);
         }
         else if (clickedNode == rootNode)
         {
             // pressed root
-            cardTransition = CardInfo.CardTransition.TOCOVER;
+            _animationManager.AddAnimation(new ToCoverAnimation(_cardManager));
             nextState = new CoverState(_cardManager);
-            _animationManager.AddAnimation(CardTransition.EXITINVENTORYPILE);
+            _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
         }
         else
         {
             Debug.LogError("Pressed something weird");
             return;
         }
-
-        _animationManager.AddAnimation(cardTransition);
 
         await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
 

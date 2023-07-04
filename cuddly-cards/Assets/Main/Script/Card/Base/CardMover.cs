@@ -55,26 +55,9 @@ public class CardMover : MonoBehaviour
     SubAnimations _subAnimations;
     public SubAnimations SubAnimations { get { return _subAnimations; } set { _subAnimations = value; } }
 
-    public List<CardAnimation> GetCardAnimations()
+    public void Start()
     {
         _subAnimations = new SubAnimations(_cardManager);
-
-        return new()
-        {
-            new ChildAnimation(_cardManager),
-            new BackAnimation(_cardManager),
-            new ToCoverAnimation(_cardManager),
-            new FromCoverAnimation(_cardManager),
-            new CloseAnimation(_cardManager),
-            new OpenAnimation(_cardManager),
-            new ToInventoryAnimation(_cardManager),
-            new FromInventoryAnimation(_cardManager),
-            new EnterInventoryPileAnimation(_cardManager),
-            new ExitInventoryPileAnimation(_cardManager),
-            new CollectCardAnimation(_cardManager),
-            new DisplayKeysAnimation(_cardManager),
-            new NoChildrenAnimation(_cardManager),
-        };
     }
 
     public List<SubLayout> GetSubLayouts()

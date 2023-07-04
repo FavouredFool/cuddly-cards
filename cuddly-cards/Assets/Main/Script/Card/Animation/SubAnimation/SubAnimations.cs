@@ -123,6 +123,8 @@ public class SubAnimations
         {
             CardNode childNode = subNode[i];
 
+            childNode.IsTopLevel = true;
+
             entireSequence.Join(DOTween.Sequence()
             .Append(MoveNodeToRight(childNode))
             .Join(RaiseNodePileRelative(childNode, inventoryNode))

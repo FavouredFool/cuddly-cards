@@ -32,7 +32,7 @@ public class CardInventory
     {
         AnimationManager animationManager = _cardManager.AnimationManager;
 
-        animationManager.AddAnimation(CardTransition.COLLECTCARD);
+        animationManager.AddAnimation(new CollectCardAnimation(_cardManager));
 
         await animationManager.PlayAnimations(node);
 

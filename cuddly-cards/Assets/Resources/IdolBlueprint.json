@@ -61,6 +61,18 @@
             "depth": "3"
         },
         {
+            "label": "U WON!",
+            "description": "AAAAnd FIGHT!",
+            "type": "THING",
+            "depth": "4"
+        },
+        {
+            "label": "After the challenge",
+            "description": "AAAAnd FIGHT!",
+            "type": "PLACE",
+            "depth": "4"
+        },
+        {
             "label": "A way past the challenge",
             "description": "Hate dem challances",
             "type": "PLACE",

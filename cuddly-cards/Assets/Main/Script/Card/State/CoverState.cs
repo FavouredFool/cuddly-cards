@@ -30,8 +30,8 @@ public class CoverState : LayoutState
             return;
         }
 
-        _animationManager.AddAnimation(CardInfo.CardTransition.FROMCOVER);
-        _animationManager.AddAnimation(CardInfo.CardTransition.ENTERINVENTORYPILE);
+        _animationManager.AddAnimation(new FromCoverAnimation(_cardManager));
+        _animationManager.AddAnimation(new EnterInventoryPileAnimation(_cardManager));
         await _animationManager.PlayAnimations(clickedNode);
 
         _stateManager.SetState(new MainState(_cardManager, clickedNode));

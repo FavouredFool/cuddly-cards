@@ -47,7 +47,6 @@ public class LockState : LayoutState
         CardNode rootNode = _cardManager.RootNode;
         CardNode previousActiveNode = _cardManager.BaseNode;
 
-        CardInfo.CardTransition cardTransition;
         LayoutState nextState;
 
         if (clickedNode == previousActiveNode)
@@ -57,34 +56,30 @@ public class LockState : LayoutState
         }
         else if (previousActiveNode.Parent == clickedNode)
         {
-            // Inventar muss eingefahren werden -> Neue Transition
-            // pressed back
+            _animationManager.AddAnimation(new BackAnimation(_cardManager));
+            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
 
-            _animationManager.AddAnimation(CardTransition.BACK);
-            // modular?
-            //_animationManager.AddAnimation(CardTransition.OPEN);
+            nextState = new MainState(_cardManager, clickedNode);
 
-            await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
-
-            _stateManager.SetState(new MainState(_cardManager, clickedNode));
-            return;
         }
         else if (clickedNode == rootNode)
         {
-            //_animationManager.AddAnimation(CardTransition.TOCOVER);
+            _animationManager.AddAnimation(new ToCoverAnimation(_cardManager));
+            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
+            _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
 
-            //_animationManager.AddAnimation(CardTransition.OPEN);
-
-            //await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
-            //_stateManager.SetState(new CoverState(_cardManager));
-
-            return;
+            nextState = new CoverState(_cardManager);
         }
         else
         {
             Debug.LogError("Pressed something weird");
             return;
         }
+
+        await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
+
+        _stateManager.SetState(nextState);
+
     }
 
     public override void HandleHover(CardNode hoveredNode)

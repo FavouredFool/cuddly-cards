@@ -29,8 +29,8 @@ public class InventoryState : LayoutState
 
         // HERE NEEDS TO BE THE REFERENCE FOR THE ANIMATION FROM ANY STATE'S CLOSED TO OPEN
 
-        _animationManager.AddAnimation(CardInfo.CardTransition.OPEN);
-        _animationManager.AddAnimation(CardInfo.CardTransition.FROMINVENTORY);
+        _animationManager.AddAnimation(new OpenAnimation(_cardManager));
+        _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
 
         await _animationManager.PlayAnimations(_cardManager.BaseNode);
 
