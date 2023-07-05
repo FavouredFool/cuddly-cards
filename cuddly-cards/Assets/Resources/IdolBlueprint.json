@@ -69,9 +69,34 @@
         },
         {
             "label": "After the challenge",
-            "description": "AAAAnd FIGHT!",
+            "description": "Cool stuff!",
             "type": "PLACE",
-            "depth": "4"
+            "depth": "5"
+        },
+        {
+            "label": "Anotha one",
+            "description": "Cool stuff!",
+            "type": "PLACE",
+            "depth": "6"
+        },
+        {
+            "label": "A popsickle",
+            "description": "pop!",
+            "type": "KEY",
+            "depth": "5"
+        },
+        {
+            "label": "Another Challenge",
+            "description": "Not agaaaain",
+            "type": "LOCK",
+            "depth": "5",
+            "desiredKey": "A popsickle"
+        },
+        {
+            "label": "DONE",
+            "description": "A",
+            "type": "PLACE",
+            "depth": "6"
         },
         {
             "label": "A way past the challenge",

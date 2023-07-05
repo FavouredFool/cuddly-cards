@@ -44,7 +44,18 @@ public class LockState : LayoutState
 
                 if (_baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
                 {
-                    Debug.Log("FOUND IT");
+                    LockOpened(_baseNode, clickedNode);
+
+                    CardNode childNode = _baseNode.Children[0];
+
+                    // Animation
+                    _stateManager.SetState(new MainState(_cardManager, childNode));
+
+                    return;
+                }
+                else
+                {
+                    Debug.Log("WRONG!!");
                 }
                 return;
 
@@ -91,6 +102,37 @@ public class LockState : LayoutState
 
         _stateManager.SetState(nextState);
 
+    }
+
+    public void RemoveLockFromTree(CardNode lockNode)
+    {
+        CardNode exposedNode = lockNode.Children[0];
+        CardNode parentNode = lockNode.Parent;
+        exposedNode.Parent = parentNode;
+        parentNode.Children.Remove(lockNode);
+        parentNode.Children.Add(exposedNode);
+    }
+
+    public void RemoveKeyFromTree(CardNode keyNode)
+    {
+        keyNode.Parent.Children.Remove(keyNode);
+    }
+
+    public void LockOpened(CardNode lockNode, CardNode keyNode)
+    {
+        // destroy lock and Node visually
+        // -> Layout should change instantly
+
+        // 1. Lock and Key disintegrate -> elements get rewired in node-tree
+        RemoveKeyFromTree(keyNode);
+        RemoveLockFromTree(lockNode);
+
+        Object.Destroy(keyNode.Body.gameObject);
+        Object.Destroy(lockNode.Body.gameObject);
+
+        // 2. Keys get pulled back in + card below the lock puts its children out -> OPEN Animation
+
+        Debug.Log("FOUND IT " + lockNode.Context.Label + " " + keyNode.Context.Label);
     }
 
     public override void HandleHover(CardNode hoveredNode)
