@@ -6,22 +6,17 @@ using System.Threading.Tasks;
 public class CardManager : MonoBehaviour
 {
     [Header("Story")]
-    [SerializeField]
-    TextAsset _textBlueprint;
+    [SerializeField] TextAsset _textBlueprint;
 
     [Header("Organization")]
-    [SerializeField]
-    Transform _cardFolder;
+    [SerializeField] Transform _cardFolder;
 
     [Header("Managers")]
-    [SerializeField]
-    CloseUpManager _closeUpManager;
+    [SerializeField] CloseUpManager _closeUpManager;
 
-    [SerializeField]
-    CardInputManager _cardInputManager;
+    [SerializeField] CardInputManager _cardInputManager;
 
-    [SerializeField]
-    Camera _camera;
+    [SerializeField] Camera _camera;
 
     public Transform CardFolder => _cardFolder;
     public Camera Camera => _camera;
@@ -98,11 +93,6 @@ public class CardManager : MonoBehaviour
 
     public void NodeHovered(CardNode hoveredNode)
     {
-        if (hoveredNode == null)
-        {
-            return;
-        }
-
         StateManager.HandleHover(hoveredNode);
     }
 

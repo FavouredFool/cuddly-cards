@@ -6,12 +6,10 @@ using static CardInfo;
 public class CardBuilder : MonoBehaviour
 {
     [Header("Card Blueprint")]
-    [SerializeField]
-    GameObject _cardBlueprint;
+    [SerializeField] GameObject _cardBlueprint;
 
     [Header("All Cardtypes")]
-    [SerializeField]
-    List<CardScriptableType> _types;
+    [SerializeField] List<CardScriptableType> _types;
 
     public void BuildAllCards(CardNode rootNode, Transform folder)
     {

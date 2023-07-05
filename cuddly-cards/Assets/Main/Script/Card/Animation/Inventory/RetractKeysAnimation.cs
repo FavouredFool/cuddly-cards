@@ -8,7 +8,7 @@ using static CardInfo;
 
 public class RetractKeysAnimation : InventoryAnimation
 {
-    bool _delay;
+    readonly bool _delay;
 
     public RetractKeysAnimation(CardManager cardManager, bool delay) : base(cardManager)
     {

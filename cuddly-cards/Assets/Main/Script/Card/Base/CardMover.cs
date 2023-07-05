@@ -9,41 +9,31 @@ using static CardInfo;
 public class CardMover : MonoBehaviour
 {
     [Header("CardPositions")]
-    [SerializeField]
-    Vector2 _playSpaceBottomLeft = new(-2.5f, 0);
+    [SerializeField] Vector2 _playSpaceBottomLeft = new(-2.5f, 0);
 
-    [SerializeField]
-    Vector2 _playSpaceTopRight = new(2.875f, 2.5f);
+    [SerializeField] Vector2 _playSpaceTopRight = new(2.875f, 2.5f);
 
-    [SerializeField, Range(0, 2f)]
-    float _childrenDistance = 1.125f;
+    [SerializeField, Range(0, 2f)] float _childrenDistance = 1.125f;
 
-    [SerializeField]
-    float _childrenStartOffset = 1;
+    [SerializeField] float _childrenStartOffset = 1;
 
 
     [Header("CardMovement")]
-    [SerializeField]
-    float _verticalTime = 0.5f;
+    [SerializeField] float _verticalTime = 0.5f;
 
-    [SerializeField]
-    float _horizontalTime = 1f;
+    [SerializeField] float _horizontalTime = 1f;
 
-    [SerializeField]
-    float _waitTime = 1f;
+    [SerializeField] float _waitTime = 1f;
 
     [Header("Inventory")]
-    [SerializeField]
-    float _border = 1f;
-    [SerializeField]
-    float _inventoryCardRotationAmount = 0.9f;
+    [SerializeField] float _border = 1f;
+
+    [SerializeField] float _inventoryCardRotationAmount = 0.9f;
 
     [Header("Easing")]
-    [SerializeField]
-    Ease _horizontalEasing;
+    [SerializeField] Ease _horizontalEasing;
 
-    [SerializeField]
-    Ease _verticalEasing;
+    [SerializeField] Ease _verticalEasing;
 
     public bool IsAnimatingFlag { get; set; } = false;
 

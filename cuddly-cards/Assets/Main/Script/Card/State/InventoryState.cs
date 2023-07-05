@@ -1,4 +1,5 @@
 
+using System.Linq;
 using UnityEngine;
 using static CardInfo;
 
@@ -19,6 +20,8 @@ public class InventoryState : LayoutState
         {
             return;
         }
+
+        ResetHover();
 
         if (click == Click.RIGHT)
         {
@@ -44,10 +47,26 @@ public class InventoryState : LayoutState
     public override void HandleHover(CardNode hoveredNode)
     {
         // würde es sich hier lohnen den Hover auf eigene Klassen für jeden Kartentyp zu deligieren?
-        CardType hoveredType = hoveredNode.Context.CardType;
-        if (hoveredType is CardType.KEY or CardType.DIALOGUE)
+        // Setz alle anderen Karten auf Hover = 0;
+
+        ResetHover();
+
+        if (hoveredNode == null)
         {
-            // move upward certain amount -> Cardmover
+            return;
+        }
+
+        if (hoveredNode.Context.CardType is CardType.KEY or CardType.DIALOGUE)
+        {
+            hoveredNode.Body.SetHoverPosition(true);
+        }
+    }
+
+    public void ResetHover()
+    {
+        foreach (CardNode childNode in _cardInventory.InventoryNode.Children.SelectMany(partNode => partNode.Children))
+        {
+            childNode.Body.SetHoverPosition(false);
         }
     }
 }

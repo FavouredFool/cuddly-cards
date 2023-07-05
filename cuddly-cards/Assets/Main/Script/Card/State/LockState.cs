@@ -18,7 +18,7 @@ public class LockState : LayoutState
         _animationManager.SetCardsStatic();
     }
 
-    public async override void HandleClick(CardNode clickedNode, Click click)
+    public override async void HandleClick(CardNode clickedNode, Click click)
     {
         if (clickedNode == null)
         {

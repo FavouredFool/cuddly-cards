@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
@@ -5,14 +6,15 @@ using UnityEngine.UI;
 
 public class CardBody : MonoBehaviour
 {
-    [SerializeField]
-    TMP_Text _textField;
+    [SerializeField] TMP_Text _textField;
 
-    [SerializeField]
-    MeshRenderer _meshRenderer;
+    [SerializeField] MeshRenderer _meshRenderer;
 
-    [SerializeField]
-    Image _image;
+    [SerializeField] Image _image;
+
+    [SerializeField] Transform _cardContents;
+
+    public Transform CardContents => _cardContents;
 
     public void SetLabel(string labelText)
     {
@@ -45,5 +47,13 @@ public class CardBody : MonoBehaviour
             localPosition.z
         );
         transform.localPosition = localPosition;
+    }
+
+    public void SetHoverPosition(bool isHovering)
+    {
+        float multiplier = isHovering ? 0.33f : 0;
+
+        Vector3 position = _cardContents.localPosition;
+        _cardContents.localPosition = new Vector3(position.x, position.y, CardInfo.CARDRATIO * CardInfo.CARDWIDTH * multiplier);
     }
 }
