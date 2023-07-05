@@ -2,22 +2,18 @@ using UnityEngine;
 
 public class CloseUpState : LayoutState
 {
-    CardNode _closeUpNode;
+    readonly CardNode _closeUpNode;
     Vector3 _originalPosition;
     Quaternion _originalRotation;
     bool _blockInputs;
-    bool _clickAfterFinish;
 
-    public CloseUpState(CardManager cardManager, CardNode clickedNode, bool clickAfterFinish) : base(cardManager)
+    public CloseUpState(CardManager cardManager, CardNode clickedNode) : base(cardManager)
     {
         _closeUpNode = clickedNode;
-        _clickAfterFinish = clickAfterFinish;
     }
 
     public override async void StartState()
     {
-        _closeUpNode.Context.HasBeenSeen = true;
-
         Transform transform = _closeUpNode.Body.transform;
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
@@ -29,7 +25,7 @@ public class CloseUpState : LayoutState
         _closeUpManager.SetCloseUpStatic(_closeUpNode);
     }
 
-    public override async void HandleClick(CardNode clickedNode)
+    public override async void HandleClick(CardNode clickedNode, CardInfo.Click click)
     {
         // DONT USE CLICKEDNODE -> IT DOESNT WORK, WHICH IS INTENTIONAL. USE _CLOSEUPNODE
 
@@ -45,11 +41,6 @@ public class CloseUpState : LayoutState
         _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation);
 
         _stateManager.PopState();
-
-        if (_clickAfterFinish)
-        {
-            _stateManager.States.Peek().HandleClick(_closeUpNode);
-        }
     }
 
     public override void HandleHover(CardNode hoveredNode)

@@ -13,17 +13,21 @@ public class InventoryState : LayoutState
         _animationManager.SetCardsStatic();
     }
 
-    public override async void HandleClick(CardNode clickedNode)
+    public override async void HandleClick(CardNode clickedNode, Click click)
     {
         if (clickedNode == null)
         {
             return;
         }
 
-        if (clickedNode.Context.CardType == CardType.KEY || clickedNode.Context.CardType == CardType.DIALOGUE)
+        if (click == Click.RIGHT)
         {
-            // Close Up!
-            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
+            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode));
+            return;
+        }
+
+        if (clickedNode.Context.CardType is CardType.KEY or CardType.DIALOGUE)
+        {
             return;
         }
 

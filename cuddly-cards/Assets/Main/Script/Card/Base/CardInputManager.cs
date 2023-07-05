@@ -18,8 +18,13 @@ public class CardInputManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            EvaluateClick();
+            EvaluateClick(CardInfo.Click.LEFT);
         }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            EvaluateClick(CardInfo.Click.RIGHT);
+        }
+        
     }
 
     public void HoverCard()
@@ -27,10 +32,10 @@ public class CardInputManager : MonoBehaviour
         CardManager.NodeHovered(GetHoveredCard());
     }
 
-    public void EvaluateClick()
+    public void EvaluateClick(CardInfo.Click click)
     {
         // note that the card can be null to express that a click has happened without a target card
-        CardManager.NodeClicked(GetHoveredCard());
+        CardManager.NodeClicked(GetHoveredCard(), click);
     }
 
     public CardNode GetHoveredCard()

@@ -46,8 +46,8 @@ public class StateManager
         _states.Peek().HandleHover(hoveredNode);
     }
 
-    public void HandleClick(CardNode clickedNode)
+    public void HandleClick(CardNode clickedNode, CardInfo.Click click)
     {
-        _states.Peek().HandleClick(clickedNode);
+        _states.Peek().HandleClick(clickedNode, click);
     }
 }

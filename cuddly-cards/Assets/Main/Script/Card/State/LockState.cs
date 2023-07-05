@@ -17,10 +17,16 @@ public class LockState : LayoutState
         _animationManager.SetCardsStatic();
     }
 
-    public override void HandleClick(CardNode clickedNode)
+    public override void HandleClick(CardNode clickedNode, Click click)
     {
         if (clickedNode == null)
         {
+            return;
+        }
+
+        if (click == Click.RIGHT)
+        {
+            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode));
             return;
         }
 
@@ -39,13 +45,7 @@ public class LockState : LayoutState
                 if (_baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
                 {
                     Debug.Log("FOUND IT");
-                    _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
                 }
-                else
-                {
-                    _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
-                }
-
                 return;
 
             default:
@@ -63,7 +63,6 @@ public class LockState : LayoutState
 
         if (clickedNode == previousActiveNode)
         {
-            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, false));
             return;
         }
         else if (previousActiveNode.Parent == clickedNode)

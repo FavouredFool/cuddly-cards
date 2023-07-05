@@ -1,4 +1,6 @@
 
+using static CardInfo;
+
 public abstract class LayoutState
 {
     protected StateManager _stateManager;
@@ -8,7 +10,7 @@ public abstract class LayoutState
     protected AnimationManager _animationManager;
     protected CardInventory _cardInventory;
 
-    public LayoutState(CardManager cardManager)
+    protected LayoutState(CardManager cardManager)
     {
         _cardManager = cardManager;
         _stateManager = cardManager.StateManager;
@@ -19,6 +21,6 @@ public abstract class LayoutState
     }
 
     public abstract void StartState();
-    public abstract void HandleClick(CardNode clickedNode);
+    public abstract void HandleClick(CardNode clickedNode, Click click);
     public abstract void HandleHover(CardNode hoveredNode);
 }

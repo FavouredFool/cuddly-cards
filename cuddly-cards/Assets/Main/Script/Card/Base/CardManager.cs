@@ -106,9 +106,9 @@ public class CardManager : MonoBehaviour
         StateManager.HandleHover(hoveredNode);
     }
 
-    public void NodeClicked(CardNode clickedNode)
+    public void NodeClicked(CardNode clickedNode, Click click)
     {
-        StateManager.HandleClick(clickedNode);        
+        StateManager.HandleClick(clickedNode, click);        
     }
 
     public List<CardNode> GetClickableNodes()

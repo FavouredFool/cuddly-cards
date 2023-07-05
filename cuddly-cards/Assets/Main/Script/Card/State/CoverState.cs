@@ -15,18 +15,16 @@ public class CoverState : LayoutState
         _animationManager.SetCardsStatic();
     }
 
-    public override async void HandleClick(CardNode clickedNode)
+    public override async void HandleClick(CardNode clickedNode, Click click)
     {
         if (clickedNode == null || clickedNode.Context.CardType == CardType.INVENTORY)
         {
-            // During the cover, the inventory can not be opened!
             return;
         }
-        
-        // --- Put the closeup state on the stack
-        if (!clickedNode.Context.HasBeenSeen)
+
+        if (click == Click.RIGHT)
         {
-            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode, true));
+            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode));
             return;
         }
 
