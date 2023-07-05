@@ -8,8 +8,11 @@ using static CardInfo;
 
 public class RetractKeysAnimation : InventoryAnimation
 {
-    public RetractKeysAnimation(CardManager cardManager) : base(cardManager)
+    bool _delay;
+
+    public RetractKeysAnimation(CardManager cardManager, bool delay) : base(cardManager)
     {
+        _delay = delay;
     }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
@@ -20,8 +23,10 @@ public class RetractKeysAnimation : InventoryAnimation
 
         entireSequence.Join(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT)));
 
+        float delayTime = _delay ? _verticalTime : 0f;
+
         entireSequence.Join(DOTween.Sequence()
-            .AppendInterval(_verticalTime)
+            .AppendInterval(delayTime)
             .Append(_subAnimations.FanInCardsToRight(inventoryNode[1])));
 
         return entireSequence;

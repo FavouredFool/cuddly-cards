@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
@@ -17,7 +18,7 @@ public class LockState : LayoutState
         _animationManager.SetCardsStatic();
     }
 
-    public override void HandleClick(CardNode clickedNode, Click click)
+    public async override void HandleClick(CardNode clickedNode, Click click)
     {
         if (clickedNode == null)
         {
@@ -47,6 +48,15 @@ public class LockState : LayoutState
                     LockOpened(_baseNode, clickedNode);
 
                     CardNode childNode = _baseNode.Children[0];
+
+                    // Disintegrate cards
+
+                    await Task.Delay(200);
+
+                    _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, false));
+                    _animationManager.AddAnimation(new OpenAnimation(_cardManager));
+
+                    await _animationManager.PlayAnimations(childNode);
 
                     // Animation
                     _stateManager.SetState(new MainState(_cardManager, childNode));
@@ -79,7 +89,7 @@ public class LockState : LayoutState
         else if (previousActiveNode.Parent == clickedNode)
         {
             _animationManager.AddAnimation(new BackAnimation(_cardManager));
-            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager));
+            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, true));
 
             nextState = new MainState(_cardManager, clickedNode);
 
@@ -87,7 +97,7 @@ public class LockState : LayoutState
         else if (clickedNode == rootNode)
         {
             _animationManager.AddAnimation(new ToCoverAnimation(_cardManager));
-            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager));
+            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, true));
             _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
 
             nextState = new CoverState(_cardManager);
@@ -129,10 +139,6 @@ public class LockState : LayoutState
 
         Object.Destroy(keyNode.Body.gameObject);
         Object.Destroy(lockNode.Body.gameObject);
-
-        // 2. Keys get pulled back in + card below the lock puts its children out -> OPEN Animation
-
-        Debug.Log("FOUND IT " + lockNode.Context.Label + " " + keyNode.Context.Label);
     }
 
     public override void HandleHover(CardNode hoveredNode)
