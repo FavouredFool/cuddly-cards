@@ -21,8 +21,6 @@ public class InventoryState : LayoutState
             return;
         }
 
-        ResetHover();
-
         if (click == Click.RIGHT)
         {
             _stateManager.PushState(new CloseUpState(_cardManager, clickedNode));
@@ -46,27 +44,25 @@ public class InventoryState : LayoutState
 
     public override void HandleHover(CardNode hoveredNode)
     {
-        // würde es sich hier lohnen den Hover auf eigene Klassen für jeden Kartentyp zu deligieren?
-        // Setz alle anderen Karten auf Hover = 0;
-
-        ResetHover();
+        ResetHovers(hoveredNode);
 
         if (hoveredNode == null)
         {
             return;
         }
 
-        if (hoveredNode.Context.CardType is CardType.KEY or CardType.DIALOGUE)
-        {
-            hoveredNode.Body.SetHoverPosition(true);
-        }
+        if (hoveredNode.Context.CardType is not (CardType.KEY or CardType.DIALOGUE)) return;
+
+        if (hoveredNode.Body.IsHovered) return;
+
+        hoveredNode.Body.StartHoverTween();
     }
 
-    public void ResetHover()
+    public void ResetHovers(CardNode hoveredNode)
     {
         foreach (CardNode childNode in _cardInventory.InventoryNode.Children.SelectMany(partNode => partNode.Children))
         {
-            childNode.Body.SetHoverPosition(false);
+            childNode.Body.ResetHover(hoveredNode);
         }
     }
 }

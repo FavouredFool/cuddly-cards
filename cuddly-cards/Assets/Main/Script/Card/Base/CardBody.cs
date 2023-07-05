@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class CardBody : MonoBehaviour
 {
@@ -14,7 +15,13 @@ public class CardBody : MonoBehaviour
 
     [SerializeField] Transform _cardContents;
 
+
+    public CardNode CardReferenceNode { get; set; }
     public Transform CardContents => _cardContents;
+
+    Tween _hoverTween = null;
+
+    public bool IsHovered { get; set; } = false;
 
     public void SetLabel(string labelText)
     {
@@ -49,11 +56,32 @@ public class CardBody : MonoBehaviour
         transform.localPosition = localPosition;
     }
 
-    public void SetHoverPosition(bool isHovering)
+    public void StartHoverTween()
     {
-        float multiplier = isHovering ? 0.33f : 0;
+        IsHovered = true;
 
-        Vector3 position = _cardContents.localPosition;
-        _cardContents.localPosition = new Vector3(position.x, position.y, CardInfo.CARDRATIO * CardInfo.CARDWIDTH * multiplier);
+        if (_hoverTween.IsActive()) _hoverTween.Kill();
+
+        float hoverPosition = CardInfo.CARDRATIO * CardInfo.CARDWIDTH * 0.33f;
+
+        _hoverTween = _cardContents.DOLocalMoveZ(hoverPosition, CardInfo.HOVERSPEED).SetSpeedBased();
+    }
+
+    public void EndHoverTween()
+    {
+        IsHovered = false;
+
+        if (_hoverTween.IsActive()) _hoverTween.Kill();
+
+        _hoverTween = _cardContents.DOLocalMoveZ(0f, CardInfo.HOVERSPEED).SetSpeedBased();
+    }
+
+    public void ResetHover(CardNode hoveredNode)
+    {
+        if (CardReferenceNode == hoveredNode) return;
+
+        if (!IsHovered) return;
+
+        EndHoverTween();
     }
 }

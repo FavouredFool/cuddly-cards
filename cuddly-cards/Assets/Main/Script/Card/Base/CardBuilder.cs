@@ -17,18 +17,19 @@ public class CardBuilder : MonoBehaviour
             delegate (CardNode cardNode)
             {
                 CardContext context = cardNode.Context;
-                cardNode.Body = BuildCardBody(context, folder);
+                cardNode.Body = BuildCardBody(context, cardNode, folder);
                 return true;
             }
         );
     }
 
-    public CardBody BuildCardBody(CardContext cardContext, Transform folder)
+    public CardBody BuildCardBody(CardContext cardContext, CardNode nodeReference, Transform folder)
     {
         CardBody body = GameObject.Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, folder).GetComponent<CardBody>();
 
         body.SetLabel(cardContext.Label);
         body.gameObject.name = "Card: \"" + cardContext.Label + "\"";
+        body.CardReferenceNode = nodeReference;
 
         CardScriptableType type = _types.FirstOrDefault(e => e.GetCardType().Equals(cardContext.CardType));
 

@@ -82,7 +82,7 @@ public class CardManager : MonoBehaviour
 
         foreach (CardNode node in tests)
         {
-            node.Body = CardBuilder.BuildCardBody(node.Context, _cardFolder);
+            node.Body = CardBuilder.BuildCardBody(node.Context, node, _cardFolder);
         }
 
         foreach (CardNode cardNode in tests)

@@ -1,4 +1,5 @@
 
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
@@ -143,6 +144,25 @@ public class LockState : LayoutState
 
     public override void HandleHover(CardNode hoveredNode)
     {
-        return;
+        ResetHovers(hoveredNode);
+
+        if (hoveredNode == null)
+        {
+            return;
+        }
+
+        if (hoveredNode.Context.CardType is not (CardType.KEY or CardType.DIALOGUE)) return;
+
+        if (hoveredNode.Body.IsHovered) return;
+
+        hoveredNode.Body.StartHoverTween();
+    }
+
+    public void ResetHovers(CardNode hoveredNode)
+    {
+        foreach (CardNode childNode in _cardInventory.InventoryNode.Children.SelectMany(partNode => partNode.Children))
+        {
+            childNode.Body.ResetHover(hoveredNode);
+        }
     }
 }

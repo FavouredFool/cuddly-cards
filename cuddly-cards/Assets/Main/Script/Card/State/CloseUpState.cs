@@ -14,6 +14,8 @@ public class CloseUpState : LayoutState
 
     public override async void StartState()
     {
+        _closeUpNode.Body.ResetHover(null);
+
         Transform transform = _closeUpNode.Body.transform;
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
