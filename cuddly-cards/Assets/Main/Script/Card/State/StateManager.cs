@@ -9,12 +9,12 @@ public class StateManager
 
     protected Stack<LayoutState> _states;
 
-    public Stack<LayoutState> States { get { return _states; } }
+    public Stack<LayoutState> States => _states;
 
     public StateManager(CardManager cardManager)
     {
         _cardManager = cardManager;
-        _states = new();
+        _states = new Stack<LayoutState>();
     }
 
     public void StartStates()

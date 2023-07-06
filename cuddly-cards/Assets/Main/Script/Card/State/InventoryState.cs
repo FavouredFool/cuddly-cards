@@ -32,14 +32,58 @@ public class InventoryState : LayoutState
             return;
         }
 
-        // HERE NEEDS TO BE THE REFERENCE FOR THE ANIMATION FROM ANY STATE'S CLOSED TO OPEN
+        if (clickedNode == _cardInventory.InventoryNode)
+        {
+            _animationManager.AddAnimation(new OpenAnimation(_cardManager));
+            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
 
-        _animationManager.AddAnimation(new OpenAnimation(_cardManager));
-        _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
+            await _animationManager.PlayAnimations(_cardManager.BaseNode);
 
-        await _animationManager.PlayAnimations(_cardManager.BaseNode);
+            _stateManager.PopState();
+            return;
+        }
 
-        _stateManager.PopState();
+
+        EvaluateDefaultCardAction(clickedNode);
+    }
+
+    public async void EvaluateDefaultCardAction(CardNode clickedNode)
+    {
+        CardNode rootNode = _cardManager.RootNode;
+        CardNode previousActiveNode = _cardManager.BaseNode;
+
+        LayoutState nextState;
+
+        if (clickedNode == previousActiveNode)
+        {
+            return;
+        }
+        else if (previousActiveNode.Parent == clickedNode)
+        {
+            _animationManager.AddAnimation(new BackAnimation(_cardManager));
+            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
+
+            nextState = new MainState(_cardManager, clickedNode);
+
+        }
+        else if (clickedNode == rootNode)
+        {
+            _animationManager.AddAnimation(new ToCoverAnimation(_cardManager));
+            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
+            _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
+
+            nextState = new CoverState(_cardManager);
+        }
+        else
+        {
+            Debug.LogError("Pressed something weird");
+            return;
+        }
+
+        await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
+
+        _stateManager.SetState(nextState);
+
     }
 
     public override void HandleHover(CardNode hoveredNode)
