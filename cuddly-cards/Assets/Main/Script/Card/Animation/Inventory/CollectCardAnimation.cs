@@ -8,6 +8,8 @@ using static CardInfo;
 
 public class CollectCardAnimation : InventoryAnimation
 {
+    int _minRaiseHeight = 10;
+
     public CollectCardAnimation(CardManager cardManager) : base(cardManager) { }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
@@ -21,19 +23,20 @@ public class CollectCardAnimation : InventoryAnimation
 
         // activeNode vertical nach oben, relativ dem höchsten stack rechts der Node.
 
-        int maxHeight = 0;
+        int maxNeightbourHeight = 0;
 
         for(int i = parentNode.Children.IndexOf(activeNode) + 1; i < parentNode.Children.Count; i++)
         {
             int tempHeight = parentNode.Children[i].GetNodeCount(CardTraversal.CONTEXT);
 
-            if (tempHeight > maxHeight)
+            if (tempHeight > maxNeightbourHeight)
             {
-                maxHeight = tempHeight;
+                maxNeightbourHeight = tempHeight;
             }
         }
 
-        maxHeight += 1;
+        maxNeightbourHeight += 1;
+        maxNeightbourHeight = Math.Max(maxNeightbourHeight, _minRaiseHeight);
 
 
         int finalHeight = 1;
@@ -50,7 +53,7 @@ public class CollectCardAnimation : InventoryAnimation
 
         entireSequence.Join(
             DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodeToHeight(activeNode, maxHeight))
+                .Append(_subAnimations.RaiseNodeToHeight(activeNode, maxNeightbourHeight))
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.MoveNodeToRight(activeNode))
                 .AppendInterval(_waitTime)
@@ -65,7 +68,7 @@ public class CollectCardAnimation : InventoryAnimation
                 break;
         }
 
-        int inventoryHeight = maxHeight;
+        int inventoryHeight = maxNeightbourHeight;
 
         switch (cardType)
         {
