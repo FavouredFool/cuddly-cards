@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -6,7 +7,7 @@ using static CardInfo;
 
 public class LockState : LayoutState
 {
-    CardNode _baseNode;
+    readonly CardNode _baseNode;
 
     public LockState(CardManager cardManager, CardNode baseNode) : base (cardManager)
     {
@@ -46,13 +47,9 @@ public class LockState : LayoutState
 
                 if (_baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
                 {
-                    LockOpened(_baseNode, clickedNode);
+                    await LockOpened(_baseNode, clickedNode);
 
                     CardNode childNode = _baseNode.Children[0];
-
-                    // Disintegrate cards
-
-                    await Task.Delay(200);
 
                     _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, false));
                     _animationManager.AddAnimation(new OpenAnimation(_cardManager));
@@ -129,7 +126,7 @@ public class LockState : LayoutState
         keyNode.Parent.Children.Remove(keyNode);
     }
 
-    public void LockOpened(CardNode lockNode, CardNode keyNode)
+    public async Task LockOpened(CardNode lockNode, CardNode keyNode)
     {
         // destroy lock and Node visually
         // -> Layout should change instantly
@@ -138,8 +135,18 @@ public class LockState : LayoutState
         RemoveKeyFromTree(keyNode);
         RemoveLockFromTree(lockNode);
 
+
+        _ = DisintegrateCard(lockNode);
+        await DisintegrateCard(keyNode);
+        
+
         Object.Destroy(keyNode.Body.gameObject);
         Object.Destroy(lockNode.Body.gameObject);
+    }
+
+    public async Task DisintegrateCard(CardNode node)
+    {
+        await node.Body.DisintegrateCard();
     }
 
     public override void HandleHover(CardNode hoveredNode)

@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
+using AmazingAssets.AdvancedDissolve;
 
 public class CardBody : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class CardBody : MonoBehaviour
     [SerializeField] Image _image;
 
     [SerializeField] Transform _cardContents;
+
+    [SerializeField] float _disintegrateTime;
 
 
     public CardNode CardReferenceNode { get; set; }
@@ -83,5 +87,39 @@ public class CardBody : MonoBehaviour
         if (!IsHovered) return;
 
         EndHoverTween();
+    }
+
+    public void DeactivateUI()
+    {
+        _image.enabled = false;
+        _textField.enabled = false;
+    }
+
+    public async Task DisintegrateCard()
+    {
+        DeactivateUI();
+
+        foreach (Material material in _meshRenderer.materials)
+        {
+            AdvancedDissolveKeywords.SetKeyword(material, AdvancedDissolveKeywords.State.Enabled, true);
+        }
+
+        float startTime = Time.time;
+        float maxTime = startTime + _disintegrateTime;
+
+
+        while (Time.time < maxTime)
+        {
+            float t = (Time.time - startTime) / _disintegrateTime;
+
+            Debug.Log(t);
+
+            foreach (Material material in _meshRenderer.materials)
+            {
+                AdvancedDissolveProperties.Cutout.Standard.UpdateLocalProperty(material, AdvancedDissolveProperties.Cutout.Standard.Property.Clip, t);
+            }
+
+            await Task.Yield();
+        }
     }
 }

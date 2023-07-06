@@ -82,6 +82,7 @@ MonoBehaviour:
   _meshRenderer: {fileID: 8822104389601333008}
   _image: {fileID: 7811054856107293988}
   _cardContents: {fileID: 7811054855460049670}
+  _disintegrateTime: 1.5
 --- !u!1 &7811054855745619492
 GameObject:
   m_ObjectHideFlags: 0
