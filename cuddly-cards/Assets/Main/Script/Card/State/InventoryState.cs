@@ -78,7 +78,7 @@ public class InventoryState : LayoutState
             _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
             _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
 
-            nextState = new CoverState(_cardManager, rootNode);
+            nextState = new CoverState(_cardManager);
         }
         else
         {

@@ -11,7 +11,7 @@ public class LockState : DefaultState
     {
     }
 
-    public override async void HandleIndividualTransitions(CardNode clickedNode)
+    public override void HandleIndividualTransitions(CardNode clickedNode)
     {
         CardType cardType = clickedNode.Context.CardType;
 
@@ -22,31 +22,7 @@ public class LockState : DefaultState
 
             case CardType.KEY:
             case CardType.DIALOGUE:
-
-                // Compare the clicked nodes name to the desired KEy
-
-                CardNode baseNode = _cardManager.BaseNode;
-
-                if (baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
-                {
-                    await LockOpened(baseNode, clickedNode);
-
-                    CardNode childNode = baseNode.Children[0];
-
-                    _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, false));
-                    _animationManager.AddAnimation(new OpenAnimation(_cardManager));
-
-                    await _animationManager.PlayAnimations(childNode);
-
-                    // Animation
-                    _stateManager.SetState(new MainState(_cardManager, childNode));
-
-                    return;
-                }
-                else
-                {
-                    Debug.Log("WRONG!!");
-                }
+                PlayNode(clickedNode);
                 return;
 
             case CardType.COVER:
@@ -55,48 +31,87 @@ public class LockState : DefaultState
             case CardType.PERSON:
             case CardType.LOCK:
             default:
-                EvaluateDefaultCardAction(clickedNode);
+                ToDefaultTransitions(clickedNode);
                 return;
         }
     }
 
-    public async void EvaluateDefaultCardAction(CardNode clickedNode)
+    void ToDefaultTransitions(CardNode clickedNode)
     {
-        CardNode rootNode = _cardManager.RootNode;
-        CardNode previousActiveNode = _cardManager.BaseNode;
+        if (clickedNode == _cardManager.BaseNode) return;
 
-        LayoutState nextState;
-
-        if (clickedNode == previousActiveNode)
+        if (_cardManager.BaseNode.Parent == clickedNode)
         {
+            ToBackTransition(clickedNode);
             return;
         }
-        else if (previousActiveNode.Parent == clickedNode)
+
+        if (clickedNode == _cardManager.RootNode)
         {
-            _animationManager.AddAnimation(new BackAnimation(_cardManager));
-            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, true));
-
-            nextState = new MainState(_cardManager, clickedNode);
-
+            ToRootTransition(clickedNode);
+            return;
         }
-        else if (clickedNode == rootNode)
-        {
-            _animationManager.AddAnimation(new ToCoverAnimation(_cardManager));
-            _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, true));
-            _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
+    }
 
-            nextState = new CoverState(_cardManager, rootNode);
+    void ToRootTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new ToCoverAnimation(_cardManager), new RetractKeysAnimation(_cardManager, true), new ExitInventoryPileAnimation(_cardManager) };
+        LayoutState newState = new CoverState(_cardManager);
+
+        ToTransition(clickedNode, animations, newState);
+    }
+
+    void ToBackTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager), new RetractKeysAnimation(_cardManager, true) };
+        LayoutState newState = new MainState(_cardManager, clickedNode);
+
+        ToTransition(clickedNode, animations, newState);
+    }
+
+    void PlayNode(CardNode clickedNode)
+    {
+        CardNode baseNode = _cardManager.BaseNode;
+
+        if (baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
+        {
+            NodeCorrect(clickedNode, baseNode);
         }
         else
         {
-            Debug.LogError("Pressed something weird");
-            return;
+            NodeWrong();
         }
+    }
 
-        await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
+    void NodeWrong()
+    {
+        Debug.Log("WRONG!");
+    }
 
-        _stateManager.SetState(nextState);
+    async void NodeCorrect(CardNode clickedNode, CardNode baseNode)
+    {
+        await LockOpened(baseNode, clickedNode);
 
+        CardNode childNode = baseNode.Children[0];
+        // Für die Animation muss ich das im Voraus machen, bevor es erneut von dem MainState gesetzt wird
+        _cardManager.BaseNode = childNode;
+
+        List<CardAnimation> animations = new() { new RetractKeysAnimation(_cardManager, false), new OpenAnimation(_cardManager) };
+        LayoutState newState = new MainState(_cardManager, childNode);
+
+        ToTransition(childNode, animations, newState);
+    }
+
+    public async Task LockOpened(CardNode lockNode, CardNode keyNode)
+    {
+        RemoveKeyFromTree(keyNode);
+        RemoveLockFromTree(lockNode);
+
+        _ = DisintegrateCard(lockNode);
+        await DisintegrateCard(keyNode);
+        
+        Object.Destroy(keyNode.Body.gameObject);
+        Object.Destroy(lockNode.Body.gameObject);
     }
 
     public void RemoveLockFromTree(CardNode lockNode)
@@ -111,24 +126,6 @@ public class LockState : DefaultState
     public void RemoveKeyFromTree(CardNode keyNode)
     {
         keyNode.Parent.Children.Remove(keyNode);
-    }
-
-    public async Task LockOpened(CardNode lockNode, CardNode keyNode)
-    {
-        // destroy lock and Node visually
-        // -> Layout should change instantly
-
-        // 1. Lock and Key disintegrate -> elements get rewired in node-tree
-        RemoveKeyFromTree(keyNode);
-        RemoveLockFromTree(lockNode);
-
-
-        _ = DisintegrateCard(lockNode);
-        await DisintegrateCard(keyNode);
-        
-
-        Object.Destroy(keyNode.Body.gameObject);
-        Object.Destroy(lockNode.Body.gameObject);
     }
 
     public async Task DisintegrateCard(CardNode node)

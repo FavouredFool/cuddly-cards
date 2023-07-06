@@ -73,7 +73,7 @@ public class MainState : DefaultState
         List<CardAnimation> animations = new() { new CloseAnimation(_cardManager), new ToInventoryAnimation(_cardManager) };
         LayoutState newState = new InventoryState(_cardManager);
 
-        ToTransition(clickedNode, animations, newState, true);
+        ToTransition(clickedNode, animations, newState);
     }
 
     public void ToLockTransition(CardNode clickedNode)
@@ -81,7 +81,7 @@ public class MainState : DefaultState
         List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new DisplayKeysAnimation(_cardManager) };
         LayoutState newState = new LockState(_cardManager, clickedNode);
 
-        ToTransition(clickedNode, animations, newState, false);
+        ToTransition(clickedNode, animations, newState);
     }
 
     public void ToChildTransition(CardNode clickedNode)
@@ -89,7 +89,7 @@ public class MainState : DefaultState
         List<CardAnimation> animations = new() { new ChildAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
-        ToTransition(clickedNode, animations, newState, false);
+        ToTransition(clickedNode, animations, newState);
     }
 
     public void ToBackTransition(CardNode clickedNode)
@@ -97,27 +97,14 @@ public class MainState : DefaultState
         List<CardAnimation> animations = new() { new BackAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
-        ToTransition(clickedNode, animations, newState, false);
+        ToTransition(clickedNode, animations, newState);
     }
 
     public void ToRootTransition(CardNode clickedNode)
     {
         List<CardAnimation> animations = new(){ new ToCoverAnimation(_cardManager), new ExitInventoryPileAnimation(_cardManager) };
-        LayoutState newState = new CoverState(_cardManager, _cardManager.RootNode);
+        LayoutState newState = new CoverState(_cardManager);
 
-        ToTransition(clickedNode, animations, newState, false);
-    }
-
-    public async void ToTransition(CardNode clickedNode, List<CardAnimation> animations, LayoutState stateParent, bool shouldPush)
-    {
-        foreach (CardAnimation animation in animations)
-        {
-            _animationManager.AddAnimation(animation);
-        }
-
-        await _animationManager.PlayAnimations(clickedNode, _cardManager.BaseNode);
-
-        Action<LayoutState> stateFunction = (shouldPush ? _stateManager.PushState : _stateManager.SetState);
-        stateFunction(stateParent);
+        ToTransition(clickedNode, animations, newState);
     }
 }

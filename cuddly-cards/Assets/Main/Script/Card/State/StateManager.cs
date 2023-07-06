@@ -14,7 +14,7 @@ public class StateManager
 
     public void StartStates()
     {
-        SetState(new CoverState(_cardManager, _cardManager.RootNode));
+        SetState(new CoverState(_cardManager));
     }
 
     public void SetState(LayoutState state)

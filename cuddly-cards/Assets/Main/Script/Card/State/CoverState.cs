@@ -1,25 +1,20 @@
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
 public class CoverState : DefaultState
 {
-    public CoverState(CardManager cardManager, CardNode rootNode) : base(cardManager, rootNode)
+    public CoverState(CardManager cardManager) : base(cardManager, cardManager.RootNode)
     {
     }
 
-    public override async void HandleIndividualTransitions(CardNode clickedNode)
+    public override void HandleIndividualTransitions(CardNode clickedNode)
     {
-        _animationManager.AddAnimation(new FromCoverAnimation(_cardManager));
-        _animationManager.AddAnimation(new EnterInventoryPileAnimation(_cardManager));
-        await _animationManager.PlayAnimations(clickedNode);
+        List<CardAnimation> animations = new() { new FromCoverAnimation(_cardManager), new EnterInventoryPileAnimation(_cardManager) };
+        LayoutState newState = new MainState(_cardManager, clickedNode);
 
-        _stateManager.SetState(new MainState(_cardManager, clickedNode));
-    }
-
-    public override void HandleHover(CardNode hoveredNode)
-    {
-        return;
+        ToTransition(clickedNode, animations, newState);
     }
 }
