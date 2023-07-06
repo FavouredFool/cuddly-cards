@@ -112,8 +112,6 @@ public class CardBody : MonoBehaviour
         {
             float t = (Time.time - startTime) / _disintegrateTime;
 
-            Debug.Log(t);
-
             foreach (Material material in _meshRenderer.materials)
             {
                 AdvancedDissolveProperties.Cutout.Standard.UpdateLocalProperty(material, AdvancedDissolveProperties.Cutout.Standard.Property.Clip, t);
