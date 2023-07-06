@@ -3,31 +3,14 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
-public class CoverState : LayoutState
+public class CoverState : DefaultState
 {
-    public CoverState(CardManager cardManager) : base(cardManager)
+    public CoverState(CardManager cardManager, CardNode rootNode) : base(cardManager, rootNode)
     {
     }
 
-    public override void StartState()
+    public override async void HandleIndividualTransitions(CardNode clickedNode)
     {
-        _cardManager.BaseNode = _cardManager.RootNode;
-        _animationManager.SetCardsStatic();
-    }
-
-    public override async void HandleClick(CardNode clickedNode, Click click)
-    {
-        if (clickedNode == null || clickedNode.Context.CardType == CardType.INVENTORY)
-        {
-            return;
-        }
-
-        if (click == Click.RIGHT)
-        {
-            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode));
-            return;
-        }
-
         _animationManager.AddAnimation(new FromCoverAnimation(_cardManager));
         _animationManager.AddAnimation(new EnterInventoryPileAnimation(_cardManager));
         await _animationManager.PlayAnimations(clickedNode);

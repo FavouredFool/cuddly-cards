@@ -11,7 +11,7 @@ public class ExitInventoryPileAnimation : CardAnimation
 {
     public ExitInventoryPileAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
         Sequence entireSequence = DOTween.Sequence();
 

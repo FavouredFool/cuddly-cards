@@ -1,113 +1,123 @@
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
-public class MainState : LayoutState
+public class MainState : DefaultState
 {
-    readonly CardNode _baseNode;
-    public MainState(CardManager cardManager, CardNode baseNode) :base (cardManager)
+    public MainState(CardManager cardManager, CardNode baseNode) :base (cardManager, baseNode)
     {
-        _baseNode = baseNode;
     }
 
-    public override void StartState()
+    public override void HandleIndividualTransitions(CardNode clickedNode)
     {
-        _cardManager.BaseNode = _baseNode;
-        _animationManager.SetCardsStatic();
-    }
-
-    public override async void HandleClick(CardNode clickedNode, Click click)
-    {
-        if (clickedNode == null)
-        {
-            return;
-        }
-
-        if (click == Click.RIGHT)
-        {
-            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode));
-            return;
-        }
-
         CardType cardType = clickedNode.Context.CardType;
 
         switch (cardType)
         {
             case CardType.INVENTORY:
-
-                _animationManager.AddAnimation(new CloseAnimation(_cardManager));
-                _animationManager.AddAnimation(new ToInventoryAnimation(_cardManager));
-                await _animationManager.PlayAnimations(_cardManager.BaseNode);
-                _stateManager.PushState(new InventoryState(_cardManager));
-
+                ToInventoryTransition(clickedNode);
                 return;
 
             case CardType.KEY:
             case CardType.DIALOGUE:
-                
-                _cardInventory.MoveNodeFromMainToInventory(clickedNode);
+                CollectNode(clickedNode);
                 return;
 
             case CardType.LOCK:
-
-                _animationManager.AddAnimation(new NoChildrenAnimation(_cardManager));
-                _animationManager.AddAnimation(new DisplayKeysAnimation(_cardManager));
-
-                await _animationManager.PlayAnimations(clickedNode, _baseNode);
-                _stateManager.PushState(new LockState(_cardManager, clickedNode));
+                ToLockTransition(clickedNode);
                 return;
 
+            case CardType.COVER:
+            case CardType.PLACE:
+            case CardType.THING:
+            case CardType.PERSON:
             default:
-
-                EvaluateDefaultCardAction(clickedNode);
-
+                ToDefaultTransitions(clickedNode);
                 return;
         }
     }
 
-    public async void EvaluateDefaultCardAction(CardNode clickedNode)
+    public void ToDefaultTransitions(CardNode clickedNode)
     {
-        CardNode rootNode = _cardManager.RootNode;
+        if (clickedNode == _cardManager.BaseNode) return;
 
-        LayoutState nextState;
-
-        // closeUp
-        if (clickedNode == _baseNode)
+        if (_cardManager.BaseNode.Children.Contains(clickedNode))
         {
-            return;
-        }
-        if (_baseNode.Children.Contains(clickedNode))
-        {
-            // pressed child
-            _animationManager.AddAnimation(new ChildAnimation(_cardManager));
-            nextState = new MainState(_cardManager, clickedNode);
-        }
-        else if (_baseNode.Parent == clickedNode)
-        {
-            // pressed back
-            _animationManager.AddAnimation(new BackAnimation(_cardManager));
-            nextState = new MainState(_cardManager, clickedNode);
-        }
-        else if (clickedNode == rootNode)
-        {
-            // pressed root
-            _animationManager.AddAnimation(new ToCoverAnimation(_cardManager));
-            nextState = new CoverState(_cardManager);
-            _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
-        }
-        else
-        {
-            Debug.LogError("Pressed something weird");
+            ToChildTransition(clickedNode);
             return;
         }
 
-        await _animationManager.PlayAnimations(clickedNode, _baseNode);
+        if (_cardManager.BaseNode.Parent == clickedNode)
+        {
+            ToBackTransition(clickedNode);
+            return;
+        }
 
-        _stateManager.SetState(nextState);
+        if (clickedNode == _cardManager.RootNode)
+        {
+            ToRootTransition(clickedNode);
+            return;
+        }
     }
 
-    public override void HandleHover(CardNode hoveredNode)
+    public void CollectNode(CardNode clickedNode)
     {
-        return;
+        _cardInventory.MoveNodeFromMainToInventory(clickedNode);
+    }
+
+    public void ToInventoryTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new CloseAnimation(_cardManager), new ToInventoryAnimation(_cardManager) };
+        LayoutState newState = new InventoryState(_cardManager);
+
+        ToTransition(clickedNode, animations, newState, true);
+    }
+
+    public void ToLockTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new DisplayKeysAnimation(_cardManager) };
+        LayoutState newState = new LockState(_cardManager, clickedNode);
+
+        ToTransition(clickedNode, animations, newState, false);
+    }
+
+    public void ToChildTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new ChildAnimation(_cardManager) };
+        LayoutState newState = new MainState(_cardManager, clickedNode);
+
+        ToTransition(clickedNode, animations, newState, false);
+    }
+
+    public void ToBackTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager) };
+        LayoutState newState = new MainState(_cardManager, clickedNode);
+
+        ToTransition(clickedNode, animations, newState, false);
+    }
+
+    public void ToRootTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new(){ new ToCoverAnimation(_cardManager), new ExitInventoryPileAnimation(_cardManager) };
+        LayoutState newState = new CoverState(_cardManager, _cardManager.RootNode);
+
+        ToTransition(clickedNode, animations, newState, false);
+    }
+
+    public async void ToTransition(CardNode clickedNode, List<CardAnimation> animations, LayoutState stateParent, bool shouldPush)
+    {
+        foreach (CardAnimation animation in animations)
+        {
+            _animationManager.AddAnimation(animation);
+        }
+
+        await _animationManager.PlayAnimations(clickedNode, _cardManager.BaseNode);
+
+        Action<LayoutState> stateFunction = (shouldPush ? _stateManager.PushState : _stateManager.SetState);
+        stateFunction(stateParent);
     }
 }

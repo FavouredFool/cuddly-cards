@@ -9,30 +9,30 @@ public class CloseAnimation : CardAnimation
 {
     public CloseAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
         Sequence entireSequence = DOTween.Sequence();
         CardNode rootNode = _cardManager.RootNode;
-        _cardManager.AddToTopLevelMainPile(activeNode);
+        _cardManager.AddToTopLevelMainPile(baseNode);
 
-        entireSequence.Join(_subAnimations.LiftNodePile(activeNode));
+        entireSequence.Join(_subAnimations.LiftNodePile(baseNode));
 
-        if (activeNode != rootNode)
+        if (baseNode != rootNode)
         {
-            _cardManager.AddToTopLevelMainPile(activeNode.Parent);
+            _cardManager.AddToTopLevelMainPile(baseNode.Parent);
 
-            if (activeNode.Parent != rootNode)
+            if (baseNode.Parent != rootNode)
             {
                 _cardManager.AddToTopLevelMainPile(rootNode);
             }
         }
 
-        foreach (CardNode childNode in activeNode.Children)
+        foreach (CardNode childNode in baseNode.Children)
         {
             _cardManager.AddToTopLevelMainPile(childNode);
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodePileRelative(childNode, activeNode))
+                .Append(_subAnimations.RaiseNodePileRelative(childNode, baseNode))
                 .Append(_subAnimations.MoveNodeToLeft(childNode)));
         }
 

@@ -1,53 +1,48 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEditor.Overlays;
 
 public class StateManager
 {
     readonly CardManager _cardManager;
 
-    protected Stack<LayoutState> _states;
-
-    public Stack<LayoutState> States => _states;
+    public Stack<LayoutState> States { get; } = new();
 
     public StateManager(CardManager cardManager)
     {
         _cardManager = cardManager;
-        _states = new Stack<LayoutState>();
     }
 
     public void StartStates()
     {
-        SetState(new CoverState(_cardManager));
+        SetState(new CoverState(_cardManager, _cardManager.RootNode));
     }
 
     public void SetState(LayoutState state)
     {
-        _states.Clear();
-        _states.Push(state);
+        States.Clear();
+        States.Push(state);
         state.StartState();
     }
 
     public void PushState(LayoutState state)
     {
-        _states.Push(state);
+        States.Push(state);
         state.StartState();
     }
 
     public void PopState()
     {
-        _states.Pop();
-        _states.Peek().StartState();
+        States.Pop();
+        States.Peek().StartState();
     }
 
-    internal void HandleHover(CardNode hoveredNode)
+    public void HandleHover(CardNode hoveredNode)
     {
-        _states.Peek().HandleHover(hoveredNode);
+        States.Peek().HandleHover(hoveredNode);
     }
 
     public void HandleClick(CardNode clickedNode, CardInfo.Click click)
     {
-        _states.Peek().HandleClick(clickedNode, click);
+        States.Peek().HandleClick(clickedNode, click);
     }
 }

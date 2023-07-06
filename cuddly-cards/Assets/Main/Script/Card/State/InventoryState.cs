@@ -56,6 +56,12 @@ public class InventoryState : LayoutState
 
         if (clickedNode == previousActiveNode)
         {
+            _animationManager.AddAnimation(new OpenAnimation(_cardManager));
+            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
+
+            await _animationManager.PlayAnimations(_cardManager.BaseNode);
+
+            _stateManager.PopState();
             return;
         }
         else if (previousActiveNode.Parent == clickedNode)
@@ -72,7 +78,7 @@ public class InventoryState : LayoutState
             _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
             _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
 
-            nextState = new CoverState(_cardManager);
+            nextState = new CoverState(_cardManager, rootNode);
         }
         else
         {

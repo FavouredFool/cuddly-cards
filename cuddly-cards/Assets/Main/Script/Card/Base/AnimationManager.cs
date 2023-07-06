@@ -24,13 +24,9 @@ public class AnimationManager
         _activeAnimations = new List<CardAnimation>();
     }
 
-    public async Task PlayAnimations()
-    {
-        await PlayAnimations(null);
-    }
     public async Task PlayAnimations(CardNode activeNode)
     {
-        await PlayAnimations(activeNode, null);
+        await PlayAnimations(activeNode, activeNode);
     }
     public async Task PlayAnimations(CardNode activeNode, CardNode previousActiveNode)
     {

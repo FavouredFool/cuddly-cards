@@ -25,5 +25,5 @@ public abstract class CardAnimation
         _verticalTime = _cardMover.VerticalTime;
     }
 
-    public abstract Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode);
+    public abstract Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode);
 }

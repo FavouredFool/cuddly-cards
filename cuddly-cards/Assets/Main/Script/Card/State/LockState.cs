@@ -5,34 +5,14 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
-public class LockState : LayoutState
+public class LockState : DefaultState
 {
-    readonly CardNode _baseNode;
-
-    public LockState(CardManager cardManager, CardNode baseNode) : base (cardManager)
+    public LockState(CardManager cardManager, CardNode baseNode) : base (cardManager, baseNode)
     {
-        _baseNode = baseNode;
     }
 
-    public override void StartState()
+    public override async void HandleIndividualTransitions(CardNode clickedNode)
     {
-        _cardManager.BaseNode = _baseNode;
-        _animationManager.SetCardsStatic();
-    }
-
-    public override async void HandleClick(CardNode clickedNode, Click click)
-    {
-        if (clickedNode == null)
-        {
-            return;
-        }
-
-        if (click == Click.RIGHT)
-        {
-            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode));
-            return;
-        }
-
         CardType cardType = clickedNode.Context.CardType;
 
         switch (cardType)
@@ -45,11 +25,13 @@ public class LockState : LayoutState
 
                 // Compare the clicked nodes name to the desired KEy
 
-                if (_baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
-                {
-                    await LockOpened(_baseNode, clickedNode);
+                CardNode baseNode = _cardManager.BaseNode;
 
-                    CardNode childNode = _baseNode.Children[0];
+                if (baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
+                {
+                    await LockOpened(baseNode, clickedNode);
+
+                    CardNode childNode = baseNode.Children[0];
 
                     _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, false));
                     _animationManager.AddAnimation(new OpenAnimation(_cardManager));
@@ -67,6 +49,11 @@ public class LockState : LayoutState
                 }
                 return;
 
+            case CardType.COVER:
+            case CardType.PLACE:
+            case CardType.THING:
+            case CardType.PERSON:
+            case CardType.LOCK:
             default:
                 EvaluateDefaultCardAction(clickedNode);
                 return;
@@ -98,7 +85,7 @@ public class LockState : LayoutState
             _animationManager.AddAnimation(new RetractKeysAnimation(_cardManager, true));
             _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
 
-            nextState = new CoverState(_cardManager);
+            nextState = new CoverState(_cardManager, rootNode);
         }
         else
         {

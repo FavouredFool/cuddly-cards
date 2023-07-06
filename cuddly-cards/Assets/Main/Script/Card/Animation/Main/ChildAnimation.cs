@@ -10,17 +10,17 @@ public class ChildAnimation : CardAnimation
 {
     public ChildAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
         Sequence entireSequence = DOTween.Sequence();
 
         CardNode rootNode = _cardManager.RootNode;
 
-        CardNode discardToBe = previousActiveNode.Parent;
+        CardNode discardToBe = baseNode.Parent;
         CardNode discard = discardToBe != null && discardToBe != rootNode ? rootNode : null;
 
         List<CardNode> childsToBe = activeNode.Children;
-        List<CardNode> previousChilds = previousActiveNode.Children;
+        List<CardNode> previousChilds = baseNode.Children;
 
 
         // ------------- CHILDS TO BE ----------------
@@ -31,7 +31,7 @@ public class ChildAnimation : CardAnimation
 
             entireSequence.Join(
                 DOTween.Sequence()
-                .Append(_subAnimations.LiftAndMoveChildToBase(childsToBe[i], previousActiveNode))
+                .Append(_subAnimations.LiftAndMoveChildToBase(childsToBe[i], baseNode))
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.FanOutChildFromBase(childsToBe[i]))
             );
@@ -41,7 +41,7 @@ public class ChildAnimation : CardAnimation
 
         _cardManager.AddToTopLevelMainPile(activeNode);
         entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.LiftAndMoveChildToBase(activeNode, previousActiveNode))
+            .Append(_subAnimations.LiftAndMoveChildToBase(activeNode, baseNode))
             .AppendInterval(_waitTime + _horizontalTime)
             .Append(_subAnimations.LowerNodePile(activeNode)));
 
@@ -64,7 +64,7 @@ public class ChildAnimation : CardAnimation
             height += previousChild.GetNodeCount(CardTraversal.CONTEXT);
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.LiftAndMoveChildToBase(previousChild, previousActiveNode))
+                .Append(_subAnimations.LiftAndMoveChildToBase(previousChild, baseNode))
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.MoveNodeFarther(previousChild))
                 .Append(_subAnimations.RaiseNodeToHeight(previousChild, height)));
@@ -72,12 +72,12 @@ public class ChildAnimation : CardAnimation
 
         // ------------- BackToBe ----------------
 
-        _cardManager.AddToTopLevelMainPile(previousActiveNode);
+        _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.LiftNodePile(previousActiveNode))
+            .Append(_subAnimations.LiftNodePile(baseNode))
             .AppendInterval(_horizontalTime + _waitTime)
-            .Append(_subAnimations.MoveNodeFarther(previousActiveNode))
-            .Append(_subAnimations.RaiseNodeToHeight(previousActiveNode, previousActiveNode.GetNodeCount(CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT))));
+            .Append(_subAnimations.MoveNodeFarther(baseNode))
+            .Append(_subAnimations.RaiseNodeToHeight(baseNode, baseNode.GetNodeCount(CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT))));
 
 
         // ------------- Discard & DiscardToBe ----------------

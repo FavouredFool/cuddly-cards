@@ -9,17 +9,17 @@ public class ToCoverAnimation : CardAnimation
 {
     public ToCoverAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousMainNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
         Sequence entireSequence = DOTween.Sequence();
 
         CardNode rootNode = _cardManager.RootNode;
 
-        CardNode backNode = previousMainNode.Parent;
+        CardNode backNode = baseNode.Parent;
 
         // -------------- CHILDREN ---------------------
 
-        List<CardNode> children = previousMainNode.Children;
+        List<CardNode> children = baseNode.Children;
 
         for (int i = 0; i < children.Count; i++)
         {
@@ -37,18 +37,18 @@ public class ToCoverAnimation : CardAnimation
 
         // -------------- MAIN ---------------------
         
-        _cardManager.AddToTopLevelMainPile(previousMainNode);
+        _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.RaiseNodePileRelative(previousMainNode, rootNode))
+            .Append(_subAnimations.RaiseNodePileRelative(baseNode, rootNode))
             .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
-            .Append(_subAnimations.MoveNodeToMiddle(previousMainNode)));
+            .Append(_subAnimations.MoveNodeToMiddle(baseNode)));
         
         // -------------- BACK ---------------------
         
         
         _cardManager.AddToTopLevelMainPile(backNode);
 
-        List<CardNode> lowerTopMostCardsBack = previousMainNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
+        List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
 
         foreach (CardNode node in lowerTopMostCardsBack)
         {

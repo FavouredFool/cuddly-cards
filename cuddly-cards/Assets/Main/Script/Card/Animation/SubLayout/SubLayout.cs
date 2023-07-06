@@ -9,7 +9,7 @@ public abstract class SubLayout
     protected CardInventory _cardInventory;
     protected StateManager _stateManager;
 
-    public SubLayout(CardManager cardManager)
+    protected SubLayout(CardManager cardManager)
     {
         _cardManager = cardManager;
         _cardMover = cardManager.CardMover;

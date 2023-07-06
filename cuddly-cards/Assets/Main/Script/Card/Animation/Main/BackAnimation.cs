@@ -10,14 +10,14 @@ public class BackAnimation : CardAnimation
 {
     public BackAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
         Sequence entireSequence = DOTween.Sequence();
 
         CardNode rootNode = _cardManager.RootNode;
         CardNode backToBe = activeNode.Parent;
         List<CardNode> childsToBe = activeNode.Children;
-        List<CardNode> previousChilds = previousActiveNode.Children;
+        List<CardNode> previousChilds = baseNode.Children;
 
         CardNode discard = backToBe != null && backToBe != rootNode ? rootNode : null;
 
@@ -27,15 +27,15 @@ public class BackAnimation : CardAnimation
             _cardManager.AddToTopLevelMainPile(newChild);
 
 
-            if (previousActiveNode == newChild)
+            if (baseNode == newChild)
             {
                 // ------------- PREVIOUS MAIN ----------------
 
                 entireSequence.Join(DOTween.Sequence()
-                    .Append(_subAnimations.RaiseNodePileRelative(previousActiveNode, activeNode))
+                    .Append(_subAnimations.RaiseNodePileRelative(baseNode, activeNode))
                     .AppendInterval(_horizontalTime + _waitTime)
-                    .Append(_subAnimations.MoveBaseToChild(previousActiveNode, previousActiveNode))
-                    .Append(_subAnimations.RaiseNodePileRelative(previousActiveNode, previousActiveNode)));
+                    .Append(_subAnimations.MoveBaseToChild(baseNode, baseNode))
+                    .Append(_subAnimations.RaiseNodePileRelative(baseNode, baseNode)));
 
                 // ------------- PREVIOUS CHILDREN ----------------
                 for (int j = previousChilds.Count - 1; j >= 0; j--)
@@ -47,8 +47,8 @@ public class BackAnimation : CardAnimation
                         .Append(_subAnimations.RaiseNodePileRelative(oldChild, activeNode))
                         .Append(_subAnimations.MoveNodeToLeft(oldChild))
                         .AppendInterval(_waitTime)
-                        .Append(_subAnimations.MoveBaseToChild(oldChild, previousActiveNode))
-                        .Append(_subAnimations.RaiseNodePileRelative(oldChild, previousActiveNode)));  
+                        .Append(_subAnimations.MoveBaseToChild(oldChild, baseNode))
+                        .Append(_subAnimations.RaiseNodePileRelative(oldChild, baseNode)));  
                 }
 
             }

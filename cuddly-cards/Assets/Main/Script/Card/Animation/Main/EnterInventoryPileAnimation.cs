@@ -10,7 +10,7 @@ public class EnterInventoryPileAnimation : CardAnimation
 {
     public EnterInventoryPileAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode previousActiveNode)
+    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
         Sequence entireSequence = DOTween.Sequence()
             .AppendInterval(_verticalTime)
