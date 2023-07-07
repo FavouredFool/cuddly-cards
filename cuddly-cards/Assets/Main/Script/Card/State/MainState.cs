@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
-public class MainState : DefaultState
+public class MainState : SettedState
 {
     public MainState(CardManager cardManager, CardNode baseNode) :base (cardManager, baseNode)
     {

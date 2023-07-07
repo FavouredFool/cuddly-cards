@@ -28,6 +28,12 @@ public class CloseUpManager : MonoBehaviour
     [SerializeField]
     Ease _easing;
 
+    public CameraMovement CameraMovement => _cameraMovement;
+    public float CloseUpRotation => _closeUpRotation;
+    public Transform CloseUpTransform => _cardCloseUpTransform;
+    public GameObject CloseUpCanvas => _closeUpCanvas;
+    public TMP_Text DescriptionText => _descriptionText;
+
     public void Start()
     {
         _closeUpCanvas.SetActive(false);
@@ -35,22 +41,22 @@ public class CloseUpManager : MonoBehaviour
 
     public void SetCloseUpStatic(CardNode closeUpNode)
     {
-        _cameraMovement.transform.rotation = Quaternion.Euler(new Vector3(GetCloseUpRotation(), 0, 0));
+        _cameraMovement.transform.rotation = Quaternion.Euler(new Vector3(CloseUpRotation, 0, 0));
 
-        Vector3 endPosition = GetCloseUpTransform().position;
-        Quaternion endRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(GetCloseUpRotation(), 0, 0) * Quaternion.Euler(-90, 0, 0);
+        Vector3 endPosition = CloseUpTransform.position;
+        Quaternion endRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(CloseUpRotation, 0, 0) * Quaternion.Euler(-90, 0, 0);
 
         closeUpNode.Body.transform.SetPositionAndRotation(endPosition, endRotation);
 
-        GetCloseUpCanvas().SetActive(true);
-        GetDescriptionText().text = closeUpNode.Context.Description;
+        CloseUpCanvas.SetActive(true);
+        DescriptionText.text = closeUpNode.Context.Description;
     }
 
     public void RevertCloseUpStatic(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation)
     {
         // out animation
-        GetCloseUpCanvas().SetActive(false);
-        GetCameraMovement().transform.rotation = Quaternion.Euler(GetCameraMovement().GetCardTableRotation(), 0, 0);
+        CloseUpCanvas.SetActive(false);
+        CameraMovement.transform.rotation = Quaternion.Euler(CameraMovement.GetCardTableRotation(), 0, 0);
 
         closeUpNode.Body.transform.SetPositionAndRotation(originalPosition, originalRotation);
     }
@@ -72,30 +78,5 @@ public class CloseUpManager : MonoBehaviour
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
         closeUpNode.Body.transform.DOMove(originalPosition, _transitionTime).SetEase(_easing);
         await closeUpNode.Body.transform.DORotateQuaternion(originalRotation, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
-    }
-
-    public CameraMovement GetCameraMovement()
-    {
-        return _cameraMovement;
-    }
-
-    public float GetCloseUpRotation()
-    {
-        return _closeUpRotation;
-    }
-
-    public Transform GetCloseUpTransform()
-    {
-        return _cardCloseUpTransform;
-    }
-
-    public GameObject GetCloseUpCanvas()
-    {
-        return _closeUpCanvas;
-    }
-
-    public TMP_Text GetDescriptionText()
-    {
-        return _descriptionText;
     }
 }

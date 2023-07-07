@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
-public class LockState : DefaultState
+public class LockState : SettedState
 {
     public LockState(CardManager cardManager, CardNode baseNode) : base (cardManager, baseNode)
     {

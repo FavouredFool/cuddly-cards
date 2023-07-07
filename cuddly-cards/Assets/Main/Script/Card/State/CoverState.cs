@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
-public class CoverState : DefaultState
+public class CoverState : SettedState
 {
     public CoverState(CardManager cardManager) : base(cardManager, cardManager.RootNode)
     {

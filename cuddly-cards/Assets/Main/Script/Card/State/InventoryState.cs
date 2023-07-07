@@ -1,9 +1,10 @@
 
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static CardInfo;
 
-public class InventoryState : LayoutState
+public class InventoryState : DefaultState
 {
     public InventoryState(CardManager cardManager) : base(cardManager)
     {
@@ -14,83 +15,56 @@ public class InventoryState : LayoutState
         _animationManager.SetCardsStatic();
     }
 
-    public override async void HandleClick(CardNode clickedNode, Click click)
+    public override void HandleIndividualTransitions(CardNode clickedNode)
     {
-        if (clickedNode == null)
-        {
-            return;
-        }
-
-        if (click == Click.RIGHT)
-        {
-            _stateManager.PushState(new CloseUpState(_cardManager, clickedNode));
-            return;
-        }
-
         if (clickedNode.Context.CardType is CardType.KEY or CardType.DIALOGUE)
         {
             return;
         }
 
-        if (clickedNode == _cardInventory.InventoryNode)
+        if (clickedNode == _cardInventory.InventoryNode || clickedNode == _cardManager.BaseNode)
         {
-            _animationManager.AddAnimation(new OpenAnimation(_cardManager));
-            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
-
-            await _animationManager.PlayAnimations(_cardManager.BaseNode);
-
-            _stateManager.PopState();
+            FromInventoryToBaseTransition(clickedNode);
             return;
         }
 
+        if (_cardManager.BaseNode.Parent == clickedNode)
+        {
+            FromInventoryToBackTransition(clickedNode);
+            return;
+        }
 
-        EvaluateDefaultCardAction(clickedNode);
+        if (clickedNode == _cardManager.RootNode)
+        {
+            FromInventoryToCoverTransition(clickedNode);
+            return;
+        }
     }
 
-    public async void EvaluateDefaultCardAction(CardNode clickedNode)
+    public void FromInventoryToBaseTransition(CardNode clickedNode)
     {
-        CardNode rootNode = _cardManager.RootNode;
-        CardNode previousActiveNode = _cardManager.BaseNode;
+        List<CardAnimation> animations = new() { new OpenAnimation(_cardManager), new FromInventoryAnimation(_cardManager) };
+        LayoutState newState = new MainState(_cardManager, _cardManager.BaseNode);
 
-        LayoutState nextState;
-
-        if (clickedNode == previousActiveNode)
-        {
-            _animationManager.AddAnimation(new OpenAnimation(_cardManager));
-            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
-
-            await _animationManager.PlayAnimations(_cardManager.BaseNode);
-
-            _stateManager.PopState();
-            return;
-        }
-        else if (previousActiveNode.Parent == clickedNode)
-        {
-            _animationManager.AddAnimation(new BackAnimation(_cardManager));
-            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
-
-            nextState = new MainState(_cardManager, clickedNode);
-
-        }
-        else if (clickedNode == rootNode)
-        {
-            _animationManager.AddAnimation(new ToCoverAnimation(_cardManager));
-            _animationManager.AddAnimation(new FromInventoryAnimation(_cardManager));
-            _animationManager.AddAnimation(new ExitInventoryPileAnimation(_cardManager));
-
-            nextState = new CoverState(_cardManager);
-        }
-        else
-        {
-            Debug.LogError("Pressed something weird");
-            return;
-        }
-
-        await _animationManager.PlayAnimations(clickedNode, previousActiveNode);
-
-        _stateManager.SetState(nextState);
-
+        ToTransition(clickedNode, animations, newState);
     }
+
+    public void FromInventoryToBackTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager), new FromInventoryAnimation(_cardManager) };
+        LayoutState newState = new MainState(_cardManager, clickedNode);
+
+        ToTransition(clickedNode, animations, newState);
+    }
+
+    public void FromInventoryToCoverTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new ToCoverAnimation(_cardManager), new FromInventoryAnimation(_cardManager), new ExitInventoryPileAnimation(_cardManager) };
+        LayoutState newState = new CoverState(_cardManager);
+
+        ToTransition(clickedNode, animations, newState);
+    }
+
 
     public override void HandleHover(CardNode hoveredNode)
     {

@@ -1,9 +1,5 @@
-/**
- * TreeNode.cs
- * Author: Luke Holland (http://lukeholland.me/)
- */
-
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static CardInfo;
 
@@ -11,41 +7,30 @@ public class CardNode
 {
 	public delegate bool TraversalNodeDelegate(CardNode node);
 
-	private readonly CardContext _context;
-	private CardBody _body;
-
-	private CardNode _parent;
-	private List<CardNode> _children;
-
-	private bool _isTopLevel;
-
-	public CardNode(CardContext context)
+    public CardNode(CardContext context)
 	{
-		_context = context;
-		_children = new List<CardNode>();
+		Context = context;
+		Children = new List<CardNode>();
 	}
 
 	public CardNode(CardContext context, CardNode parent) : this(context)
 	{
-		_parent = parent;
+		Parent = parent;
 	}
 
-	public CardContext Context { get { return _context; } }
-	public CardBody Body { set { _body = value; } get { return _body; } }
-	public CardNode Parent { set { _parent = value; } get { return _parent; } }
-	public List<CardNode> Children { get { return _children; } }
-	public bool IsTopLevel { set { _isTopLevel = value; } get { return _isTopLevel; } }
+	public CardContext Context { get; }
+    public CardBody Body { set; get; }
+    public CardNode Parent { set; get; }
+    public List<CardNode> Children { get; }
+    public bool IsTopLevel { set; get; }
 
-	public CardNode this[int key]
-	{
-		get { return _children[key]; }
-	}
+    public CardNode this[int key] => Children[key];
 
-	public void AddChild(CardNode node)
+    public void AddChild(CardNode node)
 	{
 		node.Parent = this;
 
-		_children.Add(node);
+		Children.Add(node);
 	}
 
 	public int SetPositionsRecursive(int cardsBelowCardAndParent)
@@ -59,31 +44,26 @@ public class CardNode
 
 		cardsBelowCardAndParent = 1;
 
-		for (int i = 0; i < Children.Count; i++)
+		foreach (CardNode node in Children)
         {
-			cardsBelowCardAndParent += Children[i].SetPositionsRecursive(cardsBelowCardAndParent);
+            cardsBelowCardAndParent += node.SetPositionsRecursive(cardsBelowCardAndParent);
         }
 
 		return cardsBelowCardAndParent;
 	}
 
 	public void TraverseChildren(CardTraversal traversal, TraversalNodeDelegate handler)
-	{
-		if (!handler(this))
+    {
+        if (!handler(this))
 		{
 			return;
 		}
 
-		foreach (CardNode child in _children)
-		{
-			if (traversal == CardTraversal.BODY && child.IsTopLevel)
-            {
-				continue;
-            }
-
-			child.TraverseChildren(traversal, handler);
-		}
-	}
+        foreach (CardNode child in Children.Where(child => traversal != CardTraversal.BODY || !child.IsTopLevel))
+        {
+            child.TraverseChildren(traversal, handler);
+        }
+    }
 
 	public List<CardNode> GetTopNodesBelowNodeInPile(CardNode topOfPile, CardTraversal traversal)
 	{
@@ -94,24 +74,24 @@ public class CardNode
 			return addedCards;
 		}
 
-		for (int i = _parent._children.IndexOf(this) + 1; i < _parent._children.Count; i++)
+		for (int i = Parent.Children.IndexOf(this) + 1; i < Parent.Children.Count; i++)
 		{
-			if (traversal == CardTraversal.BODY && _parent._children[i].IsTopLevel)
+			if (traversal == CardTraversal.BODY && Parent.Children[i].IsTopLevel)
             {
 				continue;
             }
 
-			addedCards.Add(_parent._children[i]);
+			addedCards.Add(Parent.Children[i]);
 		}
 
-		addedCards.AddRange(_parent.GetTopNodesBelowNodeInPile(topOfPile, traversal));
+		addedCards.AddRange(Parent.GetTopNodesBelowNodeInPile(topOfPile, traversal));
 
 		return addedCards;
 	}
 
 	public CardNode GetTopLevelNode()
     {
-		if (!_isTopLevel)
+		if (!IsTopLevel)
         {
 			return Parent.GetTopLevelNode();
         }
@@ -123,14 +103,7 @@ public class CardNode
 	{
 		List<CardNode> nodes = GetTopNodesBelowNodeInPile(topOfPile, traversal);
 
-		int nodeCount = 0;
-
-		foreach (CardNode node in nodes)
-        {
-			nodeCount += node.GetNodeCount(traversal);
-        }
-
-		return nodeCount;
+        return nodes.Sum(node => node.GetNodeCount(traversal));
 	}
 
 	public int GetNodeCountUpToNodeInPile(CardNode topOfPile, CardTraversal traversal)
@@ -139,19 +112,7 @@ public class CardNode
     }
 
 	public int GetNodeCount(CardTraversal traversal)
-	{
-		int nodeCount = 1;
-
-		foreach (CardNode child in _children)
-		{
-			if (traversal == CardTraversal.BODY && child.IsTopLevel)
-            {
-				continue;
-            } 
-
-			nodeCount += child.GetNodeCount(traversal);
-		}
-
-		return nodeCount;
-	}
+    {
+        return 1 + Children.Where(child => traversal != CardTraversal.BODY || !child.IsTopLevel).Sum(child => child.GetNodeCount(traversal));
+    }
 }

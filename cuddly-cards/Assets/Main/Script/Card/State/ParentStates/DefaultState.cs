@@ -4,11 +4,8 @@ using static CardInfo;
 
 public abstract class DefaultState : LayoutState
 {
-    readonly CardNode _newBaseNode;
-
-    protected DefaultState(CardManager cardManager, CardNode newBaseNode) : base(cardManager)
+    protected DefaultState(CardManager cardManager) : base(cardManager)
     {
-        _newBaseNode = newBaseNode;
     }
 
     public abstract void HandleIndividualTransitions(CardNode clickedNode);
@@ -31,7 +28,6 @@ public abstract class DefaultState : LayoutState
 
     public override void StartState()
     {
-        _cardManager.BaseNode = _newBaseNode;
         SetStatic();
     }
 
@@ -40,7 +36,7 @@ public abstract class DefaultState : LayoutState
         _animationManager.SetCardsStatic();
     }
 
-    public async void ToTransition(CardNode clickedNode, List<CardAnimation> animations, LayoutState stateParent)
+    public async void ToTransition(CardNode clickedNode, List<CardAnimation> animations, LayoutState state)
     {
         foreach (CardAnimation animation in animations)
         {
@@ -49,20 +45,7 @@ public abstract class DefaultState : LayoutState
 
         await _animationManager.PlayAnimations(clickedNode, _cardManager.BaseNode);
 
-        Action<LayoutState> stateFunction;
-
-        switch (clickedNode.Context.CardType)
-        {
-            case CardType.INVENTORY:
-                stateFunction = _stateManager.PushState;
-                break;
-
-            default:
-                stateFunction = _stateManager.SetState;
-                break;
-        }
-
-        stateFunction(stateParent);
+        _stateManager.SetState(state);
     }
 
     public override void HandleHover(CardNode hoveredNode)

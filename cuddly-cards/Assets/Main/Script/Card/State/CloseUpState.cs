@@ -29,7 +29,7 @@ public class CloseUpState : LayoutState
 
     public override async void HandleClick(CardNode clickedNode, CardInfo.Click click)
     {
-        // DONT USE CLICKEDNODE -> IT DOESNT WORK, WHICH IS INTENTIONAL. USE _CLOSEUPNODE
+        // DONT USE CLICKEDNODE; IT DOESNT WORK, WHICH IS INTENTIONAL. USE _CLOSEUPNODE
 
         if (_blockInputs)
         {
