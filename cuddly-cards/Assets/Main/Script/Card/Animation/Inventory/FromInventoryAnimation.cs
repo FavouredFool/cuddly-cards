@@ -8,25 +8,16 @@ using static CardInfo;
 
 public class FromInventoryAnimation : InventoryAnimation
 {
-
-    float _delay;
+    readonly float _delay;
 
     public FromInventoryAnimation(CardManager cardManager, int delay) : base(cardManager)
     {
-        
-        switch (delay)
+        _delay = delay switch
         {
-            case 1:
-                _delay = _waitTime + _horizontalTime + _verticalTime;
-                break;
-            case 2:
-                _delay = _verticalTime;
-                break;
-            default:
-                _delay = 0;
-                break;
-        }
-        
+            1 => _waitTime + _horizontalTime + _verticalTime,
+            2 => _verticalTime,
+            _ => 0
+        };
     }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
