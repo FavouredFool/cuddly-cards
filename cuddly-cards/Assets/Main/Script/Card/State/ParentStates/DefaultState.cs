@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static CardInfo;
 
 public abstract class DefaultState : LayoutState
@@ -16,6 +17,8 @@ public abstract class DefaultState : LayoutState
         {
             return;
         }
+
+        ResetHover(clickedNode, null);
 
         if (click == Click.RIGHT)
         {
@@ -48,11 +51,40 @@ public abstract class DefaultState : LayoutState
         _stateManager.SetState(state);
     }
 
+    public abstract void StartHover(CardNode hoveredNode);
+
+    public abstract void EndHover(CardNode hoveredNode);
+
     public override void HandleHover(CardNode hoveredNode)
     {
-        // outlines pls?
-        return;
+        ResetHovers(hoveredNode);
+
+        if (hoveredNode == null) return;
+
+        if (hoveredNode.Body.IsHovered) return;
+
+        hoveredNode.Body.IsHovered = true;
+
+        StartHover(hoveredNode);
     }
 
-    
+    public void ResetHovers(CardNode hoveredNode)
+    {
+        foreach (CardNode childNode in _cardManager.GetClickableNodes())
+        {
+            ResetHover(childNode, hoveredNode);
+        }
+    }
+
+    public void ResetHover(CardNode childNode, CardNode hoveredNode)
+    {
+        if (childNode == hoveredNode) return;
+
+        if (!childNode.Body.IsHovered) return;
+
+        childNode.Body.IsHovered = false;
+
+        EndHover(childNode);
+    }
+
 }

@@ -17,4 +17,14 @@ public class CoverState : SettedState
 
         ToTransition(clickedNode, animations, newState);
     }
+
+    public override void StartHover(CardNode hoveredNode)
+    {
+        hoveredNode.Body.StartOutline();
+    }
+
+    public override void EndHover(CardNode hoveredNode)
+    {
+        hoveredNode.Body.EndOutline();
+    }
 }

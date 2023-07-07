@@ -43,6 +43,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7811054855538319272}
   - component: {fileID: 4492988714175698890}
+  - component: {fileID: 5463506745700320822}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -83,6 +84,24 @@ MonoBehaviour:
   _image: {fileID: 7811054856107293988}
   _cardContents: {fileID: 7811054855460049670}
   _disintegrateTime: 1
+--- !u!114 &5463506745700320822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7811054855538319273}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  outlineWidth: 6.54
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7811054855745619492
 GameObject:
   m_ObjectHideFlags: 0

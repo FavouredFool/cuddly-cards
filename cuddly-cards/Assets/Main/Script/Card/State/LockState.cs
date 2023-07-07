@@ -107,6 +107,9 @@ public class LockState : SettedState
         RemoveKeyFromTree(keyNode);
         RemoveLockFromTree(lockNode);
 
+        EndHover(lockNode);
+        EndHover(keyNode);
+
         _ = DisintegrateCard(lockNode);
         await DisintegrateCard(keyNode);
         
@@ -133,27 +136,18 @@ public class LockState : SettedState
         await node.Body.DisintegrateCard();
     }
 
-    public override void HandleHover(CardNode hoveredNode)
+    public override void StartHover(CardNode hoveredNode)
     {
-        ResetHovers(hoveredNode);
-
-        if (hoveredNode == null)
-        {
-            return;
-        }
+        hoveredNode.Body.StartOutline();
 
         if (hoveredNode.Context.CardType is not (CardType.KEY or CardType.DIALOGUE)) return;
-
-        if (hoveredNode.Body.IsHovered) return;
 
         hoveredNode.Body.StartHoverTween();
     }
 
-    public void ResetHovers(CardNode hoveredNode)
+    public override void EndHover(CardNode hoveredNode)
     {
-        foreach (CardNode childNode in _cardInventory.InventoryNode.Children.SelectMany(partNode => partNode.Children))
-        {
-            childNode.Body.ResetHover(hoveredNode);
-        }
+        hoveredNode.Body.EndHoverTween();
+        hoveredNode.Body.EndOutline();
     }
 }
