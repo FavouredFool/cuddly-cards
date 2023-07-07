@@ -43,7 +43,7 @@ public class InventoryState : DefaultState
 
     public void FromInventoryToBaseTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new OpenAnimation(_cardManager), new FromInventoryAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new OpenAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 0) };
         LayoutState newState = new MainState(_cardManager, _cardManager.BaseNode);
 
         ToTransition(clickedNode, animations, newState);
@@ -51,7 +51,7 @@ public class InventoryState : DefaultState
 
     public void FromInventoryToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager), new FromInventoryAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 1) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
@@ -59,7 +59,7 @@ public class InventoryState : DefaultState
 
     public void FromInventoryToCoverTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new ToCoverAnimation(_cardManager), new FromInventoryAnimation(_cardManager), new ExitInventoryPileAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new ToCoverAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 2), new ExitInventoryPileAnimation(_cardManager) };
         LayoutState newState = new CoverState(_cardManager);
 
         ToTransition(clickedNode, animations, newState);
