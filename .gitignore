@@ -75,6 +75,8 @@ crashlytics-build.properties
 [Aa]ssets/[Ss]treamingAssets/aa/*
 
 
+# Ignore the entire FMOD folder
+FMOD/*
 
 # Never ignore DLLs in the FMOD subfolder.
 ![Aa]ssets/Plugins/FMOD/**/lib/*
