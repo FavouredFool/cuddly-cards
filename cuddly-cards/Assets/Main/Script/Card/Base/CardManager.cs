@@ -29,6 +29,7 @@ public class CardManager : MonoBehaviour
     public CardInventory CardInventory { get; private set; }
     public StateManager StateManager { get; private set; }
     public AnimationManager AnimationManager { get; private set; }
+    public SoundManager SoundManager { get; private set; }
     public CardNode RootNode { get; private set; }
     public CardNode BaseNode { get; set; }
 
@@ -41,6 +42,8 @@ public class CardManager : MonoBehaviour
 
         CardBuilder = GetComponent<CardBuilder>();
         CardMover = GetComponent<CardMover>();
+        SoundManager = GetComponent<SoundManager>();
+
         CardMover.CardManager = this;
         _cardInputManager.CardManager = this;
 

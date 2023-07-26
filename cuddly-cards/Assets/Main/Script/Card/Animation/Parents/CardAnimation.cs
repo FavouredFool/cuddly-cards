@@ -9,6 +9,7 @@ public abstract class CardAnimation
     protected CardManager _cardManager;
     protected CardMover _cardMover;
     protected SubAnimations _subAnimations;
+    protected SoundManager _soundManager;
 
     protected float _waitTime;
     protected float _horizontalTime;
@@ -19,6 +20,7 @@ public abstract class CardAnimation
         _cardManager = cardManager;
         _cardMover = cardManager.CardMover;
         _subAnimations = _cardMover.SubAnimations;
+        _soundManager = cardManager.SoundManager;
 
         _waitTime = _cardMover.WaitTime;
         _horizontalTime = _cardMover.HorizontalTime;

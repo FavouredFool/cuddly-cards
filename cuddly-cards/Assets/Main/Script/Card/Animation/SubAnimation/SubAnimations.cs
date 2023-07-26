@@ -11,6 +11,7 @@ public class SubAnimations
     readonly CardMover _cardMover;
     readonly CardManager _cardManager;
     readonly CardInventory _cardInventory;
+    readonly SoundManager _soundManager;
 
     readonly float _waitTime;
     readonly float _horizontalTime;
@@ -28,6 +29,7 @@ public class SubAnimations
         _cardManager = cardManager;
         _cardMover = _cardManager.CardMover;
         _cardInventory = _cardManager.CardInventory;
+        _soundManager = cardManager.SoundManager;
         _waitTime = _cardMover.WaitTime;
         _horizontalTime = _cardMover.HorizontalTime;
         _verticalTime = _cardMover.VerticalTime;
@@ -158,7 +160,9 @@ public class SubAnimations
 
     public Tween MoveNodeToLeft(CardNode node)
     {
-        return _tweenXFunc(node, _playSpaceBottomLeft.x);
+        Tween tween = _tweenXFunc(node, _playSpaceBottomLeft.x).OnComplete(()=> { _soundManager.PlayCardSound(SoundManager.CardSound.PULL); });
+
+        return tween;
     }
 
     public Tween MoveNodeToRight(CardNode node)
@@ -188,7 +192,12 @@ public class SubAnimations
 
     public Tween LowerNodePile(CardNode node)
     {
-        return RaiseNodeToHeight(node, node.GetNodeCount(CardTraversal.BODY));
+        Tween tween;
+
+        tween = RaiseNodeToHeight(node, node.GetNodeCount(CardTraversal.BODY)).OnComplete(()=> { _soundManager.PlayCardSound(SoundManager.CardSound.PLACE); });
+
+        
+        return tween;
     }
 
     public Tween LiftNodePile(CardNode node)

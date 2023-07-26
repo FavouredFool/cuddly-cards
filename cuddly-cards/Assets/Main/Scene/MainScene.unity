@@ -1267,6 +1267,7 @@ GameObject:
   - component: {fileID: 1221586264}
   - component: {fileID: 1221586267}
   - component: {fileID: 1221586266}
+  - component: {fileID: 1221586268}
   m_Layer: 0
   m_Name: CardManager
   m_TagString: Untagged
@@ -1352,6 +1353,32 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 088c0514043b9504ba3e1fbc28670316, type: 2}
   - {fileID: 11400000, guid: 35de73f05cd0a0e459f3e2cf9d3c8f64, type: 2}
   - {fileID: 11400000, guid: 1a67d8efb6bd3014db4eda07f75bac2b, type: 2}
+--- !u!114 &1221586268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221586262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94993bf331c022d43aa5f7f9417151ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pullCardEvent:
+    Guid:
+      Data1: 804643043
+      Data2: 1313680882
+      Data3: -967761246
+      Data4: 706494607
+    Path: event:/PullEvent
+  _placeCardEvent:
+    Guid:
+      Data1: 651706325
+      Data2: 1243997260
+      Data3: 470464412
+      Data4: -1101738297
+    Path: event:/LightPlaceEvent
 --- !u!1 &1640303845
 GameObject:
   m_ObjectHideFlags: 0

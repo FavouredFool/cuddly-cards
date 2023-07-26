@@ -15,63 +15,11 @@ MonoBehaviour:
   Path: ../FMOD/cuddly-cards project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638246917873106062
+  lastModified: 638259734104945150
   FileSizes:
   - Name: Desktop
-    Value: 12288
+    Value: 20640
   Exists: 1
---- !u!114 &-3845861642701077476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/CrazyCoolEvent/CrazyCoolParameter
-  m_EditorClassIdentifier: 
-  Name: CrazyCoolParameter
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 3242025917
-    data2: 271307254
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-1048939516918124573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/CrazyCoolEvent
-  m_EditorClassIdentifier: 
-  Path: event:/CrazyCoolEvent
-  Guid:
-    Data1: 540920320
-    Data2: 1219300875
-    Data3: 2007777712
-    Data4: 1052800150
-  Banks:
-  - {fileID: -9193015899751644631}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters:
-  - {fileID: -3845861642701077476}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 4400
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,13 +36,14 @@ MonoBehaviour:
   - {fileID: 581936436016004369}
   - {fileID: -9193015899751644631}
   EditorEvents:
-  - {fileID: -1048939516918124573}
+  - {fileID: 8688760960387436024}
+  - {fileID: 6798647535673620640}
   EditorParameters: []
   MasterBanks:
   - {fileID: -9193015899751644631}
   StringsBanks:
   - {fileID: 581936436016004369}
-  cacheTime: 638246917873116063
+  cacheTime: 638259734104955160
   cacheVersion: 131605
 --- !u!114 &581936436016004369
 MonoBehaviour:
@@ -111,8 +60,62 @@ MonoBehaviour:
   Path: ../FMOD/cuddly-cards project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638246917873116063
+  lastModified: 638259734104955160
   FileSizes:
   - Name: Desktop
-    Value: 824
+    Value: 876
   Exists: 1
+--- !u!114 &6798647535673620640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/PullEvent
+  m_EditorClassIdentifier: 
+  Path: event:/PullEvent
+  Guid:
+    Data1: 804643043
+    Data2: 1313680882
+    Data3: -967761246
+    Data4: 706494607
+  Banks:
+  - {fileID: -9193015899751644631}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8688760960387436024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/LightPlaceEvent
+  m_EditorClassIdentifier: 
+  Path: event:/LightPlaceEvent
+  Guid:
+    Data1: 651706325
+    Data2: 1243997260
+    Data3: 470464412
+    Data4: -1101738297
+  Banks:
+  - {fileID: -9193015899751644631}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
