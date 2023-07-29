@@ -55,7 +55,7 @@ public class LockState : SettedState
 
     void ToRootTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new ToCoverAnimation(_cardManager), new RetractKeysAnimation(_cardManager, true), new ExitInventoryPileAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new ToCoverAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 2), new ExitInventoryPileAnimation(_cardManager) };
         LayoutState newState = new CoverState(_cardManager);
 
         ToTransition(clickedNode, animations, newState);
@@ -63,7 +63,7 @@ public class LockState : SettedState
 
     void ToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager), new RetractKeysAnimation(_cardManager, true) };
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 1) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
@@ -96,7 +96,7 @@ public class LockState : SettedState
         // Für die Animation muss ich das im Voraus machen, bevor es erneut von dem MainState gesetzt wird
         _cardManager.BaseNode = childNode;
 
-        List<CardAnimation> animations = new() { new RetractKeysAnimation(_cardManager, false), new OpenAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new FromInventoryAnimation(_cardManager, 0), new OpenAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, childNode);
 
         ToTransition(childNode, animations, newState);

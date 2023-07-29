@@ -81,7 +81,7 @@ public class MainState : SettedState
 
     public void ToLockTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new DisplayKeysAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new ToInventoryAnimation(_cardManager) };
         LayoutState newState = new LockState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
