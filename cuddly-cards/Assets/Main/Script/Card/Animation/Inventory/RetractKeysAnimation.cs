@@ -20,6 +20,7 @@ public class RetractKeysAnimation : InventoryAnimation
         Sequence entireSequence = DOTween.Sequence();
 
         CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
+        CardNode keyParentNode = _cardManager.CardInventory.KeyParentNode;
 
         entireSequence.Join(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT)));
 
@@ -27,7 +28,7 @@ public class RetractKeysAnimation : InventoryAnimation
 
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(delayTime)
-            .Append(_subAnimations.FanInCardsToRight(inventoryNode[1])));
+            .Append(_subAnimations.FanInCardsToRight(keyParentNode)));
 
         return entireSequence;
     }

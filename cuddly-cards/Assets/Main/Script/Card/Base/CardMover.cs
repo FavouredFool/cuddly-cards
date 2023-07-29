@@ -109,18 +109,16 @@ public class CardMover : MonoBehaviour
     public void SetHeightAndRotationOfInventory()
     {
         CardNode inventoryNode = CardManager.CardInventory.InventoryNode;
+        CardNode keyParentNode = CardManager.CardInventory.KeyParentNode;
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
 
-        for (int i = 0; i < inventoryNode.Children.Count; i++)
+        if (keyParentNode.IsTopLevel)
         {
-            if (inventoryNode[i].IsTopLevel)
-            {
-                SetFannedHeightAndRotationOfInventoryPart(inventoryNode[i]);
-            }
-            else
-            {
-                SetStackedHeightAndRotationOfInventoryPart(inventoryNode[i]);
-            }
+            SetFannedHeightAndRotationOfInventoryPart(keyParentNode);
+        }
+        else
+        {
+            SetStackedHeightAndRotationOfInventoryPart(keyParentNode);
         }
     }
 

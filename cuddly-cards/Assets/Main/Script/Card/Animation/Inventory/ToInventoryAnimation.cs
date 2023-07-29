@@ -12,21 +12,20 @@ public class ToInventoryAnimation : InventoryAnimation
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
+        // TODO Combine this with DisplayKeys because there are only keys left.
+
         Sequence entireSequence = DOTween.Sequence();
 
-        CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
+        CardNode keyParentNode = _cardManager.CardInventory.KeyParentNode;
 
         float totalSpace = _cardMover.PlaySpaceTopRight.x - _cardMover.PlaySpaceBottomLeft.x;
-        float fannedCardSpace = (totalSpace - 3 * _cardMover.Border) * 0.5f;
+        float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
 
         entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(1, true));
 
-        for (int i = 0; i < inventoryNode.Children.Count; i++)
-        {
-            float generalStartOffset = _cardMover.PlaySpaceBottomLeft.x + (1 + (1 - i)) * _cardMover.Border + (1 - i) * fannedCardSpace;
+        float generalStartOffset = _cardMover.PlaySpaceBottomLeft.x + _cardMover.Border;
 
-            entireSequence.Join(_subAnimations.FanOutCardsFromRight(inventoryNode[i], generalStartOffset, fannedCardSpace));
-        }
+        entireSequence.Join(_subAnimations.FanOutCardsFromRight(keyParentNode, generalStartOffset, fannedCardSpace));
 
         return entireSequence;
     }

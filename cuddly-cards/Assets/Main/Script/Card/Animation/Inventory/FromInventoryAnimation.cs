@@ -26,16 +26,11 @@ public class FromInventoryAnimation : InventoryAnimation
         entireSequence.AppendInterval(_delay);
 
         CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
-
+        CardNode keyParentNode = _cardManager.CardInventory.KeyParentNode;
 
         entireSequence.Append(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT)));
 
-        for (int i = 0; i < inventoryNode.Children.Count; i++)
-        {
-            entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.FanInCardsToRight(inventoryNode[i]))
-                );
-        }
+        entireSequence.Join(_subAnimations.FanInCardsToRight(keyParentNode));
 
         return entireSequence;
     }

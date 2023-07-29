@@ -21,10 +21,10 @@ public class LockState : SettedState
                 return;
 
             case CardType.KEY:
-            case CardType.DIALOGUE:
                 PlayNode(clickedNode);
                 return;
 
+            case CardType.DIALOGUE:
             case CardType.COVER:
             case CardType.PLACE:
             case CardType.THING:

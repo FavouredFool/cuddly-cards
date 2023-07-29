@@ -17,7 +17,7 @@ public class InventoryState : DefaultState
 
     public override void HandleIndividualTransitions(CardNode clickedNode)
     {
-        if (clickedNode.Context.CardType is CardType.KEY or CardType.DIALOGUE)
+        if (clickedNode.Context.CardType is CardType.KEY)
         {
             return;
         }
@@ -69,7 +69,7 @@ public class InventoryState : DefaultState
     {
         hoveredNode.Body.StartOutline();
 
-        if (hoveredNode.Context.CardType is not (CardType.KEY or CardType.DIALOGUE)) return;
+        if (hoveredNode.Context.CardType is not CardType.KEY) return;
 
         hoveredNode.Body.StartHoverTween();
     }

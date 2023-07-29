@@ -73,13 +73,6 @@ public class CardManager : MonoBehaviour
             tests.Add(new CardNode(new CardContext("A revelation", "you just had a dangerous thought", CardInfo.CardType.KEY)));
         }
 
-        for (int i = 0; i < 5; i++)
-        {
-            tests.Add(new CardNode(new CardContext("The affair", "Not a nice topic to talk about. Don't expect a happy welcome.", CardInfo.CardType.DIALOGUE)));
-            tests.Add(new CardNode(new CardContext("Bad friends", "The worst.", CardInfo.CardType.DIALOGUE)));
-        }
-
-
         foreach (CardNode node in tests)
         {
             node.Body = CardBuilder.BuildCardBody(node.Context, node, _cardFolder);
@@ -87,7 +80,7 @@ public class CardManager : MonoBehaviour
 
         foreach (CardNode cardNode in tests)
         {
-            CardInventory.AddNodeToInventory(cardNode);
+            CardInventory.AddKeyToInventory(cardNode);
         }
     }
 

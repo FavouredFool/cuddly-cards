@@ -17,7 +17,6 @@ public class CollectCardAnimation : InventoryAnimation
         Sequence entireSequence = DOTween.Sequence();
 
         CardNode parentNode = activeNode.Parent;
-        CardType cardType = activeNode.Context.CardType;
 
         CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
 
@@ -38,47 +37,17 @@ public class CollectCardAnimation : InventoryAnimation
         maxNeightbourHeight += 1;
         maxNeightbourHeight = Math.Max(maxNeightbourHeight, _minRaiseHeight);
 
-
-        int finalHeight = 1;
-
-        switch (cardType)
-        {
-            case CardType.DIALOGUE:
-                finalHeight = _cardManager.CardInventory.InventoryNode[1].GetNodeCount(CardTraversal.CONTEXT) + 1;
-                break;
-            case CardType.KEY:
-                finalHeight = 1;
-                break;
-        }
-
         entireSequence.Join(
             DOTween.Sequence()
                 .Append(_subAnimations.RaiseNodeToHeight(activeNode, maxNeightbourHeight))
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.MoveNodeToRight(activeNode))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.RaiseNodeToHeight(activeNode, finalHeight))
+                .Append(_subAnimations.RaiseNodeToHeight(activeNode, 1))
             );
 
 
-        switch (cardType)
-        {
-            case CardType.DIALOGUE:
-                inventoryNode[1].IsTopLevel = true;
-                break;
-        }
-
-        int inventoryHeight = maxNeightbourHeight;
-
-        switch (cardType)
-        {
-            case CardType.DIALOGUE:
-                inventoryHeight += inventoryNode[0].GetNodeCount(CardTraversal.CONTEXT) + 1;
-                break;
-            case CardType.KEY:
-                inventoryHeight += inventoryNode.GetNodeCount(CardTraversal.CONTEXT);
-                break;
-        }
+        int inventoryHeight = maxNeightbourHeight + inventoryNode.GetNodeCount(CardTraversal.CONTEXT);
 
         entireSequence.Join(
             DOTween.Sequence()
