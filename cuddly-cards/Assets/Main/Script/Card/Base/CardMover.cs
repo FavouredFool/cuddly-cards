@@ -109,42 +109,41 @@ public class CardMover : MonoBehaviour
     public void SetHeightAndRotationOfInventory()
     {
         CardNode inventoryNode = CardManager.CardInventory.InventoryNode;
-        CardNode keyParentNode = CardManager.CardInventory.KeyParentNode;
+
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
 
-        if (keyParentNode.IsTopLevel)
+        if (CardManager.StateManager.States.Peek() is InventoryState or LockState)
         {
-            SetFannedHeightAndRotationOfInventoryPart(keyParentNode);
+            SetFannedHeightAndRotationOfInventoryPart();
         }
         else
         {
-            SetStackedHeightAndRotationOfInventoryPart(keyParentNode);
+            SetStackedHeightAndRotationOfInventoryPart();
         }
     }
 
-    public void SetStackedHeightAndRotationOfInventoryPart(CardNode inventoryPart)
+    public void SetStackedHeightAndRotationOfInventoryPart()
     {
-        int cardNr = inventoryPart.Children.Count + 1;
-        inventoryPart.Body.SetHeight(cardNr);
-        inventoryPart.Body.transform.localRotation = Quaternion.identity;
+        CardNode inventoryNode = CardManager.CardInventory.InventoryNode;
 
-        for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
+        int cardNr = inventoryNode.Children.Count;
+
+        for (int i = inventoryNode.Children.Count - 1; i >= 0; i--)
         {
             cardNr -= 1;
-            inventoryPart[i].Body.SetHeight(cardNr);
-            inventoryPart[i].Body.transform.localRotation = Quaternion.identity;
+            inventoryNode[i].Body.SetHeight(cardNr);
+            inventoryNode[i].Body.transform.localRotation = Quaternion.identity;
         }
     }
 
-    public void SetFannedHeightAndRotationOfInventoryPart(CardNode inventoryPart)
+    public void SetFannedHeightAndRotationOfInventoryPart()
     {
-        inventoryPart.Body.SetHeight(2);
-        inventoryPart.Body.transform.localRotation = Quaternion.Euler(0, 0, -InventoryCardRotationAmount);
+        CardNode inventoryNode = CardManager.CardInventory.InventoryNode;
 
-        for (int i = inventoryPart.Children.Count - 1; i >= 0; i--)
+        for (int i = inventoryNode.Children.Count - 1; i >= 0; i--)
         {
-            inventoryPart[i].Body.SetHeightFloat(2 + (i + 1) * -0.01f);
-            inventoryPart[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -InventoryCardRotationAmount);
+            inventoryNode[i].Body.SetHeightFloat(2 + (i * -0.01f));
+            inventoryNode[i].Body.transform.localRotation = Quaternion.Euler(0, 0, -InventoryCardRotationAmount);
         }
     }
 

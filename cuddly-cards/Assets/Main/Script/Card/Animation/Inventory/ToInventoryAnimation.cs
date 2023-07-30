@@ -8,7 +8,12 @@ using static CardInfo;
 
 public class ToInventoryAnimation : InventoryAnimation
 {
-    public ToInventoryAnimation(CardManager cardManager) : base(cardManager) { }
+    bool _synchronizeLoweringWithFanning;
+    
+    public ToInventoryAnimation(CardManager cardManager, bool synchronizeLoweringWithFanning) : base(cardManager)
+    {
+        _synchronizeLoweringWithFanning = synchronizeLoweringWithFanning;
+    }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
@@ -16,16 +21,14 @@ public class ToInventoryAnimation : InventoryAnimation
 
         Sequence entireSequence = DOTween.Sequence();
 
-        CardNode keyParentNode = _cardManager.CardInventory.KeyParentNode;
-
         float totalSpace = _cardMover.PlaySpaceTopRight.x - _cardMover.PlaySpaceBottomLeft.x;
         float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
 
-        entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(1, true));
+        entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(1, _synchronizeLoweringWithFanning));
 
         float generalStartOffset = _cardMover.PlaySpaceBottomLeft.x + _cardMover.Border;
 
-        entireSequence.Join(_subAnimations.FanOutCardsFromRight(keyParentNode, generalStartOffset, fannedCardSpace));
+        entireSequence.Join(_subAnimations.FanOutCardsFromRight(generalStartOffset, fannedCardSpace));
 
         return entireSequence;
     }

@@ -108,9 +108,14 @@ public class CardManager : MonoBehaviour
         RootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT,
             delegate (CardNode node)
         {
-            node.IsTopLevel = _topLevelNodesMainPile.Contains(node);
+            node.IsTopLevel = false;
             return true;
         });
+
+        foreach (CardNode node in CardInventory.InventoryNode.Children)
+        {
+            node.IsTopLevel = false;
+        }
     }
 
     public void AddToTopLevelMainPile(CardNode cardNode)

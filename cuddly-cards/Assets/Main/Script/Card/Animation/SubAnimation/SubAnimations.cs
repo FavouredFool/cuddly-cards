@@ -72,65 +72,50 @@ public class SubAnimations
             .Append(_cardInventory.InventoryNode.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, time).SetEase(ease));
     }
 
-    public Tween FanOutCardsFromRight(CardNode subNode, float startOffset, float fannedCardSpace)
+    public Tween FanOutCardsFromRight(float startOffset, float fannedCardSpace)
     {
         Sequence entireSequence = DOTween.Sequence();
+        CardNode inventoryNode = _cardInventory.InventoryNode;
 
-        subNode.IsTopLevel = true;
-
-        entireSequence.Join(DOTween.Sequence()
-            .AppendInterval(_verticalTime)
-            .Append(_tweenXFunc(subNode, startOffset))
-            .Append(RotateOffset(subNode))
-            .Append(_tweenXFunc(subNode, startOffset + fannedCardSpace))
-            .Join(_tweenYFunc(subNode, 2)));
-
-
-        int totalChildren = subNode.Children.Count;
+        int totalChildren = inventoryNode.Children.Count;
 
         for (int i = 0; i < totalChildren; i++)
         {
-            CardNode childNode = subNode[i];
+            CardNode childNode = inventoryNode[i];
 
-            float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren);
+            _cardManager.AddToTopLevelMainPile(childNode);
+
+            float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren - 1);
 
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(_tweenXFunc(childNode, startOffset))
                 .Append(RotateOffset(childNode))
-                .Append(_tweenXFunc(childNode, startOffset + (totalChildren - 1 - i) * CardInfo.CARDWIDTH * cardPercentage))
+                .Append(_tweenXFunc(childNode, startOffset + (totalChildren - i - 1) * CardInfo.CARDWIDTH * cardPercentage))
                 .Join(_tweenYFunc(childNode, 2)));
         }
 
         return entireSequence;
     }
 
-    public Tween FanInCardsToRight(CardNode subNode)
+    public Tween FanInCardsToRight()
     {
         Sequence entireSequence = DOTween.Sequence();
         CardNode inventoryNode = _cardInventory.InventoryNode;
 
-        subNode.IsTopLevel = true;
-
-        entireSequence.Join(DOTween.Sequence()
-            .Append(MoveNodeToRight(subNode))
-            .Join(RaiseNodePileRelative(subNode, inventoryNode))
-            .Join(RotateToIdentity(subNode)));
-
-        int totalChildren = subNode.Children.Count;
+        int totalChildren = inventoryNode.Children.Count;
 
         for (int i = 0; i < totalChildren; i++)
         {
-            CardNode childNode = subNode[i];
+            CardNode childNode = inventoryNode[i];
 
-            childNode.IsTopLevel = true;
+            _cardManager.AddToTopLevelMainPile(childNode);
 
             entireSequence.Join(DOTween.Sequence()
             .Append(MoveNodeToRight(childNode))
             .Join(RaiseNodePileRelative(childNode, inventoryNode))
             .Join(RotateToIdentity(childNode)));
         }
-
 
         return entireSequence;
     }

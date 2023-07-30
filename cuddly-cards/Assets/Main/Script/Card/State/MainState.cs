@@ -73,7 +73,7 @@ public class MainState : SettedState
 
     public void ToInventoryTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new CloseAnimation(_cardManager), new ToInventoryAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new CloseAnimation(_cardManager), new ToInventoryAnimation(_cardManager, true) };
         LayoutState newState = new InventoryState(_cardManager);
 
         ToTransition(clickedNode, animations, newState);
@@ -81,7 +81,7 @@ public class MainState : SettedState
 
     public void ToLockTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new ToInventoryAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new ToInventoryAnimation(_cardManager, false) };
         LayoutState newState = new LockState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
