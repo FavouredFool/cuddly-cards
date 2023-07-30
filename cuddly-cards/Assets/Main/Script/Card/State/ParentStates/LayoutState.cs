@@ -9,6 +9,7 @@ public abstract class LayoutState
     protected CardMover _cardMover;
     protected AnimationManager _animationManager;
     protected CardInventory _cardInventory;
+    protected CardDialogue _cardDialogue;
 
     protected LayoutState(CardManager cardManager)
     {
@@ -18,6 +19,7 @@ public abstract class LayoutState
         _cardMover = cardManager.CardMover;
         _animationManager = cardManager.AnimationManager;
         _cardInventory = cardManager.CardInventory;
+        _cardDialogue = cardManager.CardDialogue;
     }
 
     public abstract void StartState();

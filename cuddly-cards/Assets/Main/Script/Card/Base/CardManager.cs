@@ -27,6 +27,7 @@ public class CardManager : MonoBehaviour
     public CardMover CardMover { get; private set; }
     public CardReader CardReader { get; private set; }
     public CardInventory CardInventory { get; private set; }
+    public CardDialogue CardDialogue { get; private set; }
     public StateManager StateManager { get; private set; }
     public AnimationManager AnimationManager { get; private set; }
     public CardNode RootNode { get; private set; }
@@ -47,6 +48,7 @@ public class CardManager : MonoBehaviour
         CardReader = new CardReader(_textBlueprint);
         StateManager = new StateManager(this);
         CardInventory = new CardInventory(this);
+        CardDialogue = new CardDialogue(this);
         AnimationManager = new AnimationManager(this);
     }
 
@@ -127,11 +129,5 @@ public class CardManager : MonoBehaviour
     public List<CardNode> GetTopLevelNodesMainPile()
     {
         return _topLevelNodesMainPile;
-    }
-
-    public void RemoveNodeFromMainNodes(CardNode nodeToRemove)
-    {
-        nodeToRemove.Parent.Children.Remove(nodeToRemove);
-        nodeToRemove.Parent = null;
     }
 }

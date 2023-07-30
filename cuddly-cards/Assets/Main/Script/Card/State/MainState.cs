@@ -17,13 +17,13 @@ public class MainState : SettedState
 
         switch (cardType)
         {
-            case CardType.DIALOGUE:
-                Debug.LogWarning("not implemented");
-                break;
-
             case CardType.INVENTORY:
                 ToInventoryTransition(clickedNode);
                 return;
+
+            case CardType.DIALOGUE:
+                CollectDialogue(clickedNode);
+                break;
 
             case CardType.KEY:
                 CollectKey(clickedNode);
@@ -69,6 +69,11 @@ public class MainState : SettedState
     public void CollectKey(CardNode clickedNode)
     {
         _cardInventory.MoveKeyFromMainToInventory(clickedNode);
+    }
+
+    public void CollectDialogue(CardNode clickedNode)
+    {
+        _cardDialogue.SpreadDialogues(clickedNode);
     }
 
     public void ToInventoryTransition(CardNode clickedNode)

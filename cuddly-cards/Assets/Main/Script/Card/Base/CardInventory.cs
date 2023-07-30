@@ -26,7 +26,8 @@ public class CardInventory
         animationManager.AddAnimation(new CollectCardAnimation(_cardManager));
         await animationManager.PlayAnimations(node);
 
-        _cardManager.RemoveNodeFromMainNodes(node);
+        node.UnlinkFromParent();
+
         AddKeyToInventory(node);
 
         animationManager.SetCardsStatic();

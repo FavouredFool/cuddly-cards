@@ -33,6 +33,12 @@ public class CardNode
 		Children.Add(node);
 	}
 
+	public void UnlinkFromParent()
+    {
+		Parent.Children.Remove(this);
+		Parent = null;
+	}
+
 	public int SetPositionsRecursive(int cardsBelowCardAndParent)
     {
 		if (IsTopLevel)
