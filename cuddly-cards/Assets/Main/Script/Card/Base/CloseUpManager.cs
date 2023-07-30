@@ -19,7 +19,7 @@ public class CloseUpManager : MonoBehaviour
     TMP_Text _descriptionText;
 
     [Header("Animation")]
-    [SerializeField, Range(-45, 45)]
+    [SerializeField]
     float _closeUpRotation = -25;
 
     [SerializeField, Range(0.1f, 5)]

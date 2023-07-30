@@ -4,7 +4,7 @@ using DG.Tweening;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField, Range(-45, 45)]
+    [SerializeField]
     float _cardTableRotation = 0;
 
     [SerializeField]
