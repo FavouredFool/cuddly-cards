@@ -17,13 +17,17 @@ public class MainState : SettedState
 
         switch (cardType)
         {
+            case CardType.DIALOGUE:
+                Debug.LogWarning("Shouldn't be able to click on dialogues");
+                return;
+
             case CardType.INVENTORY:
                 ToInventoryTransition(clickedNode);
                 return;
 
-            case CardType.DIALOGUE:
+            case CardType.DWRAPPER:
                 CollectDialogue(clickedNode);
-                break;
+                return;
 
             case CardType.KEY:
                 CollectKey(clickedNode);

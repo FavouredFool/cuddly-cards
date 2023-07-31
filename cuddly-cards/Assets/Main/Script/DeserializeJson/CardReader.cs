@@ -17,7 +17,7 @@ public class CardReader
         DeserializedObject serializedObject = JsonConvert.DeserializeObject<DeserializedObject>(_textBlueprint.text);
         DeserializedObjectElement activeElement = serializedObject.elements[0];
 
-        CardNode rootNode = new(new(activeElement.Label, activeElement.Description, activeElement.Type));
+        CardNode rootNode = new(new(0, activeElement.Label, activeElement.Description, activeElement.Type));
         rootNode.Parent = null;
 
         _count = 1;
@@ -36,7 +36,7 @@ public class CardReader
     {
         DeserializedObjectElement activeElement = elementList[_count];
 
-        CardContext context = new(activeElement.Label, activeElement.Description, activeElement.Type);
+        CardContext context = new(_count, activeElement.Label, activeElement.Description, activeElement.Type);
 
         if (activeElement.DesiredKey != null) context.DesiredKey = activeElement.DesiredKey;
 

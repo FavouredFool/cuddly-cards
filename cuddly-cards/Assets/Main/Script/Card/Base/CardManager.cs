@@ -60,7 +60,7 @@ public class CardManager : MonoBehaviour
 
         CardInventory.InitializeInventory(CardBuilder);
 
-        CreateLocksAndDialogueOnStartUp();
+        //CreateLocksAndDialogueOnStartUp();
 
         StateManager.StartStates();
     }

@@ -5,6 +5,7 @@ using static CardInfo;
 
 public class CardContext
 {
+
     public CardContext(string label, string description, CardType cardType)
     {
         Label = label;
@@ -12,6 +13,12 @@ public class CardContext
         CardType = cardType;
     }
 
+    public CardContext(int id, string label, string description, CardType cardType) : this(label, description, cardType)
+    {
+        ID = id;
+    }
+
+    public int ID { get; private set; } = -1;
     public string Label { get; private set; }
     public string Description { get; private set; }
     public CardType CardType { get; private set; }
