@@ -23,4 +23,5 @@ public class CardContext
     public string Description { get; private set; }
     public CardType CardType { get; private set; }
     public string DesiredKey { get; set; }
+    public int TalkID { get; set; } = -1;
 }

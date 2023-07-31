@@ -12,4 +12,5 @@ public class DeserializedObjectElement
     public int Depth { get; set; }
 
     public string DesiredKey { get; set; }
+    public int TalkID { get; set; }
 }

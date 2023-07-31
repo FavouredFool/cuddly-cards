@@ -17,10 +17,6 @@ public class MainState : SettedState
 
         switch (cardType)
         {
-            case CardType.DIALOGUE:
-                Debug.LogWarning("Shouldn't be able to click on dialogues");
-                return;
-
             case CardType.INVENTORY:
                 ToInventoryTransition(clickedNode);
                 return;
@@ -37,6 +33,7 @@ public class MainState : SettedState
                 ToLockTransition(clickedNode);
                 return;
 
+            case CardType.DIALOGUE:
             case CardType.COVER:
             case CardType.PLACE:
             case CardType.THING:

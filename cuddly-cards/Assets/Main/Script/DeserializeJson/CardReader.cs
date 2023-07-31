@@ -39,6 +39,7 @@ public class CardReader
         CardContext context = new(_count, activeElement.Label, activeElement.Description, activeElement.Type);
 
         if (activeElement.DesiredKey != null) context.DesiredKey = activeElement.DesiredKey;
+        if (activeElement.TalkID != 0) context.TalkID = activeElement.TalkID;
 
         CardNode node = new(context);
 

@@ -1,0 +1,91 @@
+{
+    "elements" : [
+        {
+            "label": "TalkTestCover",
+            "description": "",
+            "type": "COVER",
+            "depth": "0"
+        },
+        {
+            "label": "Place for people",
+            "description": "",
+            "type": "PLACE",
+            "depth": "1"
+        },
+        {
+            "label": "Person1",
+            "description": "",
+            "type": "PERSON",
+            "depth": "2"
+        },
+        {
+            "label": "TalkTo",
+            "description": "",
+            "type": "TALK",
+            "depth": "3"
+        },
+        {
+            "label": "Some dialogue",
+            "description": "",
+            "type": "DIALOGUE",
+            "depth": "4"
+        },
+        {
+            "label": "Some Key",
+            "description": "",
+            "type": "KEY",
+            "depth": "5"
+        },
+        {
+            "label": "Person2",
+            "description": "",
+            "type": "PERSON",
+            "depth": "2"
+        },
+        {
+            "label": "TalkTo",
+            "description": "",
+            "type": "TALK",
+            "depth": "3"
+        },
+        {
+            "label": "Person3",
+            "description": "",
+            "type": "PERSON",
+            "depth": "2"
+        },
+        {
+            "label": "TalkTo",
+            "description": "",
+            "type": "TALK",
+            "depth": "3"
+        },
+        {
+            "label": "Dialogue(Wrapper) To Be Passed Around",
+            "description": "",
+            "type": "DWRAPPER",
+            "depth": "2"
+        },
+        {
+            "label": "Dialogue To Be Passed To Person 1",
+            "description": "",
+            "type": "DIALOGUE",
+            "depth": "3",
+            "talkid": "3"
+        },
+        {
+            "label": "Dialogue To Be Passed To Person 2",
+            "description": "",
+            "type": "DIALOGUE",
+            "depth": "3",
+            "talkid": "7"
+        },
+        {
+            "label": "Dialogue To Be Passed To Person 3",
+            "description": "",
+            "type": "DIALOGUE",
+            "depth": "3",
+            "talkid": "9"
+        }
+    ]
+}

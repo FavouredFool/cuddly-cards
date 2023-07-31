@@ -120,6 +120,29 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    public CardNode GetCardNodeFromID(int id)
+    {
+        CardNode foundNode = null;
+
+        RootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT,
+            delegate (CardNode node)
+            {
+                if (node.Context.ID == id)
+                {
+                    foundNode = node;
+                }
+
+                return true;
+            });
+
+        if (foundNode == null)
+        {
+            throw new System.Exception("Found no node with ID: " + id);
+        }
+
+        return foundNode;
+    }
+
     public void AddToTopLevelMainPile(CardNode cardNode)
     {
         _topLevelNodesMainPile.Add(cardNode);
