@@ -44,8 +44,7 @@ public class ToCoverAnimation : CardAnimation
             .Append(_subAnimations.MoveNodeToMiddle(baseNode)));
         
         // -------------- BACK ---------------------
-        
-        
+
         _cardManager.AddToTopLevelMainPile(backNode);
 
         List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);

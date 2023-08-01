@@ -86,6 +86,26 @@
             "type": "DIALOGUE",
             "depth": "3",
             "talkid": "9"
+        },
+        {
+            "label": "Wrapper for recursive dialogue",
+            "description": "",
+            "type": "DWRAPPER",
+            "depth": "4"
+        },
+        {
+            "label": "Recursive Dialogue",
+            "description": "",
+            "type": "DIALOGUE",
+            "depth": "5",
+            "talkid": "7"
+        },
+        {
+            "label": "Recursive Dialogue 2",
+            "description": "",
+            "type": "DIALOGUE",
+            "depth": "5",
+            "talkid": "3"
         }
     ]
 }

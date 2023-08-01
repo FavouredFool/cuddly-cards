@@ -9,11 +9,15 @@ public class CardDialogue
         _cardManager = cardManager;
     }
 
-    public void SpreadDialogues(CardNode dialogueWrapperNode)
+    public async void SpreadDialogues(CardNode dialogueWrapperNode)
     {
         AnimationManager animationManager = _cardManager.AnimationManager;
         List<CardNode> dialogueNodes = new();
 
+        animationManager.AddAnimation(new SpreadDialogueAnimationPart1(_cardManager));
+        await animationManager.PlayAnimations(dialogueWrapperNode, _cardManager.BaseNode);
+
+        // Unlink Wrapper
         dialogueWrapperNode.UnlinkFromParent();
 
         foreach (CardNode node in dialogueWrapperNode.Children)
@@ -26,22 +30,24 @@ public class CardDialogue
             node.UnlinkFromParent();
         }
 
-        // Animate cards moving into their intended positions.
-
-        // kill wrapperBody (the node in memory will be garbage collected)
-        GameObject.Destroy(dialogueWrapperNode.Body.gameObject);
-
-        // relink nodes, so that they can be properly positioned statically.
-            // How do I find out to which cards this Dialogue card is linked - and at which exact position? Dialogue-Card side or other cards and you iterate through them all (definitely the first one)
+        // Dissolve effect!
+        await dialogueWrapperNode.Body.DisintegrateCard();
+        Object.Destroy(dialogueWrapperNode.Body.gameObject);
 
         foreach (CardNode node in dialogueNodes)
         {
+            animationManager.AddAnimation(new SpreadDialogueAnimationPart2(_cardManager));
+            await animationManager.PlayAnimations(node, _cardManager.BaseNode);
+
             CardNode talkParentNode = _cardManager.GetCardNodeFromID(node.Context.TalkID);
             talkParentNode.AddChild(node);
         }
 
+        animationManager.AddAnimation(new SpreadDialogueAnimationPart3(_cardManager));
+        await animationManager.PlayAnimations(_cardManager.BaseNode, _cardManager.BaseNode);
 
-        // hit up manual static recalculation.
+        // Reset Position
         animationManager.SetCardsStatic();
     }
+
 }

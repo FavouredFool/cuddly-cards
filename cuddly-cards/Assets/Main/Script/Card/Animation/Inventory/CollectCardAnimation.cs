@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class CollectCardAnimation : InventoryAnimation
+public class CollectCardAnimation : CardAnimation
 {
     int _minRaiseHeight = 10;
 

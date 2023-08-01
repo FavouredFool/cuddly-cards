@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class ToInventoryAnimation : InventoryAnimation
+public class ToInventoryAnimation : CardAnimation
 {
     bool _synchronizeLoweringWithFanning;
     
@@ -17,8 +17,6 @@ public class ToInventoryAnimation : InventoryAnimation
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
-        // TODO Combine this with DisplayKeys because there are only keys left.
-
         Sequence entireSequence = DOTween.Sequence();
 
         float totalSpace = _cardMover.PlaySpaceTopRight.x - _cardMover.PlaySpaceBottomLeft.x;

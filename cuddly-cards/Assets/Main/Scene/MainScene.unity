@@ -913,7 +913,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh27806
+  m_Name: pb_Mesh26034
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -1318,7 +1318,7 @@ MonoBehaviour:
   _childrenDistance: 1.125
   _childrenStartOffset: 1.648
   _verticalTime: 0.2
-  _horizontalTime: 0.4
+  _horizontalTime: 0.45
   _waitTime: 0.1
   _border: 1.25
   _inventoryCardRotationAmount: 0.5

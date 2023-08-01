@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class FromInventoryAnimation : InventoryAnimation
+public class FromInventoryAnimation : CardAnimation
 {
     readonly float _delay;
 

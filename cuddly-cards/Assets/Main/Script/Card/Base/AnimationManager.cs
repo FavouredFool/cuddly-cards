@@ -74,6 +74,8 @@ public class AnimationManager
     public void FinishAnimation()
     {
         _cardMover.IsAnimatingFlag = false;
+
+        ClearAnimations();
     }
 
     public void PrepareStatic()
@@ -96,8 +98,6 @@ public class AnimationManager
         _cardMover.SetInventoryCardsRelativeToParent();
 
         _cardInput.SetColliders();
-
-        ClearAnimations();
     }
 
     public void AddAnimation(CardAnimation cardAnimation)
