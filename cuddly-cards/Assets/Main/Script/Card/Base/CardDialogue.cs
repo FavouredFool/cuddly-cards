@@ -4,11 +4,12 @@ using UnityEngine;
 public class CardDialogue
 {
     private CardManager _cardManager;
+    private CloseUpManager _closeUpManager;
     public CardDialogue(CardManager cardManager)
     {
         _cardManager = cardManager;
+        _closeUpManager = cardManager.CloseUpManager;
     }
-
     public async void SpreadDialogues(CardNode dialogueWrapperNode)
     {
         AnimationManager animationManager = _cardManager.AnimationManager;

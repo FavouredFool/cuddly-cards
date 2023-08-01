@@ -913,7 +913,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh26034
+  m_Name: pb_Mesh25850
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -2016,4 +2016,5 @@ MonoBehaviour:
   _descriptionText: {fileID: 1642152226}
   _closeUpRotation: -25
   _transitionTime: 0.5
+  _rotationTime: 0.5
   _easing: 13

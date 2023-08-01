@@ -34,6 +34,9 @@ public class MainState : SettedState
                 return;
 
             case CardType.DIALOGUE:
+                ShowDialogue(clickedNode);
+                return;
+
             case CardType.COVER:
             case CardType.PLACE:
             case CardType.THING:
@@ -75,6 +78,12 @@ public class MainState : SettedState
     public void CollectDialogue(CardNode clickedNode)
     {
         _cardDialogue.SpreadDialogues(clickedNode);
+    }
+
+    public void ShowDialogue(CardNode clickedNode)
+    {
+        ResetHover(clickedNode, null);
+        _stateManager.PushState(new DialogueState(_cardManager, clickedNode));
     }
 
     public void ToInventoryTransition(CardNode clickedNode)

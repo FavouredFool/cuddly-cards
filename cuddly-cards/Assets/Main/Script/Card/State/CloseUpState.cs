@@ -1,4 +1,5 @@
 using UnityEngine;
+using static CloseUpManager;
 
 public class CloseUpState : LayoutState
 {
@@ -19,10 +20,11 @@ public class CloseUpState : LayoutState
         _originalRotation = transform.rotation;
 
         _blockInputs = true;
-        await _closeUpManager.SetCloseUpAnimated(_closeUpNode);
+        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.CLOSEUP);
         _blockInputs = false;
 
-        _closeUpManager.SetCloseUpStatic(_closeUpNode);
+        _closeUpManager.SetCloseUpStatic(_closeUpNode, CloseUpStyle.CLOSEUP);
+        _closeUpManager.SetText(_closeUpNode.Context.Description);
     }
 
     public override async void HandleClick(CardNode clickedNode, CardInfo.Click click)
@@ -35,10 +37,10 @@ public class CloseUpState : LayoutState
         }
         
         _blockInputs = true;
-        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation);
+        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.CLOSEUP);
         _blockInputs = false;
 
-        _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation);
+        _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.CLOSEUP);
 
         _stateManager.PopState();
     }
