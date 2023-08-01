@@ -50,7 +50,6 @@ public class CloseUpManager : MonoBehaviour
 
         Vector3 endPosition = CloseUpTransform.position;
         Quaternion endRotation = Quaternion.Euler(180, 180, 180) * Quaternion.Euler(CloseUpRotation, 0, 0) * Quaternion.Euler(-90, 0, 0);
-        if (style == CloseUpStyle.DIALOGUE) endRotation *= Quaternion.Euler(0, 0, 180);
 
         closeUpNode.Body.transform.SetPositionAndRotation(endPosition, endRotation);
 
@@ -78,9 +77,8 @@ public class CloseUpManager : MonoBehaviour
 
         if (style == CloseUpStyle.DIALOGUE)
         {
-            await closeUpNode.Body.transform.DORotateQuaternion(endRotation * Quaternion.Euler(0, 0, 180), _rotationTime).SetEase(_easing).AsyncWaitForCompletion();
+            await Flip(closeUpNode);
         }
-
     }
 
     public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation, CloseUpStyle style)
@@ -89,14 +87,20 @@ public class CloseUpManager : MonoBehaviour
         
         if (style == CloseUpStyle.DIALOGUE)
         {
-            Quaternion rotation = closeUpNode.Body.transform.rotation * Quaternion.Euler(0, 0, 180);
-            await closeUpNode.Body.transform.DORotateQuaternion(rotation, _rotationTime).SetEase(_easing).AsyncWaitForCompletion();
+            await Flip(closeUpNode);
         }
 
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
 
         closeUpNode.Body.transform.DOMove(originalPosition, _transitionTime).SetEase(_easing);
         await closeUpNode.Body.transform.DORotateQuaternion(originalRotation, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
+    }
+
+    public async Task Flip(CardNode node)
+    {
+        Quaternion startRotation = node.Body.transform.rotation;
+        await node.Body.transform.DORotateQuaternion(startRotation * Quaternion.Euler(0, 0, 180), _rotationTime).SetEase(_easing).AsyncWaitForCompletion();
+        node.Body.transform.rotation = startRotation;
     }
 
     public void SetText(string text)

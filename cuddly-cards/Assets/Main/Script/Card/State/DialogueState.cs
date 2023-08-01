@@ -48,6 +48,7 @@ public class DialogueState : LayoutState
 
     public void LeftClick()
     {
+        _ = _closeUpManager.Flip(_closeUpNode);
         _closeUpManager.SetText("different text");
     }
 
