@@ -161,14 +161,6 @@ public class CardMover : MonoBehaviour
         card.Body.transform.localPosition = new Vector3(position.x, card.Body.transform.localPosition.y, position.y);
     }
 
-    public void SetHeightOfTopLevelNodes()
-    {
-        foreach (CardNode node in CardManager.GetTopLevelNodesMainPile())
-        {
-            node.Body.SetHeight(node.GetNodeCount(CardInfo.CardTraversal.BODY));
-        }
-    }
-
     public Vector2 GetPlaySpaceBottomLeft()
     {
         return _playSpaceBottomLeft;

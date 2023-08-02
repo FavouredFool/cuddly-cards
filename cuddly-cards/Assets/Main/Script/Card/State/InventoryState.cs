@@ -24,7 +24,17 @@ public class InventoryState : DefaultState
 
         if (clickedNode == _cardInventory.InventoryNode || clickedNode == _cardManager.BaseNode)
         {
-            FromInventoryToBaseTransition(clickedNode);
+            switch (_cardManager.BaseNode.Context.CardType)
+            {
+                case CardType.TALK:
+                    FromInventoryToTalkTransition(clickedNode);
+                    break;
+                default:
+                    FromInventoryToBaseTransition(clickedNode);
+                    break;
+            }
+
+            
             return;
         }
 
@@ -45,6 +55,14 @@ public class InventoryState : DefaultState
     {
         List<CardAnimation> animations = new() { new OpenAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 0) };
         LayoutState newState = new MainState(_cardManager, _cardManager.BaseNode);
+
+        ToTransition(clickedNode, animations, newState);
+    }
+
+    public void FromInventoryToTalkTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new OpenAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 0) };
+        LayoutState newState = new TalkState(_cardManager, _cardManager.BaseNode);
 
         ToTransition(clickedNode, animations, newState);
     }

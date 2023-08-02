@@ -34,7 +34,11 @@ public class MainState : SettedState
                 return;
 
             case CardType.DIALOGUE:
-                ShowDialogue(clickedNode);
+                Debug.LogWarning("A dialogue should not be here");
+                return;
+
+            case CardType.TALK:
+                ToTalkTransition(clickedNode);
                 return;
 
             case CardType.COVER:
@@ -80,16 +84,18 @@ public class MainState : SettedState
         _cardDialogue.SpreadDialogues(clickedNode);
     }
 
-    public void ShowDialogue(CardNode clickedNode)
-    {
-        ResetHover(clickedNode, null);
-        _stateManager.PushState(new DialogueState(_cardManager, clickedNode));
-    }
-
     public void ToInventoryTransition(CardNode clickedNode)
     {
         List<CardAnimation> animations = new() { new CloseAnimation(_cardManager), new ToInventoryAnimation(_cardManager, true) };
         LayoutState newState = new InventoryState(_cardManager);
+
+        ToTransition(clickedNode, animations, newState);
+    }
+
+    public void ToTalkTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new FanDialogueAnimation(_cardManager) };
+        LayoutState newState = new TalkState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
     }

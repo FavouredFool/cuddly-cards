@@ -32,16 +32,16 @@ public class InventoryLayout : SubLayout
 
     public void ResetInventoryState()
     {
-    foreach (CardNode node in _cardInventory.InventoryNode.Children)
-    {
-        _cardManager.AddToTopLevelMainPile(node);
-    }
+        foreach (CardNode node in _cardInventory.InventoryNode.Children)
+        {
+            _cardManager.AddToTopLevelMainPile(node);
+        }
 
-    float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
-    float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
+        float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
+        float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
 
-    float offset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.Border;
-    FanCardsFromInventorySubcardStatic(offset, fannedCardSpace);
+        float offset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.Border;
+        FanCardsFromInventoryStatic(offset, fannedCardSpace);
     }
 
     public void ResetLockState()
@@ -55,10 +55,10 @@ public class InventoryLayout : SubLayout
         float fannedCardSpace = (totalSpace - 2 * _cardMover.Border);
 
         float keyOffset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.Border;
-        FanCardsFromInventorySubcardStatic(keyOffset, fannedCardSpace);
+        FanCardsFromInventoryStatic(keyOffset, fannedCardSpace);
     }
 
-    public void FanCardsFromInventorySubcardStatic(float startFanX, float fannedCardSpace)
+    public void FanCardsFromInventoryStatic(float startFanX, float fannedCardSpace)
     {
         CardNode inventoryNode = _cardInventory.InventoryNode;
 

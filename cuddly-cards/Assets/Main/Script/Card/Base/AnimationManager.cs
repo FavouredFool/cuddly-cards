@@ -89,8 +89,6 @@ public class AnimationManager
 
     public void FinishStatic()
     {
-        _cardMover.SetHeightOfTopLevelNodes();
-
         _cardMover.SetHeightAndRotationOfInventory();
 
         _cardMover.SetMainCardsRelativeToParent();

@@ -60,27 +60,27 @@ public class CardManager : MonoBehaviour
 
         CardInventory.InitializeInventory(CardBuilder);
 
-        //CreateLocksAndDialogueOnStartUp();
+        CreateLocksAndDialogueOnStartUp();
 
         StateManager.StartStates();
     }
 
     public void CreateLocksAndDialogueOnStartUp()
     {
-        List<CardNode> tests = new();
+        List<CardNode> keys = new();
 
         for (int i = 0; i < 5; i++)
         {
-            tests.Add(new CardNode(new CardContext("Dagger", "sharp like... a dagger i guess", CardInfo.CardType.KEY)));
-            tests.Add(new CardNode(new CardContext("A revelation", "you just had a dangerous thought", CardInfo.CardType.KEY)));
+            keys.Add(new CardNode(new CardContext("Dagger", "sharp like... a dagger i guess", CardInfo.CardType.KEY)));
+            keys.Add(new CardNode(new CardContext("A revelation", "you just had a dangerous thought", CardInfo.CardType.KEY)));
         }
 
-        foreach (CardNode node in tests)
+        foreach (CardNode node in keys)
         {
             node.Body = CardBuilder.BuildCardBody(node.Context, node, _cardFolder);
         }
 
-        foreach (CardNode cardNode in tests)
+        foreach (CardNode cardNode in keys)
         {
             CardInventory.AddKeyToInventory(cardNode);
         }
