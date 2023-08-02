@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 using static CardManager;
 using static CardInfo;
 
@@ -24,4 +25,5 @@ public class CardContext
     public CardType CardType { get; private set; }
     public string DesiredKey { get; set; }
     public int TalkID { get; set; } = -1;
+    public List<DialogueContext> DialogueContexts { get; set; }
 }

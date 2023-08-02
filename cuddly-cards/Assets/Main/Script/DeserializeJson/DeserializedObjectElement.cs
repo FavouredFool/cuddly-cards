@@ -1,4 +1,5 @@
 using static CardManager;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using static CardInfo;
@@ -13,4 +14,6 @@ public class DeserializedObjectElement
 
     public string DesiredKey { get; set; }
     public int TalkID { get; set; }
+    public List<DialogueContext> Dialogue { get; set; }
+    
 }

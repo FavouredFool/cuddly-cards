@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using static CloseUpManager;
 
 public class DialogueState : LayoutState
@@ -8,6 +9,7 @@ public class DialogueState : LayoutState
     Vector3 _originalPosition;
     Quaternion _originalRotation;
     bool _blockInputs;
+    int _dialogueIterator = 0;
 
     public DialogueState(CardManager cardManager, CardNode clickedNode) : base(cardManager)
     {
@@ -21,12 +23,14 @@ public class DialogueState : LayoutState
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
 
+        DialogueContext dialogueContext = _closeUpNode.Context.DialogueContexts[0];
+
         _blockInputs = true;
-        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.DIALOGUE, _cardManager);
+        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.DIALOGUE, _cardManager, dialogueContext);
         _blockInputs = false;
 
         _closeUpManager.SetCloseUpStatic(_closeUpNode, CloseUpStyle.DIALOGUE);
-        _closeUpManager.SetText("Somethign something dialogue");
+        _closeUpManager.SetText(dialogueContext.Text);
     }
 
     public override void HandleClick(CardNode clickedNode, CardInfo.Click click)
@@ -50,12 +54,21 @@ public class DialogueState : LayoutState
 
     public async void LeftClick()
     {
-        string newLabel = "A person";
+        _dialogueIterator += 1;
 
+        if (_dialogueIterator >= _closeUpNode.Context.DialogueContexts.Count)
+        {
+            return;
+        }
+
+        DialogueContext dialogueContext = _closeUpNode.Context.DialogueContexts[_dialogueIterator];
+
+        _closeUpManager.SetText("");
         _blockInputs = true;
-        await _closeUpManager.Flip(_closeUpNode, newLabel, _cardBuilder.GetPersonImageFromCard());
+        await _closeUpManager.Flip(_closeUpNode, dialogueContext.Name, _cardBuilder.GetPersonImageFromCard());
         _blockInputs = false;
-        _closeUpManager.SetText("different text");
+
+        _closeUpManager.SetText(dialogueContext.Text);
     }
 
     public async void RightClick()

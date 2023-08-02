@@ -65,7 +65,7 @@ public class CloseUpManager : MonoBehaviour
         closeUpNode.Body.transform.SetPositionAndRotation(originalPosition, originalRotation);
     }
 
-    public async Task SetCloseUpAnimated(CardNode closeUpNode, CloseUpStyle style, CardManager cardManager)
+    public async Task SetCloseUpAnimated(CardNode closeUpNode, CloseUpStyle style, CardManager cardManager, DialogueContext dialogueContext)
     {
         _cameraMovement.SetCloseUpRotation(_closeUpRotation, _transitionTime, _easing);
 
@@ -77,7 +77,7 @@ public class CloseUpManager : MonoBehaviour
 
         if (style == CloseUpStyle.DIALOGUE)
         {
-            await Flip(closeUpNode, "A person", cardManager.CardBuilder.GetPersonImageFromCard());
+            await Flip(closeUpNode, dialogueContext.Name, cardManager.CardBuilder.GetPersonImageFromCard());
         }
     }
 

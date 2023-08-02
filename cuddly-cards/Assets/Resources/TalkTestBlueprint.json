@@ -26,9 +26,47 @@
         },
         {
             "label": "Some dialogue",
-            "description": "",
+            "description": "The butterfly looks stretched - strained. Let's see what she has to say.",
             "type": "DIALOGUE",
-            "depth": "4"
+            "depth": "4",
+            "dialogue" : [
+                {
+                    "name" : "The Fox",
+                    "text" : "Good evening Mrs..."
+                },
+                {
+                    "name" : "The Butterfly",
+                    "text" : "Creighton. Good evening."
+                },
+                {
+                    "name" : "The Fox",
+                    "text" : "Creighton, right. I apologize for not recognizing your face. It's just that I've only ever met your husband and even that is from quite a while back."
+                },
+                {
+                    "name" : "[...]",
+                    "text" : "Talking is difficult with the crying baby. Both of you speak loud and slow, but it still takes considerable concentration to make out the words."
+                },
+                {
+                    "name" : "The Butterfly",
+                    "text" : "Then you must be Mrs Dresser? Charles told me you'd come. I have to say, I've been quite surprised, he never mentioned your name once and suddenly you're invited to a private ball."
+                },
+                {
+                    "name" : "[...]",
+                    "text" : "Her face shows suspicion and exhaustion in equal manner. It looks quite miserable."
+                },
+                {
+                    "name" : "The Fox",
+                    "text" : "I understand the confusion. I recently fell on hardship and this might be his way to cheer up an old friend."
+                },
+                {
+                    "name" : "The Butterfly",
+                    "text" : "I see."
+                },
+                {
+                    "name" : "[...]",
+                    "text" : "And with that, the conversation is over. She turns her attention back to the child, as if you were never there."
+                }
+            ]
         },
         {
             "label": "Some Key",

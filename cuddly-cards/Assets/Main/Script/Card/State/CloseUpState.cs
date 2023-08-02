@@ -20,7 +20,7 @@ public class CloseUpState : LayoutState
         _originalRotation = transform.rotation;
 
         _blockInputs = true;
-        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.CLOSEUP, _cardManager);
+        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.CLOSEUP, _cardManager, null);
         _blockInputs = false;
 
         _closeUpManager.SetCloseUpStatic(_closeUpNode, CloseUpStyle.CLOSEUP);
