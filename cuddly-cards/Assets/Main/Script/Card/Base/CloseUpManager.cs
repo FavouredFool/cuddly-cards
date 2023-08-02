@@ -65,7 +65,7 @@ public class CloseUpManager : MonoBehaviour
         closeUpNode.Body.transform.SetPositionAndRotation(originalPosition, originalRotation);
     }
 
-    public async Task SetCloseUpAnimated(CardNode closeUpNode, CloseUpStyle style)
+    public async Task SetCloseUpAnimated(CardNode closeUpNode, CloseUpStyle style, CardManager cardManager)
     {
         _cameraMovement.SetCloseUpRotation(_closeUpRotation, _transitionTime, _easing);
 
@@ -77,17 +77,17 @@ public class CloseUpManager : MonoBehaviour
 
         if (style == CloseUpStyle.DIALOGUE)
         {
-            await Flip(closeUpNode);
+            await Flip(closeUpNode, "A person", cardManager.CardBuilder.GetPersonImageFromCard());
         }
     }
 
-    public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation, CloseUpStyle style)
+    public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation, CloseUpStyle style, CardManager cardManager)
     {
         _closeUpCanvas.SetActive(false);
         
         if (style == CloseUpStyle.DIALOGUE)
         {
-            await Flip(closeUpNode);
+            await Flip(closeUpNode, closeUpNode.Context.Label, cardManager.CardBuilder.GetOriginalImageFromCard(closeUpNode));
         }
 
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
@@ -96,11 +96,19 @@ public class CloseUpManager : MonoBehaviour
         await closeUpNode.Body.transform.DORotateQuaternion(originalRotation, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
     }
 
-    public async Task Flip(CardNode node)
+    public async Task Flip(CardNode node, string label, Sprite icon)
     {
+        string newLabel = label;
+        Sprite newIcon = icon;
+
+        node.Body.SetBackElements(newLabel, newIcon);
+
         Quaternion startRotation = node.Body.transform.rotation;
         await node.Body.transform.DORotateQuaternion(startRotation * Quaternion.Euler(0, 0, 180), _rotationTime).SetEase(_easing).AsyncWaitForCompletion();
         node.Body.transform.rotation = startRotation;
+
+        node.Body.ClearBack();
+        node.Body.SetFrontElements(newLabel, newIcon);
     }
 
     public void SetText(string text)

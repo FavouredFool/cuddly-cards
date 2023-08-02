@@ -3,7 +3,8 @@ using static CloseUpManager;
 
 public class DialogueState : LayoutState
 {
-    readonly CardNode _closeUpNode;
+    CardNode _closeUpNode;
+    CardBuilder _cardBuilder;
     Vector3 _originalPosition;
     Quaternion _originalRotation;
     bool _blockInputs;
@@ -11,6 +12,7 @@ public class DialogueState : LayoutState
     public DialogueState(CardManager cardManager, CardNode clickedNode) : base(cardManager)
     {
         _closeUpNode = clickedNode;
+        _cardBuilder = cardManager.CardBuilder;
     }
 
     public override async void StartState()
@@ -20,7 +22,7 @@ public class DialogueState : LayoutState
         _originalRotation = transform.rotation;
 
         _blockInputs = true;
-        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.DIALOGUE);
+        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.DIALOGUE, _cardManager);
         _blockInputs = false;
 
         _closeUpManager.SetCloseUpStatic(_closeUpNode, CloseUpStyle.DIALOGUE);
@@ -46,16 +48,20 @@ public class DialogueState : LayoutState
         }
     }
 
-    public void LeftClick()
+    public async void LeftClick()
     {
-        _ = _closeUpManager.Flip(_closeUpNode);
+        string newLabel = "A person";
+
+        _blockInputs = true;
+        await _closeUpManager.Flip(_closeUpNode, newLabel, _cardBuilder.GetPersonImageFromCard());
+        _blockInputs = false;
         _closeUpManager.SetText("different text");
     }
 
     public async void RightClick()
     {
         _blockInputs = true;
-        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.DIALOGUE);
+        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.DIALOGUE, _cardManager);
         _blockInputs = false;
 
         _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.DIALOGUE);

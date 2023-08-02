@@ -10,11 +10,15 @@ using AmazingAssets.AdvancedDissolve;
 
 public class CardBody : MonoBehaviour
 {
-    [SerializeField] TMP_Text _textField;
-
     [SerializeField] MeshRenderer _meshRenderer;
 
-    [SerializeField] Image _image;
+    [SerializeField] TMP_Text _frontTextField;
+
+    [SerializeField] Image _frontImage;
+
+    [SerializeField] TMP_Text _backTextField;
+
+    [SerializeField] Image _backImage;
 
     [SerializeField] Transform _cardContents;
 
@@ -36,20 +40,27 @@ public class CardBody : MonoBehaviour
         _outline.enabled = false;
     }
 
-    public void SetLabel(string labelText)
-    {
-        _textField.text = labelText;
-    }
-
     public void SetColor(Color color)
     {
         // just accessing the second element might be risky.
         _meshRenderer.materials[1].color = color;
     }
-
-    public void SetIcon(Sprite icon)
+    public void SetFrontElements(string labelText, Sprite icon)
     {
-        _image.sprite = icon;
+        _frontTextField.text = labelText;
+        _frontImage.sprite = icon;
+    }
+
+    public void SetBackElements(string labelText, Sprite icon)
+    {
+        _backTextField.text = labelText;
+        _backImage.sprite = icon;
+    }
+
+    public void ClearBack()
+    {
+        _backImage.sprite = null;
+        _backTextField.text = "";
     }
 
     public void SetHeight(int height)
@@ -109,8 +120,8 @@ public class CardBody : MonoBehaviour
 
     public void DeactivateUI()
     {
-        _image.enabled = false;
-        _textField.enabled = false;
+        _frontImage.enabled = false;
+        _frontTextField.enabled = false;
     }
 
     public async Task DisintegrateCard()

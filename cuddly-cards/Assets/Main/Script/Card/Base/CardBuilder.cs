@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 using static CardInfo;
 
 public class CardBuilder : MonoBehaviour
@@ -27,7 +28,6 @@ public class CardBuilder : MonoBehaviour
     {
         CardBody body = GameObject.Instantiate(_cardBlueprint, Vector3.zero, Quaternion.identity, folder).GetComponent<CardBody>();
 
-        body.SetLabel(cardContext.Label);
         body.gameObject.name = "Card: \"" + cardContext.Label + "\"";
         body.CardReferenceNode = nodeReference;
 
@@ -39,8 +39,21 @@ public class CardBuilder : MonoBehaviour
         }
 
         body.SetColor(type.GetCardColor());
-        body.SetIcon(type.GetCardIcon());
+
+        body.SetFrontElements(cardContext.Label, type.GetCardIcon());
 
         return body;
+    }
+
+    public Sprite GetOriginalImageFromCard(CardNode card)
+    {
+        CardScriptableType type = _types.FirstOrDefault(e => e.GetCardType().Equals(card.Context.CardType));
+        return type.GetCardIcon();
+    }
+
+    public Sprite GetPersonImageFromCard()
+    {
+        CardScriptableType type = _types.FirstOrDefault(e => e.GetCardType().Equals(CardType.PERSON));
+        return type.GetCardIcon();
     }
 }

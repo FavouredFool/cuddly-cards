@@ -20,7 +20,7 @@ public class CloseUpState : LayoutState
         _originalRotation = transform.rotation;
 
         _blockInputs = true;
-        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.CLOSEUP);
+        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.CLOSEUP, _cardManager);
         _blockInputs = false;
 
         _closeUpManager.SetCloseUpStatic(_closeUpNode, CloseUpStyle.CLOSEUP);
@@ -35,9 +35,14 @@ public class CloseUpState : LayoutState
         {
             return;
         }
+
+        if (click != CardInfo.Click.RIGHT)
+        {
+            return;
+        }
         
         _blockInputs = true;
-        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.CLOSEUP);
+        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.CLOSEUP, _cardManager);
         _blockInputs = false;
 
         _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.CLOSEUP);
