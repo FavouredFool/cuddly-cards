@@ -65,7 +65,7 @@ public class CloseUpManager : MonoBehaviour
         closeUpNode.Body.transform.SetPositionAndRotation(originalPosition, originalRotation);
     }
 
-    public async Task SetCloseUpAnimated(CardNode closeUpNode, CloseUpStyle style, CardManager cardManager, DialogueContext dialogueContext)
+    public async Task SetCloseUpAnimated(CardNode closeUpNode, CloseUpStyle style, CardManager cardManager, DialogueContext dialogueContext, bool flipRight)
     {
         _cameraMovement.SetCloseUpRotation(_closeUpRotation, _transitionTime, _easing);
 
@@ -77,17 +77,17 @@ public class CloseUpManager : MonoBehaviour
 
         if (style == CloseUpStyle.DIALOGUE)
         {
-            await Flip(closeUpNode, dialogueContext.Name, cardManager.CardBuilder.GetPersonImageFromCard());
+            await Flip(closeUpNode, dialogueContext.Name, cardManager.CardBuilder.GetPersonImageFromCard(), flipRight);
         }
     }
 
-    public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation, CloseUpStyle style, CardManager cardManager)
+    public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation, CloseUpStyle style, CardManager cardManager, bool flipRight)
     {
         _closeUpCanvas.SetActive(false);
         
         if (style == CloseUpStyle.DIALOGUE)
         {
-            await Flip(closeUpNode, closeUpNode.Context.Label, cardManager.CardBuilder.GetOriginalImageFromCard(closeUpNode));
+            await Flip(closeUpNode, closeUpNode.Context.Label, cardManager.CardBuilder.GetOriginalImageFromCard(closeUpNode), flipRight);
         }
 
         _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
@@ -96,7 +96,7 @@ public class CloseUpManager : MonoBehaviour
         await closeUpNode.Body.transform.DORotateQuaternion(originalRotation, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
     }
 
-    public async Task Flip(CardNode node, string label, Sprite icon)
+    public async Task Flip(CardNode node, string label, Sprite icon, bool flipRight)
     {
         string newLabel = label;
         Sprite newIcon = icon;
@@ -104,7 +104,8 @@ public class CloseUpManager : MonoBehaviour
         node.Body.SetBackElements(newLabel, newIcon);
 
         Quaternion startRotation = node.Body.transform.rotation;
-        await node.Body.transform.DORotateQuaternion(startRotation * Quaternion.Euler(0, 0, 180), _rotationTime).SetEase(_easing).AsyncWaitForCompletion();
+        Quaternion addedRotation = flipRight ? Quaternion.Euler(0, 0, 180) : Quaternion.Euler(0, 0, -180);
+        await node.Body.transform.DORotateQuaternion(startRotation * addedRotation, _rotationTime).SetEase(_easing).AsyncWaitForCompletion();
         node.Body.transform.rotation = startRotation;
 
         node.Body.ClearBack();

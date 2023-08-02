@@ -26,7 +26,7 @@ public class DialogueState : LayoutState
         DialogueContext dialogueContext = _closeUpNode.Context.DialogueContexts[0];
 
         _blockInputs = true;
-        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.DIALOGUE, _cardManager, dialogueContext);
+        await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.DIALOGUE, _cardManager, dialogueContext, true);
         _blockInputs = false;
 
         _closeUpManager.SetCloseUpStatic(_closeUpNode, CloseUpStyle.DIALOGUE);
@@ -52,29 +52,48 @@ public class DialogueState : LayoutState
         }
     }
 
-    public async void LeftClick()
+    public void LeftClick()
+    {
+        _dialogueIterator -= 1;
+
+        if (_dialogueIterator < 0)
+        {
+            EndDialogue(false);
+            return;
+        }
+
+        SetUpDialogue(_dialogueIterator, false);
+    }
+
+    public void RightClick()
     {
         _dialogueIterator += 1;
 
         if (_dialogueIterator >= _closeUpNode.Context.DialogueContexts.Count)
         {
+            EndDialogue(true);
             return;
         }
 
-        DialogueContext dialogueContext = _closeUpNode.Context.DialogueContexts[_dialogueIterator];
+        SetUpDialogue(_dialogueIterator, true);
+    }
+
+    public async void SetUpDialogue(int index, bool flipRight)
+    {
+        DialogueContext dialogueContext = _closeUpNode.Context.DialogueContexts[index];
 
         _closeUpManager.SetText("");
         _blockInputs = true;
-        await _closeUpManager.Flip(_closeUpNode, dialogueContext.Name, _cardBuilder.GetPersonImageFromCard());
+        await _closeUpManager.Flip(_closeUpNode, dialogueContext.Name, _cardBuilder.GetPersonImageFromCard(), flipRight);
         _blockInputs = false;
 
         _closeUpManager.SetText(dialogueContext.Text);
     }
 
-    public async void RightClick()
+    public async void EndDialogue(bool flipRight)
     {
         _blockInputs = true;
-        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.DIALOGUE, _cardManager);
+        await _closeUpManager.RevertCloseUpAnimated(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.DIALOGUE, _cardManager, flipRight);
         _blockInputs = false;
 
         _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.DIALOGUE);
