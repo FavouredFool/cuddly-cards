@@ -41,7 +41,6 @@ public class BackAnimation : CardAnimation
                 for (int j = previousChilds.Count - 1; j >= 0; j--)
                 {
                     CardNode oldChild = previousChilds[j];
-                    _cardManager.AddToTopLevelMainPile(oldChild);
 
                     entireSequence.Join(DOTween.Sequence()
                         .Append(_subAnimations.MoveNodeYLiftPile(oldChild, activeNode))
@@ -67,7 +66,6 @@ public class BackAnimation : CardAnimation
 
         // ------------- NEW MAIN ----------------
 
-        _cardManager.AddToTopLevelMainPile(activeNode);
         entireSequence.Join(DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(activeNode, activeNode))
             .Append(_subAnimations.MoveNodeZNearer(activeNode))
@@ -77,9 +75,6 @@ public class BackAnimation : CardAnimation
 
         if (discard != null)
         {
-            _cardManager.AddToTopLevelMainPile(discard);
-            _cardManager.AddToTopLevelMainPile(backToBe);
-
             // ------------- DISCARD ----------------
 
             int discardHeight = discard.GetNodeCount(CardTraversal.BODY);
@@ -107,8 +102,6 @@ public class BackAnimation : CardAnimation
         else if (backToBe != null)
         {
             // ------------- BackToBe ----------------
-
-            _cardManager.AddToTopLevelMainPile(backToBe);
 
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)

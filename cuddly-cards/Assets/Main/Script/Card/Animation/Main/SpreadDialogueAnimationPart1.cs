@@ -21,8 +21,6 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
         // -------------- ACTIVE NODE ------------------
 
-        _cardManager.AddToTopLevelMainPile(activeNode);
-
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(2 * _waitTime + 2 * _horizontalTime + _verticalTime)
             .Append(_subAnimations.MoveNodeXToMiddle(activeNode))
@@ -37,7 +35,6 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
         for (int i = 0; i < children.Count; i++)
         {
             CardNode child = children[i];
-            _cardManager.AddToTopLevelMainPile(child);
             
             entireSequence.Join(DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(child, rootNode))
@@ -61,7 +58,6 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
         int baseHeight = baseNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT);
 
-        _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(baseNode, rootNode))
             .AppendInterval(3 * _horizontalTime + 2 * _waitTime)
@@ -69,8 +65,6 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
 
         // -------------- BACK ---------------------
-
-        _cardManager.AddToTopLevelMainPile(backNode);
 
         List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
 
@@ -102,7 +96,6 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
         if (rootNode != backNode)
         {
-            _cardManager.AddToTopLevelMainPile(rootNode);
             List<CardNode> lowerTopMostCardsRoot = backNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
 
             foreach (CardNode node in lowerTopMostCardsRoot)

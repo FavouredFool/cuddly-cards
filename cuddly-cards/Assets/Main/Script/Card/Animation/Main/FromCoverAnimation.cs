@@ -14,7 +14,7 @@ public class FromCoverAnimation : CardAnimation
         Sequence entireSequence = DOTween.Sequence();
 
         CardNode rootNode = _cardManager.RootNode;
-        _cardManager.AddToTopLevelMainPile(rootNode);
+ 
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(_verticalTime)
             .Append(_subAnimations.MoveNodeXToLeft(rootNode))
@@ -24,7 +24,6 @@ public class FromCoverAnimation : CardAnimation
         for (int i = 0; i < rootNode.Children.Count; i++)
         {
             CardNode childNode = rootNode.Children[i];
-            _cardManager.AddToTopLevelMainPile(childNode);
 
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)

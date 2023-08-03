@@ -24,7 +24,6 @@ public class NoChildrenAnimation : CardAnimation
 
         // ------------- MAIN TO BE ----------------
 
-        _cardManager.AddToTopLevelMainPile(activeNode);
         entireSequence.Join(DOTween.Sequence()
             .Append(_subAnimations.LiftAndMoveChildToBase(activeNode, baseNode))
             .AppendInterval(_waitTime + _horizontalTime)
@@ -44,8 +43,6 @@ public class NoChildrenAnimation : CardAnimation
                 continue;
             }
 
-            _cardManager.AddToTopLevelMainPile(previousChild);
-
             height += previousChild.GetNodeCount(CardTraversal.CONTEXT);
 
             entireSequence.Join(DOTween.Sequence()
@@ -57,7 +54,6 @@ public class NoChildrenAnimation : CardAnimation
 
         // ------------- BackToBe ----------------
 
-        _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode))
             .AppendInterval(_horizontalTime + _waitTime)
@@ -69,9 +65,6 @@ public class NoChildrenAnimation : CardAnimation
 
         if (discard != null)
         {
-            _cardManager.AddToTopLevelMainPile(discard);
-            _cardManager.AddToTopLevelMainPile(discardToBe);
-
             // height needs to be calculated before the deck is split in two, because otherwise new top-levels would be overlooked (this is a bit ugly)
             int discardHeight = discard.GetNodeCount(CardTraversal.BODY) + discardToBe.GetNodeCount(CardTraversal.BODY);
             int discardToBeHeight = discardToBe.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.BODY);
@@ -92,7 +85,6 @@ public class NoChildrenAnimation : CardAnimation
         }
         else if (discardToBe != null)
         {
-            _cardManager.AddToTopLevelMainPile(discardToBe);
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
                 .Append(_subAnimations.MoveNodeXToRight(discardToBe)));

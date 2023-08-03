@@ -14,19 +14,19 @@ public class CollectCardAnimation : CardAnimation
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
-
-        CardNode parentNode = activeNode.Parent;
+        // --- Variables
 
         CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
 
-        // activeNode vertical nach oben, relativ dem höchsten stack rechts der Node.
+        // --- Sequence
+
+        Sequence entireSequence = DOTween.Sequence();
 
         int maxNeightbourHeight = 0;
 
-        for(int i = parentNode.Children.IndexOf(activeNode) + 1; i < parentNode.Children.Count; i++)
+        for(int i = baseNode.Children.IndexOf(activeNode) + 1; i < baseNode.Children.Count; i++)
         {
-            int tempHeight = parentNode.Children[i].GetNodeCount(CardTraversal.CONTEXT);
+            int tempHeight = baseNode.Children[i].GetNodeCount(CardTraversal.CONTEXT);
 
             if (tempHeight > maxNeightbourHeight)
             {
@@ -58,15 +58,12 @@ public class CollectCardAnimation : CardAnimation
 
         // move all cards that were to the right of activeNode one space to the left
 
-        for (int i = parentNode.Children.IndexOf(activeNode) + 1; i < parentNode.Children.Count; i++)
+        for (int i = baseNode.Children.IndexOf(activeNode) + 1; i < baseNode.Children.Count; i++)
         {
-            // ich setze nur die hier top level. Root ist hierbei nicht top-level was etwas weird ist
-            _cardManager.AddToTopLevelMainPile(parentNode.Children[i]);
-
             entireSequence.Join(
             DOTween.Sequence()
                 .AppendInterval(_verticalTime + _waitTime)
-                .Append(_subAnimations.MoveNodeXChildOneSpaceToLeft(parentNode.Children[i]))
+                .Append(_subAnimations.MoveNodeXChildOneSpaceToLeft(baseNode.Children[i]))
             );
         }
 

@@ -24,7 +24,6 @@ public class ToCoverAnimation : CardAnimation
         for (int i = 0; i < children.Count; i++)
         {
             CardNode child = children[i];
-            _cardManager.AddToTopLevelMainPile(child);
 
             entireSequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.MoveNodeYLiftPile(child, rootNode))
@@ -37,15 +36,12 @@ public class ToCoverAnimation : CardAnimation
 
         // -------------- MAIN ---------------------
         
-        _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(baseNode, rootNode))
             .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
             .Append(_subAnimations.MoveNodeXToMiddle(baseNode)));
         
         // -------------- BACK ---------------------
-
-        _cardManager.AddToTopLevelMainPile(backNode);
 
         List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
 
@@ -70,7 +66,6 @@ public class ToCoverAnimation : CardAnimation
 
         // -------------- ROOT ---------------------
         
-        _cardManager.AddToTopLevelMainPile(rootNode);
         List<CardNode> lowerTopMostCardsRoot = backNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
 
         foreach (CardNode node in lowerTopMostCardsRoot)

@@ -1296,7 +1296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c904a1708ec60a24e9dab8cf9d659dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textBlueprint: {fileID: 4900000, guid: 68d158a016b2ffb419240233410126bc, type: 3}
+  _textBlueprint: {fileID: 4900000, guid: 35f8e08b2bd96fe49af689711df8ac9d, type: 3}
   _cardFolder: {fileID: 35637509}
   _closeUpManager: {fileID: 2054258260}
   _cardInputManager: {fileID: 1640303847}

@@ -26,22 +26,22 @@ public class AnimationManager
 
     public async Task PlayAnimations(CardNode activeNode)
     {
-        await PlayAnimations(activeNode, activeNode);
+        await PlayAnimations(activeNode, _cardManager.BaseNode);
     }
-    public async Task PlayAnimations(CardNode activeNode, CardNode previousActiveNode)
+    public async Task PlayAnimations(CardNode activeNode, CardNode baseNode)
     {
-        await SetCardsAnimated(activeNode, previousActiveNode);
+        await SetCardsAnimated(activeNode, baseNode);
     }
 
-    public async Task SetCardsAnimated(CardNode activeNode, CardNode previousActiveNode)
+    public async Task SetCardsAnimated(CardNode activeNode, CardNode baseNode)
     {
-        PrepareAnimation();
+        PrepareAnimation(activeNode, baseNode);
 
         Sequence allAnimations = DOTween.Sequence();
 
         foreach (CardAnimation animation in _activeAnimations)
         {
-            allAnimations.Join(animation.GetAnimationSequence(activeNode, previousActiveNode));
+            allAnimations.Join(animation.GetAnimationSequence(activeNode, baseNode));
         }
 
         // OnComplete is necessary because of a problem with Dotween
@@ -62,13 +62,40 @@ public class AnimationManager
         FinishStatic();
     }
 
-    public void PrepareAnimation()
+    public void PrepareAnimation(CardNode activeNode, CardNode baseNode)
     {
         _cardInput.RemoveColliders();
 
         _cardManager.ClearTopLevelNodesMainPile();
 
+        SetTopLevelNodes(activeNode, baseNode);
+
         _cardMover.IsAnimatingFlag = true;
+    }
+
+    public void SetTopLevelNodes(CardNode activeNode, CardNode baseNode)
+    {
+        CardNode rootNode = _cardManager.RootNode;
+
+        if (activeNode != baseNode.Parent)
+        {
+            _cardManager.AddToTopLevelMainPile(baseNode);
+        }
+        
+        for (int i = 0; i < baseNode.Children.Count; i++)
+        {
+            _cardManager.AddToTopLevelMainPile(baseNode.Children[i]);
+        }
+
+        if (baseNode != rootNode)
+        {
+            _cardManager.AddToTopLevelMainPile(baseNode.Parent);
+
+            if (baseNode.Parent != rootNode)
+            {
+                _cardManager.AddToTopLevelMainPile(rootNode);
+            }
+        }
     }
 
     public void FinishAnimation()

@@ -26,7 +26,6 @@ public class SpreadDialogueAnimationPart3 : CardAnimation
         for (int i = 0; i < children.Count; i++)
         {
             CardNode child = children[i];
-            _cardManager.AddToTopLevelMainPile(child);
 
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_waitTime + _horizontalTime)
@@ -37,15 +36,12 @@ public class SpreadDialogueAnimationPart3 : CardAnimation
 
         // -------------- MAIN ---------------------
 
-        _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(2*_horizontalTime + _waitTime)
             .Append(_subAnimations.MoveNodeYLowerPile(baseNode)));
 
 
         // -------------- BACK ---------------------
-
-        _cardManager.AddToTopLevelMainPile(backNode);
 
         List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
 
@@ -76,7 +72,6 @@ public class SpreadDialogueAnimationPart3 : CardAnimation
         {
             // FIX THIS WHEN THE JSON EDITOR IS DONE
 
-            _cardManager.AddToTopLevelMainPile(rootNode);
             entireSequence.Append(_subAnimations.MoveNodeY(rootNode, 300));
         }
 

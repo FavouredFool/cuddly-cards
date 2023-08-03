@@ -145,6 +145,12 @@ public class CardManager : MonoBehaviour
 
     public void AddToTopLevelMainPile(CardNode cardNode)
     {
+        if (_topLevelNodesMainPile.Contains(cardNode))
+        {
+            Debug.Log("Gedoppelt");
+            return;
+        }
+
         _topLevelNodesMainPile.Add(cardNode);
         cardNode.IsTopLevel = true;
     }
