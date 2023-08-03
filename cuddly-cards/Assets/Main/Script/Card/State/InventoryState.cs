@@ -61,7 +61,7 @@ public class InventoryState : DefaultState
 
     public void FromInventoryToTalkTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new OpenAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 0) };
+        List<CardAnimation> animations = new() { new OpenFanAnimation(_cardManager), new FromInventoryAnimation(_cardManager, 0) };
         LayoutState newState = new TalkState(_cardManager, _cardManager.BaseNode);
 
         ToTransition(clickedNode, animations, newState);

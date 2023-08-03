@@ -27,13 +27,16 @@ public class FanDialogueAnimation : CardAnimation
 
         for (int i = childsToBe.Count - 1; i >= 0; i--)
         {
+            CardNode node = childsToBe[i];
+
             _cardManager.AddToTopLevelMainPile(childsToBe[i]);
 
             entireSequence.Join(
                 DOTween.Sequence()
-                .Append(_subAnimations.LiftAndMoveChildToBase(childsToBe[i], baseNode))
+                .AppendInterval(_verticalTime)
+                .Append(_subAnimations.MoveNodeToLeft(node))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.FanOutChildFromBase(childsToBe[i]))
+                .Append(_subAnimations.FanOutCards(node, i, childsToBe.Count, false))
             );
         }
 
@@ -41,7 +44,8 @@ public class FanDialogueAnimation : CardAnimation
 
         _cardManager.AddToTopLevelMainPile(activeNode);
         entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.LiftAndMoveChildToBase(activeNode, baseNode))
+            .AppendInterval(_verticalTime)
+            .Append(_subAnimations.MoveNodeToLeft(activeNode))
             .AppendInterval(_waitTime + _horizontalTime)
             .Append(_subAnimations.LowerNodePile(activeNode)));
 

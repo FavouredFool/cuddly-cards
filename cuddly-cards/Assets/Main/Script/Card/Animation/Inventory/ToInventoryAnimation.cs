@@ -19,14 +19,21 @@ public class ToInventoryAnimation : CardAnimation
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        float totalSpace = _cardMover.PlaySpaceTopRight.x - _cardMover.PlaySpaceBottomLeft.x;
-        float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
+        CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
 
         entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(1, _synchronizeLoweringWithFanning));
 
-        float generalStartOffset = _cardMover.PlaySpaceBottomLeft.x + _cardMover.Border;
+        int count = inventoryNode.Children.Count;
 
-        entireSequence.Join(_subAnimations.FanOutCardsFromRight(generalStartOffset, fannedCardSpace));
+        for (int i = 0; i < count; i++)
+        {
+            CardNode node = inventoryNode.Children[i];
+            _cardManager.AddToTopLevelMainPile(node);
+            
+            entireSequence.Join(DOTween.Sequence()
+                .AppendInterval(_verticalTime)
+                .Append(_subAnimations.FanOutCards(node, i, count, true)));
+        }
 
         return entireSequence;
     }
