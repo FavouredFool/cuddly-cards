@@ -6,9 +6,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public abstract class ChildParent : CardAnimation
+public abstract class DeeperParentAnimation : CardAnimation
 {
-    public ChildParent(CardManager cardManager) : base(cardManager) { }
+    public DeeperParentAnimation(CardManager cardManager) : base(cardManager) { }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class NoChildrenAnimation : ChildParent
+public class NoChildrenAnimation : DeeperParentAnimation
 {
     public NoChildrenAnimation(CardManager cardManager) : base(cardManager) { }
 
