@@ -27,10 +27,10 @@ public class ToCoverAnimation : CardAnimation
             _cardManager.AddToTopLevelMainPile(child);
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodePileRelative(child, rootNode))
-                .Append(_subAnimations.MoveNodeToLeft(child))
+                .Append(_subAnimations.MoveNodeYLiftPile(child, rootNode))
+                .Append(_subAnimations.MoveNodeXToLeft(child))
                 .AppendInterval(2 * _waitTime + _horizontalTime)
-                .Append(_subAnimations.MoveNodeToMiddle(child)));
+                .Append(_subAnimations.MoveNodeXToMiddle(child)));
         }
 
 
@@ -39,9 +39,9 @@ public class ToCoverAnimation : CardAnimation
         
         _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.RaiseNodePileRelative(baseNode, rootNode))
+            .Append(_subAnimations.MoveNodeYLiftPile(baseNode, rootNode))
             .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
-            .Append(_subAnimations.MoveNodeToMiddle(baseNode)));
+            .Append(_subAnimations.MoveNodeXToMiddle(baseNode)));
         
         // -------------- BACK ---------------------
 
@@ -60,11 +60,11 @@ public class ToCoverAnimation : CardAnimation
         foreach (CardNode node in animatingNodesBack)
         {
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodePileRelative(node, rootNode))
+                .Append(_subAnimations.MoveNodeYLiftPile(node, rootNode))
                 .AppendInterval(_horizontalTime + _waitTime)
-                .Append(_subAnimations.MoveNodeNearer(node))
+                .Append(_subAnimations.MoveNodeZNearer(node))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.MoveNodeToMiddle(node)));
+                .Append(_subAnimations.MoveNodeXToMiddle(node)));
         }
 
 
@@ -84,12 +84,12 @@ public class ToCoverAnimation : CardAnimation
         foreach (CardNode node in animatingNodesRoot)
         {
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodePileRelative(node, rootNode))
-                .Append(_subAnimations.MoveNodeToLeft(node))
+                .Append(_subAnimations.MoveNodeYLiftPile(node, rootNode))
+                .Append(_subAnimations.MoveNodeXToLeft(node))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.MoveNodeNearer(node))
+                .Append(_subAnimations.MoveNodeZNearer(node))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.MoveNodeToMiddle(node)));
+                .Append(_subAnimations.MoveNodeXToMiddle(node)));
         }
         
         return entireSequence;

@@ -7,7 +7,6 @@ using static CardInfo;
 
 public class SubAnimations
 {
-    // All animations atomized
     readonly CardMover _cardMover;
     readonly CardManager _cardManager;
     readonly CardInventory _cardInventory;
@@ -41,15 +40,15 @@ public class SubAnimations
     public Tween FanOutChildFromBase(CardNode newChild)
     {
         return DOTween.Sequence()
-            .Append(MoveBaseToChild(newChild, newChild))
-            .Append(LowerNodePile(newChild));
+            .Append(MoveNodeXToChild(newChild, newChild))
+            .Append(MoveNodeYLowerPile(newChild));
     }
 
     public Tween LiftAndMoveChildToBase(CardNode node, CardNode relativeHeightNode)
     {
         return DOTween.Sequence()
-            .Append(RaiseNodePileRelative(node, relativeHeightNode))
-            .Append(MoveNodeToLeft(node));
+            .Append(MoveNodeYLiftPile(node, relativeHeightNode))
+            .Append(MoveNodeXToLeft(node));
     }
 
     #region Inventory
@@ -85,18 +84,20 @@ public class SubAnimations
         float endPositionHorizontal = startOffset + directionSign * (totalChildren - index - 1) * CardInfo.CARDWIDTH * cardPercentage;
 
         entireSequence.Join(DOTween.Sequence()
-            .Append(MoveNodeHorizontally(node, startOffset))
+            .Append(MoveNodeX(node, startOffset))
             .Append(RotateOffset(node, fromRight))
-            .Append(MoveNodeHorizontally(node, endPositionHorizontal))
+            .Append(MoveNodeX(node, endPositionHorizontal))
             .Join(_tweenYFunc(node, 2)));
 
         return entireSequence;
     }
 
-    public Tween FanInCardsToRight()
+    public Tween FanInCardsToRight(bool doDelay)
     {
         Sequence entireSequence = DOTween.Sequence();
         CardNode inventoryNode = _cardInventory.InventoryNode;
+
+        float delay = doDelay ? _horizontalTime + _waitTime : 0;
 
         int totalChildren = inventoryNode.Children.Count;
 
@@ -107,9 +108,11 @@ public class SubAnimations
             _cardManager.AddToTopLevelMainPile(childNode);
 
             entireSequence.Join(DOTween.Sequence()
-            .Append(MoveNodeToRight(childNode))
-            .Join(RaiseNodePileRelative(childNode, inventoryNode))
-            .Join(RotateToIdentity(childNode)));
+            .Append(MoveNodeYLiftPile(childNode, inventoryNode))
+            .Join(RotateToIdentity(childNode))
+            .AppendInterval(delay)
+            .Append(MoveNodeXToRight(childNode)));
+            
         }
 
         return entireSequence;
@@ -118,78 +121,81 @@ public class SubAnimations
     #endregion
 
     #region Move Z
-    public Tween MoveNodeFarther(CardNode node)
+
+    public Tween MoveNodeZ(CardNode node, float positionZ)
     {
-        return _tweenZFunc(node, _playSpaceTopRight.y);
+        return _tweenZFunc(node, positionZ);
     }
 
-    public Tween MoveNodeNearer(CardNode node)
+    public Tween MoveNodeZFarther(CardNode node)
     {
-        return _tweenZFunc(node, _playSpaceBottomLeft.y);
+        return MoveNodeZ(node, _playSpaceTopRight.y);
+    }
+
+    public Tween MoveNodeZNearer(CardNode node)
+    {
+        return MoveNodeZ(node, _playSpaceBottomLeft.y);
     }
 
     #endregion
 
     #region Move X
-    public Tween MoveBaseToChild(CardNode movedChild, CardNode positionReferencedChild)
-    {
-        return _tweenXFunc(movedChild, positionReferencedChild.Parent.Children.IndexOf(positionReferencedChild) * _cardMover.ChildrenDistance - _cardMover.ChildrenStartOffset);
-    }
 
-    public Tween MoveNodeHorizontally(CardNode node, float positionX)
+    public Tween MoveNodeX(CardNode node, float positionX)
     {
         return _tweenXFunc(node, positionX);
     }
 
-    public Tween MoveNodeToLeft(CardNode node)
+    public Tween MoveNodeXToChild(CardNode movedChild, CardNode positionReferencedChild)
     {
-        return _tweenXFunc(node, _playSpaceBottomLeft.x);
+        return MoveNodeX(movedChild, positionReferencedChild.Parent.Children.IndexOf(positionReferencedChild) * _cardMover.ChildrenDistance - _cardMover.ChildrenStartOffset);
     }
 
-    public Tween MoveNodeToRight(CardNode node)
+    public Tween MoveNodeXToLeft(CardNode node)
     {
-        return _tweenXFunc(node, _playSpaceTopRight.x);
+        return MoveNodeX(node, _playSpaceBottomLeft.x);
     }
 
-    public Tween MoveNodeToOutOfFrameRight(CardNode node)
+    public Tween MoveNodeXToRight(CardNode node)
     {
-        return _tweenXFunc(node, _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x));
+        return MoveNodeX(node, _playSpaceTopRight.x);
     }
 
-    public Tween MoveNodeToMiddle(CardNode node)
+    public Tween MoveNodeXToFarRight(CardNode node)
     {
-        return _tweenXFunc(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f);
+        return MoveNodeX(node, _playSpaceTopRight.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x));
     }
 
-    public Tween MoveChildOneToRight(CardNode node)
+    public Tween MoveNodeXToMiddle(CardNode node)
+    {
+        return MoveNodeX(node, _playSpaceBottomLeft.x + (_playSpaceTopRight.x - _playSpaceBottomLeft.x) * 0.5f);
+    }
+
+    public Tween MoveNodeXChildOneSpaceToLeft(CardNode node)
     {
         int index = node.Parent.Children.IndexOf(node);
-        return _tweenXFunc(node, _cardMover.ChildrenDistance * (index - 1) - _cardMover.ChildrenStartOffset);
+        return MoveNodeX(node, _cardMover.ChildrenDistance * (index - 1) - _cardMover.ChildrenStartOffset);
     }
 
     #endregion
 
-    #region Lower and Lift
+    #region MoveY
 
-    public Tween LowerNodePile(CardNode node)
-    {
-        return RaiseNodeToHeight(node, node.GetNodeCount(CardTraversal.BODY));
-    }
-
-    public Tween LiftNodePile(CardNode node)
-    {
-        return RaiseNodeToHeight(node, node.GetNodeCount(CardTraversal.CONTEXT));
-    }
-
-    public Tween RaiseNodePileRelative(CardNode node, CardNode relativeHeightNode)
-    {
-        return RaiseNodeToHeight(node, node.GetNodeCountUpToNodeInPile(relativeHeightNode, CardTraversal.CONTEXT));
-    }
-
-    public Tween RaiseNodeToHeight(CardNode node, int height)
+    public Tween MoveNodeY(CardNode node, int height)
     {
         return _tweenYFunc(node, height);
     }
+
+    public Tween MoveNodeYLowerPile(CardNode node)
+    {
+        return MoveNodeY(node, node.GetNodeCount(CardTraversal.BODY));
+    }
+
+    public Tween MoveNodeYLiftPile(CardNode node, CardNode relativeHeightNode)
+    {
+        return MoveNodeY(node, node.GetNodeCountUpToNodeInPile(relativeHeightNode, CardTraversal.CONTEXT));
+    }
+    
     #endregion
 
     #region Miscellaneous

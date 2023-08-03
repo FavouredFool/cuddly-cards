@@ -25,8 +25,8 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(2 * _waitTime + 2 * _horizontalTime + _verticalTime)
-            .Append(_subAnimations.MoveNodeToMiddle(activeNode))
-            .Append(_subAnimations.LowerNodePile(activeNode))
+            .Append(_subAnimations.MoveNodeXToMiddle(activeNode))
+            .Append(_subAnimations.MoveNodeYLowerPile(activeNode))
             );
 
 
@@ -40,8 +40,8 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
             _cardManager.AddToTopLevelMainPile(child);
             
             entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.RaiseNodePileRelative(child, rootNode))
-            .Append(_subAnimations.MoveNodeToLeft(child))
+            .Append(_subAnimations.MoveNodeYLiftPile(child, rootNode))
+            .Append(_subAnimations.MoveNodeXToLeft(child))
             .AppendInterval(2 * _waitTime + 3 * _horizontalTime + _verticalTime));
         }
 
@@ -53,7 +53,7 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
             // All children that are on the same level but physically above
             entireSequence.Join(DOTween.Sequence()
             .AppendInterval(2 * _waitTime + 3 * _horizontalTime + _verticalTime)
-            .Append(_subAnimations.RaiseNodeToHeight(otherChild, height)));
+            .Append(_subAnimations.MoveNodeY(otherChild, height)));
         }
 
 
@@ -63,9 +63,9 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
         _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.RaiseNodePileRelative(baseNode, rootNode))
+            .Append(_subAnimations.MoveNodeYLiftPile(baseNode, rootNode))
             .AppendInterval(3 * _horizontalTime + 2 * _waitTime)
-            .Append(_subAnimations.RaiseNodeToHeight(baseNode, baseHeight)));
+            .Append(_subAnimations.MoveNodeY(baseNode, baseHeight)));
 
 
         // -------------- BACK ---------------------
@@ -85,9 +85,9 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
         foreach (CardNode node in animatingNodesBack)
         {
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodePileRelative(node, rootNode))
+                .Append(_subAnimations.MoveNodeYLiftPile(node, rootNode))
                 .AppendInterval(_horizontalTime + _waitTime)
-                .Append(_subAnimations.MoveNodeNearer(node))
+                .Append(_subAnimations.MoveNodeZNearer(node))
                 .AppendInterval(_waitTime + _horizontalTime + _verticalTime));
         }
 
@@ -95,7 +95,7 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(2 * _waitTime + 3 * _horizontalTime + _verticalTime)
-            .Append(_subAnimations.RaiseNodeToHeight(backNode, backHeight)));
+            .Append(_subAnimations.MoveNodeY(backNode, backHeight)));
 
 
         // -------------- ROOT ---------------------
@@ -116,10 +116,10 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
             foreach (CardNode node in animatingNodesRoot)
             {
                 entireSequence.Join(DOTween.Sequence()
-                    .Append(_subAnimations.RaiseNodePileRelative(node, rootNode))
-                    .Append(_subAnimations.MoveNodeToLeft(node))
+                    .Append(_subAnimations.MoveNodeYLiftPile(node, rootNode))
+                    .Append(_subAnimations.MoveNodeXToLeft(node))
                     .AppendInterval(_waitTime)
-                    .Append(_subAnimations.MoveNodeNearer(node))
+                    .Append(_subAnimations.MoveNodeZNearer(node))
                     .AppendInterval(_waitTime + _horizontalTime + _verticalTime));
             }
 
@@ -127,7 +127,7 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(2 * _waitTime + 3 * _horizontalTime + _verticalTime)
-                .Append(_subAnimations.RaiseNodeToHeight(rootNode, rootHeight)));
+                .Append(_subAnimations.MoveNodeY(rootNode, rootHeight)));
         }
 
         return entireSequence;

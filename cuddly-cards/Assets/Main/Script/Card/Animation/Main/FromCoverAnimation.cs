@@ -17,9 +17,9 @@ public class FromCoverAnimation : CardAnimation
         _cardManager.AddToTopLevelMainPile(rootNode);
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(_verticalTime)
-            .Append(_subAnimations.MoveNodeToLeft(rootNode))
+            .Append(_subAnimations.MoveNodeXToLeft(rootNode))
             .AppendInterval(_waitTime + _horizontalTime)
-            .Append(_subAnimations.RaiseNodeToHeight(rootNode, 1)));
+            .Append(_subAnimations.MoveNodeY(rootNode, 1)));
 
         for (int i = 0; i < rootNode.Children.Count; i++)
         {
@@ -28,10 +28,10 @@ public class FromCoverAnimation : CardAnimation
 
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
-                .Append(_subAnimations.MoveNodeToLeft(childNode))
+                .Append(_subAnimations.MoveNodeXToLeft(childNode))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.MoveBaseToChild(childNode, childNode))
-                .Append(_subAnimations.LowerNodePile(childNode)));
+                .Append(_subAnimations.MoveNodeXToChild(childNode, childNode))
+                .Append(_subAnimations.MoveNodeYLowerPile(childNode)));
         }
 
         return entireSequence;

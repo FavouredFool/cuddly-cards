@@ -34,7 +34,7 @@ public class FanDialogueAnimation : CardAnimation
             entireSequence.Join(
                 DOTween.Sequence()
                 .AppendInterval(_verticalTime)
-                .Append(_subAnimations.MoveNodeToLeft(node))
+                .Append(_subAnimations.MoveNodeXToLeft(node))
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.FanOutCards(node, i, childsToBe.Count, false))
             );
@@ -45,9 +45,9 @@ public class FanDialogueAnimation : CardAnimation
         _cardManager.AddToTopLevelMainPile(activeNode);
         entireSequence.Join(DOTween.Sequence()
             .AppendInterval(_verticalTime)
-            .Append(_subAnimations.MoveNodeToLeft(activeNode))
+            .Append(_subAnimations.MoveNodeXToLeft(activeNode))
             .AppendInterval(_waitTime + _horizontalTime)
-            .Append(_subAnimations.LowerNodePile(activeNode)));
+            .Append(_subAnimations.MoveNodeYLowerPile(activeNode)));
 
 
         // ------------- Previous Children ----------------
@@ -70,18 +70,18 @@ public class FanDialogueAnimation : CardAnimation
             entireSequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.LiftAndMoveChildToBase(previousChild, baseNode))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.MoveNodeFarther(previousChild))
-                .Append(_subAnimations.RaiseNodeToHeight(previousChild, height)));
+                .Append(_subAnimations.MoveNodeZFarther(previousChild))
+                .Append(_subAnimations.MoveNodeY(previousChild, height)));
         }
 
         // ------------- BackToBe ----------------
 
         _cardManager.AddToTopLevelMainPile(baseNode);
         entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.LiftNodePile(baseNode))
+            .Append(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode))
             .AppendInterval(_horizontalTime + _waitTime)
-            .Append(_subAnimations.MoveNodeFarther(baseNode))
-            .Append(_subAnimations.RaiseNodeToHeight(baseNode, baseNode.GetNodeCount(CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT))));
+            .Append(_subAnimations.MoveNodeZFarther(baseNode))
+            .Append(_subAnimations.MoveNodeY(baseNode, baseNode.GetNodeCount(CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT))));
 
 
         // ------------- Discard & DiscardToBe ----------------
@@ -102,19 +102,19 @@ public class FanDialogueAnimation : CardAnimation
                 _cardManager.AddToTopLevelMainPile(node);
             }
 
-            entireSequence.Join(_subAnimations.RaiseNodeToHeight(rootNode, discardHeight));
+            entireSequence.Join(_subAnimations.MoveNodeY(rootNode, discardHeight));
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodeToHeight(discardToBe, discardToBeHeight))
+                .Append(_subAnimations.MoveNodeY(discardToBe, discardToBeHeight))
                 .AppendInterval(_horizontalTime + _waitTime)
-                .Append(_subAnimations.MoveNodeToRight(discardToBe)));
+                .Append(_subAnimations.MoveNodeXToRight(discardToBe)));
         }
         else if (discardToBe != null)
         {
             _cardManager.AddToTopLevelMainPile(discardToBe);
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
-                .Append(_subAnimations.MoveNodeToRight(discardToBe)));
+                .Append(_subAnimations.MoveNodeXToRight(discardToBe)));
         }
 
         return entireSequence;

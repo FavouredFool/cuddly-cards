@@ -39,11 +39,11 @@ public class CollectCardAnimation : CardAnimation
 
         entireSequence.Join(
             DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodeToHeight(activeNode, maxNeightbourHeight))
+                .Append(_subAnimations.MoveNodeY(activeNode, maxNeightbourHeight))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.MoveNodeToRight(activeNode))
+                .Append(_subAnimations.MoveNodeXToRight(activeNode))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.RaiseNodeToHeight(activeNode, 1))
+                .Append(_subAnimations.MoveNodeY(activeNode, 1))
             );
 
 
@@ -51,9 +51,9 @@ public class CollectCardAnimation : CardAnimation
 
         entireSequence.Join(
             DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryHeight))
+                .Append(_subAnimations.MoveNodeY(inventoryNode, inventoryHeight))
                 .AppendInterval(2 * _waitTime + _horizontalTime)
-                .Append(_subAnimations.RaiseNodeToHeight(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT) + 1))
+                .Append(_subAnimations.MoveNodeY(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT) + 1))
             );
 
         // move all cards that were to the right of activeNode one space to the left
@@ -66,7 +66,7 @@ public class CollectCardAnimation : CardAnimation
             entireSequence.Join(
             DOTween.Sequence()
                 .AppendInterval(_verticalTime + _waitTime)
-                .Append(_subAnimations.MoveChildOneToRight(parentNode.Children[i]))
+                .Append(_subAnimations.MoveNodeXChildOneSpaceToLeft(parentNode.Children[i]))
             );
         }
 

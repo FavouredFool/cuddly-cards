@@ -27,8 +27,8 @@ public class SpreadDialogueAnimationPart2 : CardAnimation
         int activeHeight = parentTalkNode.GetNodeCountBelowNodeInPile(rootNode, CardTraversal.CONTEXT) + activeNode.GetNodeCount(CardTraversal.CONTEXT);
 
         entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.RaiseNodeToHeight(activeNode, activeHeight))
-            .Append(_subAnimations.MoveNodeToLeft(activeNode)));
+            .Append(_subAnimations.MoveNodeY(activeNode, activeHeight))
+            .Append(_subAnimations.MoveNodeXToLeft(activeNode)));
 
 
         // -------------- ROOT ---------------------
@@ -44,7 +44,7 @@ public class SpreadDialogueAnimationPart2 : CardAnimation
 
         int rootHeight = rootNode.GetNodeCount(CardTraversal.CONTEXT) + activeNode.GetNodeCount(CardTraversal.CONTEXT);
 
-        entireSequence.Join(_subAnimations.RaiseNodeToHeight(rootNode, rootHeight));
+        entireSequence.Join(_subAnimations.MoveNodeY(rootNode, rootHeight));
 
         return entireSequence;
     }

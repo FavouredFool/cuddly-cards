@@ -37,6 +37,6 @@ public class ExitInventoryPileAnimation : CardAnimation
     {
         return DOTween.Sequence()
                     .AppendInterval(_verticalTime + 2 * _horizontalTime + 2 * _waitTime)
-                    .Append(_subAnimations.MoveNodeToOutOfFrameRight(node));
+                    .Append(_subAnimations.MoveNodeXToFarRight(node));
     }
 }

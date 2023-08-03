@@ -1318,7 +1318,7 @@ MonoBehaviour:
   _childrenDistance: 1.125
   _childrenStartOffset: 1.648
   _verticalTime: 0.2
-  _horizontalTime: 0.45
+  _horizontalTime: 0.5
   _waitTime: 0.1
   _border: 1.25
   _inventoryCardRotationAmount: 0.5

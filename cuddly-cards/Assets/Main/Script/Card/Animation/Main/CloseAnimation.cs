@@ -15,7 +15,7 @@ public class CloseAnimation : CardAnimation
         CardNode rootNode = _cardManager.RootNode;
         _cardManager.AddToTopLevelMainPile(baseNode);
 
-        entireSequence.Join(_subAnimations.LiftNodePile(baseNode));
+        entireSequence.Join(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode));
 
         if (baseNode != rootNode)
         {
@@ -32,8 +32,8 @@ public class CloseAnimation : CardAnimation
             _cardManager.AddToTopLevelMainPile(childNode);
 
             entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.RaiseNodePileRelative(childNode, baseNode))
-                .Append(_subAnimations.MoveNodeToLeft(childNode)));
+                .Append(_subAnimations.MoveNodeYLiftPile(childNode, baseNode))
+                .Append(_subAnimations.MoveNodeXToLeft(childNode)));
         }
 
         return entireSequence;
