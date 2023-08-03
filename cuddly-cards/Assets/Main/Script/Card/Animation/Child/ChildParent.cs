@@ -6,9 +6,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class NoChildrenAnimation : CardAnimation
+public abstract class ChildParent : CardAnimation
 {
-    public NoChildrenAnimation(CardManager cardManager) : base(cardManager) { }
+    public ChildParent(CardManager cardManager) : base(cardManager) { }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
@@ -19,8 +19,14 @@ public class NoChildrenAnimation : CardAnimation
         CardNode discardToBe = baseNode.Parent;
         CardNode discard = discardToBe != null && discardToBe != rootNode ? rootNode : null;
 
+        List<CardNode> childsToBe = activeNode.Children;
         List<CardNode> previousChilds = baseNode.Children;
 
+
+        // ------------- CHILDS TO BE ----------------
+
+        entireSequence.Join(AnimateChildren(activeNode, baseNode));
+        
 
         // ------------- MAIN TO BE ----------------
 
@@ -93,4 +99,5 @@ public class NoChildrenAnimation : CardAnimation
         return entireSequence;
     }
 
+    public abstract Tween AnimateChildren(CardNode activeNode, CardNode baseNode);
 }

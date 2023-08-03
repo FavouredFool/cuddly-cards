@@ -92,6 +92,7 @@ public class BackAnimation : CardAnimation
 
             // ------------- BackToBe ----------------
 
+            _cardManager.AddToTopLevelMainPile(backToBe);
 
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
