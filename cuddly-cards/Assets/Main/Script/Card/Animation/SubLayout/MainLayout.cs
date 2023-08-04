@@ -37,7 +37,7 @@ public class MainLayout : SubLayout
 
     public void ResetCover(CardNode baseNode)
     {
-        _cardManager.AddToTopLevelMainPile(baseNode);
+        _cardManager.AddToTopLevel(baseNode);
         baseNode.Body.SetHeight(baseNode.GetNodeCount(CardTraversal.BODY));
 
         _cardMover.MoveCard(baseNode, new Vector2(_cardMover.GetPlaySpaceBottomLeft().x + (_cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x) * 0.5f, _cardMover.GetPlaySpaceBottomLeft().y));
@@ -70,19 +70,19 @@ public class MainLayout : SubLayout
     {
         CardNode rootNode = _cardManager.RootNode;
 
-        _cardManager.AddToTopLevelMainPile(baseNode);
+        _cardManager.AddToTopLevel(baseNode);
 
         _cardMover.MoveCard(baseNode, _cardMover.GetPlaySpaceBottomLeft());
 
         if (baseNode != rootNode)
         {
-            _cardManager.AddToTopLevelMainPile(baseNode.Parent);
+            _cardManager.AddToTopLevel(baseNode.Parent);
             baseNode.Parent.Body.SetHeight(baseNode.Parent.GetNodeCount(CardTraversal.BODY));
             _cardMover.MoveCard(baseNode.Parent, new Vector2(_cardMover.GetPlaySpaceBottomLeft().x, _cardMover.GetPlaySpaceTopRight().y));
 
             if (baseNode.Parent != rootNode)
             {
-                _cardManager.AddToTopLevelMainPile(rootNode);
+                _cardManager.AddToTopLevel(rootNode);
                 rootNode.Body.SetHeight(rootNode.GetNodeCount(CardTraversal.BODY));
                 _cardMover.MoveCard(rootNode, _cardMover.GetPlaySpaceTopRight());
             }
@@ -95,11 +95,11 @@ public class MainLayout : SubLayout
     {
         CardNode rootNode = _cardManager.RootNode;
 
-        _cardManager.AddToTopLevelMainPile(baseNode);
+        _cardManager.AddToTopLevel(baseNode);
 
         foreach (CardNode node in baseNode.Children)
         {
-            _cardManager.AddToTopLevelMainPile(node);
+            _cardManager.AddToTopLevel(node, false);
         }
 
         float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
@@ -112,13 +112,13 @@ public class MainLayout : SubLayout
 
         if (baseNode != rootNode)
         {
-            _cardManager.AddToTopLevelMainPile(baseNode.Parent);
+            _cardManager.AddToTopLevel(baseNode.Parent);
             baseNode.Parent.Body.SetHeight(baseNode.Parent.GetNodeCount(CardTraversal.BODY));
             _cardMover.MoveCard(baseNode.Parent, new Vector2(_cardMover.GetPlaySpaceBottomLeft().x, _cardMover.GetPlaySpaceTopRight().y));
 
             if (baseNode.Parent != rootNode)
             {
-                _cardManager.AddToTopLevelMainPile(rootNode);
+                _cardManager.AddToTopLevel(rootNode);
                 rootNode.Body.SetHeight(rootNode.GetNodeCount(CardTraversal.BODY));
                 _cardMover.MoveCard(rootNode, _cardMover.GetPlaySpaceTopRight());
             }
@@ -144,19 +144,19 @@ public class MainLayout : SubLayout
         CardNode rootNode = _cardManager.RootNode;
         // move in deck -> move out inventory
 
-        _cardManager.AddToTopLevelMainPile(baseNode);
+        _cardManager.AddToTopLevel(baseNode);
         baseNode.Body.SetHeight(baseNode.GetNodeCount(CardTraversal.BODY));
         _cardMover.MoveCard(baseNode, _cardMover.GetPlaySpaceBottomLeft());
 
         if (baseNode != rootNode)
         {
-            _cardManager.AddToTopLevelMainPile(baseNode.Parent);
+            _cardManager.AddToTopLevel(baseNode.Parent);
             baseNode.Parent.Body.SetHeight(baseNode.Parent.GetNodeCount(CardTraversal.BODY));
             _cardMover.MoveCard(baseNode.Parent, new Vector2(_cardMover.GetPlaySpaceBottomLeft().x, _cardMover.GetPlaySpaceTopRight().y));
 
             if (baseNode.Parent != rootNode)
             {
-                _cardManager.AddToTopLevelMainPile(rootNode);
+                _cardManager.AddToTopLevel(rootNode);
                 rootNode.Body.SetHeight(rootNode.GetNodeCount(CardTraversal.BODY));
                 _cardMover.MoveCard(rootNode, _cardMover.GetPlaySpaceTopRight());
             }
@@ -166,12 +166,12 @@ public class MainLayout : SubLayout
     public void ResetDefault(CardNode baseNode)
     {
         CardNode rootNode = _cardManager.RootNode;
-        _cardManager.AddToTopLevelMainPile(baseNode);
+        _cardManager.AddToTopLevel(baseNode);
         _cardMover.MoveCard(baseNode, _cardMover.GetPlaySpaceBottomLeft());
 
         for (int i = 0; i < baseNode.Children.Count; i++)
         {
-            _cardManager.AddToTopLevelMainPile(baseNode.Children[i]);
+            _cardManager.AddToTopLevel(baseNode.Children[i]);
             baseNode.Children[i].Body.SetHeight(baseNode.Children[i].GetNodeCount(CardTraversal.BODY));
             _cardMover.MoveCard(baseNode.Children[i], new Vector2(i * _cardMover.ChildrenDistance - _cardMover.ChildrenStartOffset, _cardMover.GetPlaySpaceBottomLeft().y));
         }
@@ -180,13 +180,13 @@ public class MainLayout : SubLayout
 
         if (baseNode != rootNode)
         {
-            _cardManager.AddToTopLevelMainPile(baseNode.Parent);
+            _cardManager.AddToTopLevel(baseNode.Parent);
             baseNode.Parent.Body.SetHeight(baseNode.Parent.GetNodeCount(CardTraversal.BODY));
             _cardMover.MoveCard(baseNode.Parent, new Vector2(_cardMover.GetPlaySpaceBottomLeft().x, _cardMover.GetPlaySpaceTopRight().y));
 
             if (baseNode.Parent != rootNode)
             {
-                _cardManager.AddToTopLevelMainPile(rootNode);
+                _cardManager.AddToTopLevel(rootNode);
                 rootNode.Body.SetHeight(rootNode.GetNodeCount(CardTraversal.BODY));
                 _cardMover.MoveCard(rootNode, _cardMover.GetPlaySpaceTopRight());
             }

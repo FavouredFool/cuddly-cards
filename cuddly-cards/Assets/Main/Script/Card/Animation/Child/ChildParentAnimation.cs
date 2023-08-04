@@ -79,7 +79,7 @@ public abstract class ChildParentAnimation : CardAnimation
 
             foreach (CardNode node in lowerTopMostCardsRoot)
             {
-                _cardManager.AddToTopLevelMainPile(node);
+                _cardManager.AddToTopLevel(node);
             }
 
             entireSequence.Join(_subAnimations.MoveNodeY(rootNode, discardHeight));

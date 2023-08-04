@@ -18,7 +18,7 @@ public class ChildAnimation : ChildParentAnimation
 
         for (int i = childsToBe.Count - 1; i >= 0; i--)
         {
-            _cardManager.AddToTopLevelMainPile(childsToBe[i]);
+            _cardManager.AddToTopLevel(childsToBe[i]);
 
             sequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.LiftAndMoveChildToBase(childsToBe[i], baseNode))

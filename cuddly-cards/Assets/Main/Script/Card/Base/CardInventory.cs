@@ -16,7 +16,7 @@ public class CardInventory
     {
         InventoryNode = new CardNode(new CardContext("Inventory", "All the things I have and know.", CardType.INVENTORY));
         InventoryNode.Body = builder.BuildCardBody(InventoryNode.Context, InventoryNode, _cardManager.CardFolder);
-        InventoryNode.IsTopLevel = true;
+        _cardManager.AddToTopLevel(InventoryNode);
     }
 
     public async void MoveKeyFromMainToInventory(CardNode node)

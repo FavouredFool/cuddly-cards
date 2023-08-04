@@ -16,7 +16,7 @@ public class BackAnimation : BackParentAnimation
 
         foreach (CardNode child in activeNode.Children)
         {
-            _cardManager.AddToTopLevelMainPile(child);
+            _cardManager.AddToTopLevel(child);
 
             if (child == baseNode)
             {

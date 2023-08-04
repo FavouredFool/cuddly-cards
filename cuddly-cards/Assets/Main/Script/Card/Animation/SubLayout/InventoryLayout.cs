@@ -10,6 +10,8 @@ public class InventoryLayout : SubLayout
 
     public override void SetLayoutStatic(CardNode baseNode)
     {
+        _cardManager.AddToTopLevel(_cardInventory.InventoryNode);
+
         if (_stateManager.States.Peek() is CoverState)
         {
             _cardMover.MoveCard(_cardInventory.InventoryNode, new Vector2(_cardMover.GetPlaySpaceTopRight().x + (_cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x), _cardMover.GetPlaySpaceBottomLeft().y));
@@ -34,7 +36,7 @@ public class InventoryLayout : SubLayout
     {
         foreach (CardNode node in _cardInventory.InventoryNode.Children)
         {
-            _cardManager.AddToTopLevelMainPile(node);
+            _cardManager.AddToTopLevel(node);
         }
 
         float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
@@ -48,7 +50,7 @@ public class InventoryLayout : SubLayout
     {
         foreach (CardNode node in _cardInventory.InventoryNode.Children)
         {
-            _cardManager.AddToTopLevelMainPile(node);
+            _cardManager.AddToTopLevel(node);
         }
 
         float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;

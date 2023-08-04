@@ -45,7 +45,7 @@ public abstract class BackParentAnimation : CardAnimation
 
             foreach (CardNode node in lowerTopMostCardsRoot)
             {
-                _cardManager.AddToTopLevelMainPile(node);
+                _cardManager.AddToTopLevel(node);
             }
 
             entireSequence.Join(DOTween.Sequence()
@@ -54,7 +54,7 @@ public abstract class BackParentAnimation : CardAnimation
 
             // ------------- BackToBe ----------------
 
-            _cardManager.AddToTopLevelMainPile(backToBe);
+            _cardManager.AddToTopLevel(backToBe);
 
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)

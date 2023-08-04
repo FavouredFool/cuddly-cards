@@ -76,24 +76,25 @@ public class AnimationManager
     public void SetTopLevelNodes(CardNode activeNode, CardNode baseNode)
     {
         CardNode rootNode = _cardManager.RootNode;
+        _cardManager.AddToTopLevel(_cardManager.CardInventory.InventoryNode);
 
         if (activeNode != baseNode.Parent)
         {
-            _cardManager.AddToTopLevelMainPile(baseNode);
+            _cardManager.AddToTopLevel(baseNode);
         }
         
         for (int i = 0; i < baseNode.Children.Count; i++)
         {
-            _cardManager.AddToTopLevelMainPile(baseNode.Children[i]);
+            _cardManager.AddToTopLevel(baseNode.Children[i]);
         }
 
         if (baseNode != rootNode)
         {
-            _cardManager.AddToTopLevelMainPile(baseNode.Parent);
+            _cardManager.AddToTopLevel(baseNode.Parent);
 
             if (baseNode.Parent != rootNode)
             {
-                _cardManager.AddToTopLevelMainPile(rootNode);
+                _cardManager.AddToTopLevel(rootNode);
             }
         }
     }

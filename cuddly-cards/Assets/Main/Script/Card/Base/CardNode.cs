@@ -22,9 +22,21 @@ public class CardNode
     public CardBody Body { set; get; }
     public CardNode Parent { set; get; }
     public List<CardNode> Children { get; }
-    public bool IsTopLevel { set; get; }
+    public bool IsTopLevel { private set; get; }
+	public bool IsClickable { private set; get; }
 
     public CardNode this[int key] => Children[key];
+
+	public void SetNodeState(bool isTopLevel, bool isClickable)
+    {
+		if (!isTopLevel && isClickable)
+        {
+			throw new System.Exception("node can't be clickable without being toplevel");
+        }
+
+		IsTopLevel = isTopLevel;
+		IsClickable = isClickable;
+    }
 
     public void AddChild(CardNode node)
 	{

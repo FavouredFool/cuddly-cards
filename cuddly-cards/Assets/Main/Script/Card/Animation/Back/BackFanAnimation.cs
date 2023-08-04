@@ -19,7 +19,7 @@ public class BackFanAnimation : BackParentAnimation
         {
             CardNode child = activeNode.Children[i];
 
-            _cardManager.AddToTopLevelMainPile(child);
+            _cardManager.AddToTopLevel(child);
 
             if (child == baseNode)
             {

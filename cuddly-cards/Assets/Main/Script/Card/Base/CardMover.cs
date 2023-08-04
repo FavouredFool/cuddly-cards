@@ -84,7 +84,7 @@ public class CardMover : MonoBehaviour
 
     public void SetMainCardsRelativeToParent()
     {
-        foreach (CardNode topLevel in CardManager.GetTopLevelNodesMainPile())
+        foreach (CardNode topLevel in CardManager.GetTopLevelNodes())
         {
             topLevel.Children.Aggregate(1, (current, childNode) => current + childNode.SetPositionsRecursive(current));
         }

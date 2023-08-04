@@ -36,7 +36,7 @@ public class SpreadDialogueAnimationPart2 : CardAnimation
         foreach (CardNode node in lowerTopMostCards)
         {
             // Braucht man die noch, wenn man sie in Part1 bereits toplevel gemacht hat? Ist so'ne Dependency überhaupt OK? Vllt. pro Animation top-level resetten TODO
-            _cardManager.AddToTopLevelMainPile(node);
+            _cardManager.AddToTopLevel(node);
         }
 
         int rootHeight = rootNode.GetNodeCount(CardTraversal.CONTEXT) + activeNode.GetNodeCount(CardTraversal.CONTEXT);

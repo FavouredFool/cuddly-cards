@@ -98,7 +98,16 @@ public class CardManager : MonoBehaviour
 
     public List<CardNode> GetClickableNodes()
     {
-        List<CardNode> clickables = new(GetTopLevelNodesMainPile()) { CardInventory.InventoryNode };
+        List<CardNode> clickables = new();
+        foreach (CardNode topLevelNode in GetTopLevelNodes())
+        {
+            if (!topLevelNode.IsClickable)
+            {
+                continue;
+            }
+
+            clickables.Add(topLevelNode);
+        }
 
         return clickables;
     }
@@ -107,16 +116,18 @@ public class CardManager : MonoBehaviour
     {
         _topLevelNodesMainPile.Clear();
 
+        // reset toplevel of main
         RootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT,
             delegate (CardNode node)
         {
-            node.IsTopLevel = false;
+            node.SetNodeState(false, false);
             return true;
         });
 
+        // reset toplevel of inventory
         foreach (CardNode node in CardInventory.InventoryNode.Children)
         {
-            node.IsTopLevel = false;
+            node.SetNodeState(false, false);
         }
     }
 
@@ -143,19 +154,24 @@ public class CardManager : MonoBehaviour
         return foundNode;
     }
 
-    public void AddToTopLevelMainPile(CardNode cardNode)
+    public void AddToTopLevel(CardNode cardNode)
+    {
+        AddToTopLevel(cardNode, true);
+    }
+
+    public void AddToTopLevel(CardNode cardNode, bool isClickable)
     {
         if (_topLevelNodesMainPile.Contains(cardNode))
         {
-            Debug.Log("Gedoppelt");
+            Debug.LogWarning("Toplevels versucht zu doppeln");
             return;
         }
 
         _topLevelNodesMainPile.Add(cardNode);
-        cardNode.IsTopLevel = true;
+        cardNode.SetNodeState(true, isClickable);
     }
 
-    public List<CardNode> GetTopLevelNodesMainPile()
+    public List<CardNode> GetTopLevelNodes()
     {
         return _topLevelNodesMainPile;
     }

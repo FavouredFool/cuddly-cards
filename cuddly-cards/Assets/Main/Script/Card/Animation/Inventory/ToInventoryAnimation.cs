@@ -28,7 +28,7 @@ public class ToInventoryAnimation : CardAnimation
         for (int i = 0; i < count; i++)
         {
             CardNode node = inventoryNode.Children[i];
-            _cardManager.AddToTopLevelMainPile(node);
+            _cardManager.AddToTopLevel(node);
             
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)

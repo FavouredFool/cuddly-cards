@@ -105,7 +105,7 @@ public class SubAnimations
         {
             CardNode childNode = inventoryNode[i];
 
-            _cardManager.AddToTopLevelMainPile(childNode);
+            _cardManager.AddToTopLevel(childNode);
 
             entireSequence.Join(DOTween.Sequence()
             .Append(MoveNodeYLiftPile(childNode, inventoryNode))

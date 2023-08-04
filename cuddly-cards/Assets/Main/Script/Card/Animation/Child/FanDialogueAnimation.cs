@@ -1,4 +1,3 @@
-
 using DG.Tweening;
 using System;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ public class FanDialogueAnimation : ChildParentAnimation
         {
             CardNode node = childsToBe[i];
 
-            _cardManager.AddToTopLevelMainPile(childsToBe[i]);
+            _cardManager.AddToTopLevel(node);
 
             sequence.Join(
                 DOTween.Sequence()

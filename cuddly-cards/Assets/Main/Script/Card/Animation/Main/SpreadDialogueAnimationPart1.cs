@@ -70,7 +70,7 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
         foreach (CardNode node in lowerTopMostCardsBack)
         {
-            _cardManager.AddToTopLevelMainPile(node);
+            _cardManager.AddToTopLevel(node);
         }
 
         List<CardNode> animatingNodesBack = lowerTopMostCardsBack;
@@ -100,7 +100,7 @@ public class SpreadDialogueAnimationPart1 : CardAnimation
 
             foreach (CardNode node in lowerTopMostCardsRoot)
             {
-                _cardManager.AddToTopLevelMainPile(node);
+                _cardManager.AddToTopLevel(node);
             }
 
             List<CardNode> animatingNodesRoot = lowerTopMostCardsRoot;
