@@ -21,8 +21,7 @@ public class TalkState : SettedState
                 return;
 
             case CardType.DIALOGUE:
-                Debug.LogWarning("A dialogue should not be here");
-                ShowDialogue(clickedNode);
+                ToDialogueTransition(clickedNode);
                 return;
 
             default:
@@ -31,10 +30,12 @@ public class TalkState : SettedState
         }
     }
 
-    public void ShowDialogue(CardNode clickedNode)
+    public void ToDialogueTransition(CardNode clickedNode)
     {
-        ResetHover(clickedNode, null);
-        _stateManager.PushState(new DialogueState(_cardManager, clickedNode));
+        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager) };
+        LayoutState newState = new DialogueState(_cardManager, clickedNode);
+
+        ToTransition(clickedNode, animations, newState);
     }
 
     public void ToInventoryTransition(CardNode clickedNode)

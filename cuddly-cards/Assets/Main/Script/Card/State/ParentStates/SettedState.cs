@@ -4,7 +4,7 @@ using static CardInfo;
 
 public abstract class SettedState : DefaultState
 {
-    readonly CardNode _newBaseNode;
+    protected readonly CardNode _newBaseNode;
 
     protected SettedState(CardManager cardManager, CardNode newBaseNode) : base(cardManager)
     {

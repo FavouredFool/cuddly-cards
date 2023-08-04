@@ -6,9 +6,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class BackAnimation : CardAnimation
+public abstract class BackParentAnimation : CardAnimation
 {
-    public BackAnimation(CardManager cardManager) : base(cardManager) { }
+    public BackParentAnimation(CardManager cardManager) : base(cardManager) { }
 
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
@@ -21,48 +21,10 @@ public class BackAnimation : CardAnimation
 
         CardNode discard = backToBe != null && backToBe != rootNode ? rootNode : null;
 
-        for (int i = childsToBe.Count - 1; i >= 0; i--)
-        {
-            CardNode newChild = childsToBe[i];
-            _cardManager.AddToTopLevelMainPile(newChild);
 
+        // ------------- CHILDREN AND BASE ----------------
 
-            if (baseNode == newChild)
-            {
-                // ------------- PREVIOUS MAIN ----------------
-
-                entireSequence.Join(DOTween.Sequence()
-                    .Append(_subAnimations.MoveNodeYLiftPile(baseNode, activeNode))
-                    .AppendInterval(_horizontalTime + _waitTime)
-                    .Append(_subAnimations.MoveNodeXToChild(baseNode, baseNode))
-                    .Append(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode)));
-
-                // ------------- PREVIOUS CHILDREN ----------------
-                for (int j = previousChilds.Count - 1; j >= 0; j--)
-                {
-                    CardNode oldChild = previousChilds[j];
-
-                    entireSequence.Join(DOTween.Sequence()
-                        .Append(_subAnimations.MoveNodeYLiftPile(oldChild, activeNode))
-                        .Append(_subAnimations.MoveNodeXToLeft(oldChild))
-                        .AppendInterval(_waitTime)
-                        .Append(_subAnimations.MoveNodeXToChild(oldChild, baseNode))
-                        .Append(_subAnimations.MoveNodeYLiftPile(oldChild, baseNode)));  
-                }
-
-            }
-            else
-            {
-                // ------------- NEW CHILDREN ----------------
-
-                entireSequence.Join(DOTween.Sequence()
-                    .Append(_subAnimations.MoveNodeYLiftPile(newChild, activeNode))
-                    .Append(_subAnimations.MoveNodeZNearer(newChild))
-                    .AppendInterval(_waitTime)
-                    .Append(_subAnimations.MoveNodeXToChild(newChild, newChild))
-                    .Append(_subAnimations.MoveNodeYLowerPile(newChild)));
-            }
-        }
+        entireSequence.Join(AnimateChildrenAndBase(activeNode, baseNode));
 
         // ------------- NEW MAIN ----------------
 
@@ -112,4 +74,5 @@ public class BackAnimation : CardAnimation
         return entireSequence;
     }
 
+    public abstract Tween AnimateChildrenAndBase(CardNode activeNode, CardNode baseNode);
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class FanDialogueAnimation : DeeperParentAnimation
+public class FanDialogueAnimation : ChildParentAnimation
 {
     public FanDialogueAnimation(CardManager cardManager) : base(cardManager) { }
 

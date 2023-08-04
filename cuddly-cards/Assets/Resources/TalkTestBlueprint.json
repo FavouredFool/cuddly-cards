@@ -69,6 +69,24 @@
             ]
         },
         {
+            "label": "Some Key",
+            "description": "",
+            "type": "KEY",
+            "depth": "5"
+        },
+        {
+            "label": "Some Key",
+            "description": "",
+            "type": "KEY",
+            "depth": "5"
+        },
+        {
+            "label": "Some Key",
+            "description": "",
+            "type": "KEY",
+            "depth": "5"
+        },
+        {
             "label": "Some dialogue",
             "description": "The butterfly looks stretched - strained. Let's see what she has to say.",
             "type": "DIALOGUE",

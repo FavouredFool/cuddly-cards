@@ -26,6 +26,9 @@ public class MainLayout : SubLayout
                 ResetTalk(baseNode);
                 ResetTalkHeight(baseNode);
                 break;
+            case DialogueState:
+                ResetDialogue(baseNode);
+                break;
             default:
                 ResetDefault(baseNode);
                 break;
@@ -61,6 +64,31 @@ public class MainLayout : SubLayout
             baseNode[i].Body.SetHeightFloat(maxHeight + (i * -0.01f));
             baseNode[i].Body.transform.localRotation = Quaternion.Euler(0, 0, _cardMover.InventoryCardRotationAmount);
         }
+    }
+
+    public void ResetDialogue(CardNode baseNode)
+    {
+        CardNode rootNode = _cardManager.RootNode;
+
+        _cardManager.AddToTopLevelMainPile(baseNode);
+
+        _cardMover.MoveCard(baseNode, _cardMover.GetPlaySpaceBottomLeft());
+
+        if (baseNode != rootNode)
+        {
+            _cardManager.AddToTopLevelMainPile(baseNode.Parent);
+            baseNode.Parent.Body.SetHeight(baseNode.Parent.GetNodeCount(CardTraversal.BODY));
+            _cardMover.MoveCard(baseNode.Parent, new Vector2(_cardMover.GetPlaySpaceBottomLeft().x, _cardMover.GetPlaySpaceTopRight().y));
+
+            if (baseNode.Parent != rootNode)
+            {
+                _cardManager.AddToTopLevelMainPile(rootNode);
+                rootNode.Body.SetHeight(rootNode.GetNodeCount(CardTraversal.BODY));
+                _cardMover.MoveCard(rootNode, _cardMover.GetPlaySpaceTopRight());
+            }
+        }
+
+        baseNode.Body.SetHeight(baseNode.GetNodeCount(CardTraversal.BODY));
     }
 
     public void ResetTalk(CardNode baseNode)
