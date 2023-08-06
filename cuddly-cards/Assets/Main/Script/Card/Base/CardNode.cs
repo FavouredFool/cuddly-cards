@@ -70,6 +70,21 @@ public class CardNode
 		return cardsBelowCardAndParent;
 	}
 
+	public void SetRotationRecursive()
+	{
+		if (IsTopLevel)
+		{
+			return;
+		}
+
+		Body.transform.rotation = Parent.Body.transform.rotation;
+
+		foreach (CardNode node in Children)
+		{
+			node.SetRotationRecursive();
+		}
+	}
+
 	public void TraverseChildren(CardTraversal traversal, TraversalNodeDelegate handler)
     {
         if (!handler(this))

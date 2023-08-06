@@ -95,11 +95,19 @@ public class MainLayout : SubLayout
     {
         CardNode rootNode = _cardManager.RootNode;
 
+        List<CardNode> childChildList = new();
+
         _cardManager.AddToTopLevel(baseNode);
 
         foreach (CardNode node in baseNode.Children)
         {
-            _cardManager.AddToTopLevel(node, false);
+            _cardManager.AddToTopLevel(node);
+            
+            foreach (CardNode childchild in node.Children)
+            {
+                _cardManager.AddToTopLevel(childchild);
+                childChildList.Add(childchild);
+            }
         }
 
         float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
@@ -124,7 +132,29 @@ public class MainLayout : SubLayout
             }
         }
 
+        int height = 0;
+        
+        for (int i = childChildList.Count - 1; i >= 0; i--)
+        {
+            CardNode node = childChildList[i];
+
+            // can not use node count below node because the sequence is broken -> gotta do it by hand.
+            _cardMover.MoveCard(node, _cardMover.GetPlaySpaceBottomLeft());
+            height += node.GetNodeCount(CardTraversal.CONTEXT);
+            node.Body.SetHeight(height);
+        }
+        /*
+        foreach (CardNode node in childChildList)
+        {
+            // can not use node count below node because the sequence is broken -> gotta do it by hand.
+            _cardMover.MoveCard(node, _cardMover.GetPlaySpaceBottomLeft());
+            height += node.GetNodeCount(CardTraversal.CONTEXT);
+            node.Body.SetHeight(height);
+        }*/
+
+        _cardMover.MoveCard(baseNode, _cardMover.GetPlaySpaceBottomLeft());
         baseNode.Body.SetHeight(baseNode.GetNodeCount(CardTraversal.BODY));
+        baseNode.Body.SetHeight(height + 1);
     }
 
     void FanCardsFromTalkStatic(CardNode talkNode, float startFanX, float fannedCardSpace)

@@ -62,8 +62,6 @@ public class SubAnimations
         if(synchronizeLoweringWithFanning)
         {
             waitTime -= _horizontalTime;
-            ease = _cardMover.HorizontalEasing;
-            time = _horizontalTime;
         }
 
         return DOTween.Sequence()

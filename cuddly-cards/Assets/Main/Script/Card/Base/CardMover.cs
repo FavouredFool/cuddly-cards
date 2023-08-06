@@ -87,6 +87,7 @@ public class CardMover : MonoBehaviour
         foreach (CardNode topLevel in CardManager.GetTopLevelNodes())
         {
             topLevel.Children.Aggregate(1, (current, childNode) => current + childNode.SetPositionsRecursive(current));
+            topLevel.Children.ForEach(e => e.SetRotationRecursive());
         }
     }
 

@@ -26,14 +26,11 @@ public abstract class ChildParentAnimation : CardAnimation
         // ------------- CHILDS TO BE ----------------
 
         entireSequence.Join(AnimateChildren(activeNode, baseNode));
-        
+
 
         // ------------- MAIN TO BE ----------------
 
-        entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.LiftAndMoveChildToBase(activeNode, baseNode))
-            .AppendInterval(_waitTime + _horizontalTime)
-            .Append(_subAnimations.MoveNodeYLowerPile(activeNode)));
+        entireSequence.Join(MoveBaseNode(activeNode, baseNode));
 
 
         // ------------- Previous Children ----------------
@@ -100,4 +97,12 @@ public abstract class ChildParentAnimation : CardAnimation
     }
 
     public abstract Tween AnimateChildren(CardNode activeNode, CardNode baseNode);
+
+    public virtual Tween MoveBaseNode(CardNode activeNode, CardNode baseNode)
+    {
+        return DOTween.Sequence()
+            .Append(_subAnimations.LiftAndMoveChildToBase(activeNode, baseNode))
+            .AppendInterval(_waitTime + _horizontalTime)
+            .Append(_subAnimations.MoveNodeYLowerPile(activeNode));
+    }
 }
