@@ -6,40 +6,44 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public abstract class BackParentAnimation : CardAnimation
+public abstract class BackParentAnimation : MainAnimation
 {
     public BackParentAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
+        return DOTween.Sequence();
+    }
 
-        CardNode rootNode = _cardManager.RootNode;
-        CardNode backToBe = activeNode.Parent;
-        List<CardNode> childsToBe = activeNode.Children;
-        List<CardNode> previousChilds = baseNode.Children;
-
-        CardNode discard = backToBe != null && backToBe != rootNode ? rootNode : null;
-
-
-        // ------------- CHILDREN AND BASE ----------------
-
-        entireSequence.Join(AnimateChildrenAndBase(activeNode, baseNode));
-
-        // ------------- NEW MAIN ----------------
-
-        entireSequence.Join(DOTween.Sequence()
+    public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        return DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(activeNode, activeNode))
             .Append(_subAnimations.MoveNodeZNearer(activeNode))
             .AppendInterval(_waitTime + _horizontalTime)
-            .Append(_subAnimations.MoveNodeYLowerPile(activeNode)));
+            .Append(_subAnimations.MoveNodeYLowerPile(activeNode));
+    }
 
+    public override Tween BackAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        return DOTween.Sequence();
+    }
 
-        if (discard != null)
+    public override Tween RootAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        CardNode backToBe = activeNode.Parent;
+        CardNode rootNode = _cardManager.RootNode;
+
+        if (backToBe == null)
         {
-            // ------------- DISCARD ----------------
+            return sequence;
+        }
 
-            int discardHeight = discard.GetNodeCount(CardTraversal.BODY);
+        if (backToBe != rootNode)
+        {
+            int rootHeight = rootNode.GetNodeCount(CardTraversal.BODY);
 
             List<CardNode> lowerTopMostCardsRoot = backToBe.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
 
@@ -48,30 +52,36 @@ public abstract class BackParentAnimation : CardAnimation
                 _cardManager.AddToTopLevel(node);
             }
 
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime + _horizontalTime)
-                .Append(_subAnimations.MoveNodeY(discard, discardHeight)));
+                .Append(_subAnimations.MoveNodeY(rootNode, rootHeight)));
 
-            // ------------- BackToBe ----------------
 
             _cardManager.AddToTopLevel(backToBe);
 
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(_subAnimations.MoveNodeXToLeft(backToBe))
                 .AppendInterval(_waitTime + _horizontalTime)
                 .Append(_subAnimations.MoveNodeYLowerPile(backToBe)));
         }
-        else if (backToBe != null)
+        else
         {
-            // ------------- BackToBe ----------------
-
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(_subAnimations.MoveNodeXToLeft(backToBe)));
         }
 
-        return entireSequence;
+        return sequence;
+    }
+
+    public override Tween OtherAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Join(AnimateChildrenAndBase(activeNode, baseNode));
+
+        return sequence;
     }
 
     public abstract Tween AnimateChildrenAndBase(CardNode activeNode, CardNode baseNode);
