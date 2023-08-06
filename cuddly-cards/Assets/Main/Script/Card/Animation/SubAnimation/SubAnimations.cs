@@ -69,7 +69,7 @@ public class SubAnimations
             .Append(_cardInventory.InventoryNode.Body.transform.DOMoveY(height * CardInfo.CARDHEIGHT, time).SetEase(ease));
     }
 
-    public Tween FanOutCards(CardNode node, int index, int totalChildren, bool fromRight)
+    public Tween FanOutCard(CardNode node, int index, int totalChildren, bool fromRight)
     {
         Sequence entireSequence = DOTween.Sequence();
 
@@ -85,7 +85,7 @@ public class SubAnimations
             .Append(MoveNodeX(node, startOffset))
             .Append(RotateOffset(node, fromRight))
             .Append(MoveNodeX(node, endPositionHorizontal))
-            .Join(_tweenYFunc(node, 2)));
+            .Join(_tweenYFunc(node, 1)));
 
         return entireSequence;
     }

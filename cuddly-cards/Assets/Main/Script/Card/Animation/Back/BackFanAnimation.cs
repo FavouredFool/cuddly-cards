@@ -26,7 +26,7 @@ public class BackFanAnimation : BackParentAnimation
                 sequence.Join(DOTween.Sequence()
                     .Append(_subAnimations.MoveNodeYLiftPile(baseNode, activeNode))
                     .AppendInterval(_horizontalTime + _waitTime)
-                    .Append(_subAnimations.FanOutCards(child, i, count, false)));
+                    .Append(_subAnimations.FanOutCard(child, i, count, false)));
 
                 foreach (CardNode childchild in child.Children)
                 {
@@ -34,7 +34,7 @@ public class BackFanAnimation : BackParentAnimation
                         .Append(_subAnimations.MoveNodeYLiftPile(childchild, activeNode))
                         .Append(_subAnimations.MoveNodeXToLeft(childchild))
                         .AppendInterval(_waitTime)
-                        .Append(_subAnimations.FanOutCards(childchild, i, count, false)));
+                        .Append(_subAnimations.FanOutCard(childchild, i, count, false)));
                 }
 
                 continue;
@@ -44,7 +44,7 @@ public class BackFanAnimation : BackParentAnimation
             .Append(_subAnimations.MoveNodeYLiftPile(child, activeNode))
             .Append(_subAnimations.MoveNodeZNearer(child))
             .AppendInterval(_waitTime)
-            .Append(_subAnimations.FanOutCards(child, i, count, false)));
+            .Append(_subAnimations.FanOutCard(child, i, count, false)));
         }
 
         return sequence;

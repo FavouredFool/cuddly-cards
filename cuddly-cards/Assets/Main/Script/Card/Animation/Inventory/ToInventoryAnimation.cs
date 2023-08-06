@@ -32,7 +32,7 @@ public class ToInventoryAnimation : CardAnimation
             
             entireSequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
-                .Append(_subAnimations.FanOutCards(node, i, count, true)));
+                .Append(_subAnimations.FanOutCard(node, i, count, true)));
         }
 
         return entireSequence;

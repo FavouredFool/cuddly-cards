@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static CardInfo;
 
 public class InventoryLayout : SubLayout
 {
@@ -10,7 +11,9 @@ public class InventoryLayout : SubLayout
 
     public override void SetLayoutStatic(CardNode baseNode)
     {
-        _cardManager.AddToTopLevel(_cardInventory.InventoryNode);
+        CardNode inventoryNode = _cardInventory.InventoryNode;
+
+        _cardManager.AddToTopLevel(inventoryNode);
 
         if (_stateManager.States.Peek() is CoverState)
         {
@@ -21,56 +24,36 @@ public class InventoryLayout : SubLayout
             _cardMover.MoveCard(_cardInventory.InventoryNode, new Vector2(_cardMover.GetPlaySpaceTopRight().x, _cardMover.GetPlaySpaceBottomLeft().y));
         }
 
-        switch (_stateManager.States.Peek())
+        if (_stateManager.States.Peek() is InventoryState or LockState)
         {
-            case InventoryState:
-                ResetInventoryState();
-                break;
-            case LockState:
-                ResetLockState();
-                break;
+            ResetFannedOutState(inventoryNode);
+        }
+
+        inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
+    }
+
+
+    public void SetStackedHeight(CardNode inventoryNode)
+    {
+        int cardNr = inventoryNode.Children.Count;
+
+        for (int i = inventoryNode.Children.Count - 1; i >= 0; i--)
+        {
+            cardNr -= 1;
+            inventoryNode[i].Body.SetHeight(cardNr);
+            inventoryNode[i].Body.transform.localRotation = Quaternion.identity;
         }
     }
 
-    public void ResetInventoryState()
+    public void ResetFannedOutState(CardNode inventoryNode)
     {
-        foreach (CardNode node in _cardInventory.InventoryNode.Children)
+        int count = inventoryNode.Children.Count;
+
+        for (int i = 0; i < count; i++)
         {
-            _cardManager.AddToTopLevel(node);
-        }
-
-        float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
-        float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
-
-        float offset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.Border;
-        FanCardsFromInventoryStatic(offset, fannedCardSpace);
-    }
-
-    public void ResetLockState()
-    {
-        foreach (CardNode node in _cardInventory.InventoryNode.Children)
-        {
-            _cardManager.AddToTopLevel(node);
-        }
-
-        float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
-        float fannedCardSpace = (totalSpace - 2 * _cardMover.Border);
-
-        float keyOffset = _cardMover.GetPlaySpaceBottomLeft().x + _cardMover.Border;
-        FanCardsFromInventoryStatic(keyOffset, fannedCardSpace);
-    }
-
-    public void FanCardsFromInventoryStatic(float startFanX, float fannedCardSpace)
-    {
-        CardNode inventoryNode = _cardInventory.InventoryNode;
-
-        int totalChildCards = inventoryNode.Children.Count;
-
-        float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildCards - 1);
-
-        for (int i = 0; i < totalChildCards; i++)
-        {
-            _cardMover.MoveCard(inventoryNode[totalChildCards - i - 1], new Vector2(startFanX + i * CardInfo.CARDWIDTH * cardPercentage, _cardMover.GetPlaySpaceBottomLeft().y));
+            _cardManager.AddToTopLevel(inventoryNode.Children[i]);
+            
+            _subStatics.FanOutCard(inventoryNode.Children[i], i, count, true);
         }
     }
 }

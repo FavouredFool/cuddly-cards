@@ -35,7 +35,7 @@ public class FanDialogueAnimation : ChildParentAnimation
                 .AppendInterval(_verticalTime)
                 .Append(_subAnimations.MoveNodeXToLeft(node))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.FanOutCards(node, i, childsToBe.Count, false))
+                .Append(_subAnimations.FanOutCard(node, i, childsToBe.Count, false))
             );
         }
 

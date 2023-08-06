@@ -117,8 +117,6 @@ public class AnimationManager
 
     public void FinishStatic()
     {
-        _cardMover.SetHeightAndRotationOfInventory();
-
         _cardMover.SetMainCardsRelativeToParent();
 
         _cardMover.SetInventoryCardsRelativeToParent();

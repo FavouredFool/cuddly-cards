@@ -20,7 +20,7 @@ public class OpenFanAnimation : OpenParentAnimation
 
             sequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
-                .Append(_subAnimations.FanOutCards(node, i, count, false)));
+                .Append(_subAnimations.FanOutCard(node, i, count, false)));
         }
 
         return sequence;

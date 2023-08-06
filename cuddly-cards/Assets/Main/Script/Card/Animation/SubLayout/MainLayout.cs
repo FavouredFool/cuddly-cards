@@ -24,7 +24,6 @@ public class MainLayout : SubLayout
                 break;
             case TalkState:
                 ResetTalk(baseNode);
-                ResetTalkHeight(baseNode);
                 break;
             case DialogueState:
                 ResetDialogue(baseNode);
@@ -41,29 +40,6 @@ public class MainLayout : SubLayout
         baseNode.Body.SetHeight(baseNode.GetNodeCount(CardTraversal.BODY));
 
         _cardMover.MoveCard(baseNode, new Vector2(_cardMover.GetPlaySpaceBottomLeft().x + (_cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x) * 0.5f, _cardMover.GetPlaySpaceBottomLeft().y));
-    }
-
-    public void ResetTalkHeight(CardNode baseNode)
-    {
-        // get the highest childamount -> take that as the baseheight (this wont work well for extreme cases)
-        
-        int maxHeight = 2;
-
-        foreach (CardNode node in baseNode.Children)
-        {
-            int thisHeight = node.GetNodeCount(CardInfo.CardTraversal.CONTEXT);
-
-            if (thisHeight > maxHeight)
-            {
-                maxHeight = thisHeight;
-            }
-        }
-
-        for (int i = baseNode.Children.Count - 1; i >= 0; i--)
-        {
-            baseNode[i].Body.SetHeightFloat(maxHeight + (i * -0.01f));
-            baseNode[i].Body.transform.localRotation = Quaternion.Euler(0, 0, _cardMover.InventoryCardRotationAmount);
-        }
     }
 
     public void ResetDialogue(CardNode baseNode)
@@ -110,11 +86,11 @@ public class MainLayout : SubLayout
             }
         }
 
-        float totalSpace = _cardMover.GetPlaySpaceTopRight().x - _cardMover.GetPlaySpaceBottomLeft().x;
-        float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
-
-        float offset = _cardMover.GetPlaySpaceTopRight().x - _cardMover.Border;
-        FanCardsFromTalkStatic(baseNode, offset, fannedCardSpace);
+        int count = baseNode.Children.Count;
+        for (int i = 0; i < count; i++)
+        {
+            _subStatics.FanOutCard(baseNode.Children[i], i, count, false);
+        }
 
         _cardMover.MoveCard(baseNode, _cardMover.GetPlaySpaceBottomLeft());
 
@@ -143,30 +119,10 @@ public class MainLayout : SubLayout
             height += node.GetNodeCount(CardTraversal.CONTEXT);
             node.Body.SetHeight(height);
         }
-        /*
-        foreach (CardNode node in childChildList)
-        {
-            // can not use node count below node because the sequence is broken -> gotta do it by hand.
-            _cardMover.MoveCard(node, _cardMover.GetPlaySpaceBottomLeft());
-            height += node.GetNodeCount(CardTraversal.CONTEXT);
-            node.Body.SetHeight(height);
-        }*/
 
         _cardMover.MoveCard(baseNode, _cardMover.GetPlaySpaceBottomLeft());
         baseNode.Body.SetHeight(baseNode.GetNodeCount(CardTraversal.BODY));
         baseNode.Body.SetHeight(height + 1);
-    }
-
-    void FanCardsFromTalkStatic(CardNode talkNode, float startFanX, float fannedCardSpace)
-    {
-        int totalChildCards = talkNode.Children.Count;
-
-        float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildCards - 1);
-
-        for (int i = 0; i < totalChildCards; i++)
-        {
-            _cardMover.MoveCard(talkNode.Children[totalChildCards - i - 1], new Vector2(startFanX - i * CardInfo.CARDWIDTH * cardPercentage, _cardMover.GetPlaySpaceBottomLeft().y));
-        }
     }
 
     public void ResetClose(CardNode baseNode)
