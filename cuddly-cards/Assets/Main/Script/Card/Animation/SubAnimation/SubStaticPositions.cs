@@ -34,7 +34,7 @@ public class SubStaticPositions
 
         _cardMover.MoveCard(node, new Vector2(startOffset + directionSign * (totalChildren - index - 1) * CardInfo.CARDWIDTH * cardPercentage, _cardMover.GetPlaySpaceBottomLeft().y));
 
-        node.Body.SetHeightFloat(2 + (index * -0.01f));
+        node.Body.SetHeightFloat(2 - (index * 0.01f));
         node.Body.transform.localRotation = Quaternion.Euler(0, 0, -directionSign *_cardMover.InventoryCardRotationAmount);
     }
 }

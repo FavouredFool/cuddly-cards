@@ -108,13 +108,20 @@ public class CardMover : MonoBehaviour
         }
     }
 
-    public void ResetPosition(CardNode rootNode)
+    public void ResetPositionAndRotation(CardNode rootNode, CardNode inventoryNode)
     {
         rootNode.TraverseChildren(CardInfo.CardTraversal.CONTEXT, delegate (CardNode node)
         {
-            node.Body.transform.localPosition = Vector3.zero;
+            node.Body.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             return true;
         });
+
+        inventoryNode.Body.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+        foreach (CardNode node in inventoryNode.Children)
+        {
+            node.Body.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        }
     }
 
     public void MoveCard(CardNode card, Vector2 position)

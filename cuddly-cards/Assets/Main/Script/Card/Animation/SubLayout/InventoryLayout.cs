@@ -32,19 +32,6 @@ public class InventoryLayout : SubLayout
         inventoryNode.Body.SetHeight(inventoryNode.GetNodeCount(CardTraversal.BODY));
     }
 
-
-    public void SetStackedHeight(CardNode inventoryNode)
-    {
-        int cardNr = inventoryNode.Children.Count;
-
-        for (int i = inventoryNode.Children.Count - 1; i >= 0; i--)
-        {
-            cardNr -= 1;
-            inventoryNode[i].Body.SetHeight(cardNr);
-            inventoryNode[i].Body.transform.localRotation = Quaternion.identity;
-        }
-    }
-
     public void ResetFannedOutState(CardNode inventoryNode)
     {
         int count = inventoryNode.Children.Count;

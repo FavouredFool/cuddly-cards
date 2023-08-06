@@ -112,7 +112,7 @@ public class AnimationManager
 
         _cardManager.ClearTopLevelNodesMainPile();
 
-        _cardMover.ResetPosition(_cardManager.RootNode);
+        _cardMover.ResetPositionAndRotation(_cardManager.RootNode, _cardManager.CardInventory.InventoryNode);
     }
 
     public void FinishStatic()
