@@ -37,4 +37,36 @@ public class SubStaticPositions
         node.Body.SetHeightFloat(2 - (index * 0.01f));
         node.Body.transform.localRotation = Quaternion.Euler(0, 0, -directionSign *_cardMover.InventoryCardRotationAmount);
     }
+
+    public void SetNode(CardNode node, Vector2 position)
+    {
+        _cardManager.AddToTopLevel(node);
+        node.Body.SetHeight(node.GetNodeCount(CardTraversal.BODY));
+        _cardMover.MoveCard(node, position);
+    }
+
+    public void SetChild(CardNode child, int index)
+    {
+        _cardManager.AddToTopLevel(child);
+        child.Body.SetHeight(child.GetNodeCount(CardTraversal.BODY));
+        _cardMover.MoveCard(child, new Vector2(index * _cardMover.ChildrenDistance - _cardMover.ChildrenStartOffset, _cardMover.GetPlaySpaceBottomLeft().y));
+    }
+
+    public void ResetBaseBackRoot(CardNode baseNode)
+    {
+        CardNode rootNode = _cardManager.RootNode;
+
+        SetNode(baseNode, _cardMover.GetPlaySpaceBottomLeft());
+
+        if (baseNode != rootNode)
+        {
+            SetNode(baseNode.Parent, new Vector2(_cardMover.GetPlaySpaceBottomLeft().x, _cardMover.GetPlaySpaceTopRight().y));
+
+            if (baseNode.Parent != rootNode)
+            {
+                SetNode(rootNode, _cardMover.GetPlaySpaceTopRight());
+            }
+        }
+    }
+
 }

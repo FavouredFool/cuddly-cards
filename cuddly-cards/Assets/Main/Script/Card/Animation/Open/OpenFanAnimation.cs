@@ -8,7 +8,6 @@ using static CardInfo;
 
 public class OpenFanAnimation : OpenParentAnimation
 {
-
     int _height = 0;
 
     public OpenFanAnimation(CardManager cardManager) : base(cardManager) { }
