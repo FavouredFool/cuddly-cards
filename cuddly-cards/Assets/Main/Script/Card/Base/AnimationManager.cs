@@ -41,7 +41,8 @@ public class AnimationManager
 
         foreach (CardAnimation animation in _activeAnimations)
         {
-            allAnimations.Join(animation.GetAnimationSequence(activeNode, baseNode));
+            Sequence animSequence = animation.GetAnimationSequence(activeNode, baseNode);
+            allAnimations.Join(animSequence);
         }
 
         // OnComplete is necessary because of a problem with Dotween

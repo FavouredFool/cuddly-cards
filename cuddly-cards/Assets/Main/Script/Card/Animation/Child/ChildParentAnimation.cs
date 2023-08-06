@@ -6,94 +6,115 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public abstract class ChildParentAnimation : CardAnimation
+public abstract class ChildParentAnimation : MainAnimation
 {
     public ChildParentAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence();
 
-        CardNode rootNode = _cardManager.RootNode;
+        List<CardNode> childNodes = baseNode.Children;
 
-        CardNode discardToBe = baseNode.Parent;
-        CardNode discard = discardToBe != null && discardToBe != rootNode ? rootNode : null;
-
-        List<CardNode> childsToBe = activeNode.Children;
-        List<CardNode> previousChilds = baseNode.Children;
-
-
-        // ------------- CHILDS TO BE ----------------
-
-        entireSequence.Join(AnimateChildren(activeNode, baseNode));
-
-
-        // ------------- MAIN TO BE ----------------
-
-        entireSequence.Join(MoveBaseNode(activeNode, baseNode));
-
-
-        // ------------- Previous Children ----------------
-
-        int height = 0;
-
-        for (int i = previousChilds.Count - 1; i >= 0; i--)
+        for (int i = childNodes.Count - 1; i >= 0; i--)
         {
-            CardNode previousChild = previousChilds[i];
+            CardNode previousChild = childNodes[i];
 
             if (previousChild == activeNode)
             {
                 continue;
             }
 
-            height += previousChild.GetNodeCount(CardTraversal.CONTEXT);
-
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.LiftAndMoveChildToBase(previousChild, baseNode))
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.MoveNodeZFarther(previousChild))
-                .Append(_subAnimations.MoveNodeY(previousChild, height)));
+                .Append(_subAnimations.MoveNodeYLiftPile(previousChild, baseNode.Parent)));
         }
 
-        // ------------- BackToBe ----------------
+        return sequence;
+    }
 
-        entireSequence.Join(DOTween.Sequence()
+    public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        return DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode))
             .AppendInterval(_horizontalTime + _waitTime)
             .Append(_subAnimations.MoveNodeZFarther(baseNode))
-            .Append(_subAnimations.MoveNodeY(baseNode, baseNode.GetNodeCount(CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT))));
+            .Append(_subAnimations.MoveNodeY(baseNode, baseNode.GetNodeCount(CardTraversal.CONTEXT) - activeNode.GetNodeCount(CardTraversal.CONTEXT)));
+    }
 
+    public override Tween BackAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
 
-        // ------------- Discard & DiscardToBe ----------------
+        CardNode rootNode = _cardManager.RootNode;
+        CardNode backNode = baseNode.Parent;
 
-        if (discard != null)
+        if (backNode == null)
         {
-            // height needs to be calculated before the deck is split in two, because otherwise new top-levels would be overlooked (this is a bit ugly)
-            int discardHeight = discard.GetNodeCount(CardTraversal.BODY) + discardToBe.GetNodeCount(CardTraversal.BODY);
-            int discardToBeHeight = discardToBe.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.BODY);
+            return sequence;
+        }
 
-            List<CardNode> lowerTopMostCardsRoot = discardToBe.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
+        if (backNode != rootNode)
+        {
+            int discardToBeHeight = backNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.BODY);
 
-            foreach (CardNode node in lowerTopMostCardsRoot)
-            {
-                _cardManager.AddToTopLevel(node);
-            }
-
-            entireSequence.Join(_subAnimations.MoveNodeY(rootNode, discardHeight));
-
-            entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.MoveNodeY(discardToBe, discardToBeHeight))
+            sequence.Join(DOTween.Sequence()
+                .Append(_subAnimations.MoveNodeY(backNode, discardToBeHeight))
                 .AppendInterval(_horizontalTime + _waitTime)
-                .Append(_subAnimations.MoveNodeXToRight(discardToBe)));
+                .Append(_subAnimations.MoveNodeXToRight(backNode)));
         }
-        else if (discardToBe != null)
+        else
         {
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime + _horizontalTime + _waitTime)
-                .Append(_subAnimations.MoveNodeXToRight(discardToBe)));
+                .Append(_subAnimations.MoveNodeXToRight(backNode)));
         }
 
-        return entireSequence;
+        return sequence;
+    }
+
+    public override Tween RootAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        CardNode rootNode = _cardManager.RootNode;
+        CardNode backNode = baseNode.Parent;
+
+        if (backNode == null)
+        {
+            return sequence;
+        }
+
+        if (backNode == rootNode)
+        {
+            return sequence;
+        }
+
+        int discardHeight = rootNode.GetNodeCount(CardTraversal.BODY) + backNode.GetNodeCount(CardTraversal.BODY);
+            
+        foreach (CardNode node in backNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY))
+        {
+            _cardManager.AddToTopLevel(node);
+        }
+
+        sequence.Join(_subAnimations.MoveNodeY(rootNode, discardHeight));
+  
+        return sequence;
+    }
+
+    public override Tween OtherAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        // newChildren
+        sequence.Join(AnimateChildren(activeNode, baseNode));
+
+        // newActiveNode
+        sequence.Join(MoveBaseNode(activeNode, baseNode));
+        
+        return sequence;
     }
 
     public abstract Tween AnimateChildren(CardNode activeNode, CardNode baseNode);
