@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class ToInventoryAnimation : CardAnimation
+public class ToInventoryAnimation : InventoryAnimation
 {
     bool _synchronizeLoweringWithFanning;
     
@@ -15,13 +15,14 @@ public class ToInventoryAnimation : CardAnimation
         _synchronizeLoweringWithFanning = synchronizeLoweringWithFanning;
     }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween InventoryCardAnimation(CardNode inventoryNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
+        return _subAnimations.MoveInventoryCardWhileFanning(1, _synchronizeLoweringWithFanning);
+    }
 
-        CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
-
-        entireSequence.Join(_subAnimations.MoveInventoryCardWhileFanning(1, _synchronizeLoweringWithFanning));
+    public override Tween KeysAnimation(CardNode inventoryNode)
+    {
+        Sequence sequence = DOTween.Sequence();
 
         int count = inventoryNode.Children.Count;
 
@@ -29,12 +30,12 @@ public class ToInventoryAnimation : CardAnimation
         {
             CardNode node = inventoryNode.Children[i];
             _cardManager.AddToTopLevel(node);
-            
-            entireSequence.Join(DOTween.Sequence()
+
+            sequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(_subAnimations.FanOutCard(node, i, count, true)));
         }
 
-        return entireSequence;
+        return sequence;
     }
 }

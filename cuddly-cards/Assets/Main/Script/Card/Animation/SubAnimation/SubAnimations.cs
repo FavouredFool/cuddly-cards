@@ -85,7 +85,7 @@ public class SubAnimations
             .Append(MoveNodeX(node, startOffset))
             .Append(RotateOffset(node, fromRight))
             .Append(MoveNodeX(node, endPositionHorizontal))
-            .Join(_tweenYFunc(node, 1)));
+            .Join(_tweenYFunc(node, 2)));
 
         return entireSequence;
     }

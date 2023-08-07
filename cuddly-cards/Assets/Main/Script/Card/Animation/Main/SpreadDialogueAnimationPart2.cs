@@ -6,30 +6,16 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class SpreadDialogueAnimationPart2 : CardAnimation
+public class SpreadDialogueAnimationPart2 : MainAnimation
 {
     public SpreadDialogueAnimationPart2(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween RootAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
-
-        CardNode rootNode = _cardManager.RootNode;
-
-        CardNode backNode = baseNode.Parent;
+        Sequence sequence = DOTween.Sequence();
 
         CardNode parentTalkNode = _cardManager.GetCardNodeFromID(activeNode.Context.TalkID);
-
-        // -------------- ACTIVE NODE ------------------
-        
-        int activeHeight = parentTalkNode.GetNodeCountBelowNodeInPile(rootNode, CardTraversal.CONTEXT) + activeNode.GetNodeCount(CardTraversal.CONTEXT);
-
-        entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.MoveNodeY(activeNode, activeHeight))
-            .Append(_subAnimations.MoveNodeXToLeft(activeNode)));
-
-
-        // -------------- ROOT ---------------------
+        CardNode rootNode = _cardManager.RootNode;
 
         List<CardNode> lowerTopMostCards = parentTalkNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
 
@@ -41,8 +27,23 @@ public class SpreadDialogueAnimationPart2 : CardAnimation
 
         int rootHeight = rootNode.GetNodeCount(CardTraversal.CONTEXT) + activeNode.GetNodeCount(CardTraversal.CONTEXT);
 
-        entireSequence.Join(_subAnimations.MoveNodeY(rootNode, rootHeight));
+        sequence.Join(_subAnimations.MoveNodeY(rootNode, rootHeight));
 
-        return entireSequence;
+        return sequence;
+    }
+
+    public override Tween OtherAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        CardNode parentTalkNode = _cardManager.GetCardNodeFromID(activeNode.Context.TalkID);
+
+        int activeHeight = parentTalkNode.GetNodeCountBelowNodeInPile(_cardManager.RootNode, CardTraversal.CONTEXT) + activeNode.GetNodeCount(CardTraversal.CONTEXT);
+
+        sequence.Join(DOTween.Sequence()
+            .Append(_subAnimations.MoveNodeY(activeNode, activeHeight))
+            .Append(_subAnimations.MoveNodeXToLeft(activeNode)));
+
+        return sequence;
     }
 }

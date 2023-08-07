@@ -6,16 +6,14 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class EnterInventoryPileAnimation : CardAnimation
+public class EnterInventoryPileAnimation : InventoryAnimation
 {
     public EnterInventoryPileAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween InventoryCardAnimation(CardNode inventoryNode)
     {
-        Sequence entireSequence = DOTween.Sequence()
+        return DOTween.Sequence()
             .AppendInterval(_verticalTime)
             .Append(_subAnimations.MoveNodeXToRight(_cardManager.CardInventory.InventoryNode));
-
-        return entireSequence;
     }
 }

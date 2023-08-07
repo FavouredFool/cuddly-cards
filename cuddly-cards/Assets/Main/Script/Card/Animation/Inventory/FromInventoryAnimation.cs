@@ -6,23 +6,20 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class FromInventoryAnimation : CardAnimation
+public class FromInventoryAnimation : InventoryAnimation
 {
     bool _doDelay;
     public FromInventoryAnimation(CardManager cardManager, bool doDelay) : base(cardManager) {
         _doDelay = doDelay;
     }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween InventoryCardAnimation(CardNode inventoryNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
+        return _subAnimations.MoveNodeY(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT));
+    }
 
-        CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
-
-        entireSequence.Append(_subAnimations.MoveNodeY(inventoryNode, inventoryNode.GetNodeCount(CardTraversal.CONTEXT)));
-
-        entireSequence.Join(_subAnimations.FanInCardsToRight(_doDelay));
-
-        return entireSequence;
+    public override Tween KeysAnimation(CardNode inventoryNode)
+    {
+        return _subAnimations.FanInCardsToRight(_doDelay);
     }
 }

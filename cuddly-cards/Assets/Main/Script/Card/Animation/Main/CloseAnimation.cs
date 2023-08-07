@@ -5,23 +5,30 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CloseAnimation : CardAnimation
+public class CloseAnimation : MainAnimation
 {
     public CloseAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
-
-        entireSequence.Join(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode));
+        Sequence sequence = DOTween.Sequence();
 
         foreach (CardNode childNode in baseNode.Children)
         {
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.MoveNodeYLiftPile(childNode, baseNode))
                 .Append(_subAnimations.MoveNodeXToLeft(childNode)));
         }
 
-        return entireSequence;
+        return sequence;
+    }
+
+    public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Join(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode));
+
+        return sequence;
     }
 }

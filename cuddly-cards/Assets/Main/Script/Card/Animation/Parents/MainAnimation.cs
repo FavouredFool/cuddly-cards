@@ -11,11 +11,11 @@ public class MainAnimation : CardAnimation
     public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
     {
         return DOTween.Sequence()
+            .Join(OtherAnimation(activeNode, baseNode))
             .Join(ChildAnimation(activeNode, baseNode))
             .Join(BaseAnimation(activeNode, baseNode))
             .Join(BackAnimation(activeNode, baseNode))
-            .Join(RootAnimation(activeNode, baseNode))
-            .Join(OtherAnimation(activeNode, baseNode));
+            .Join(RootAnimation(activeNode, baseNode));
     }
 
     public virtual Tween ChildAnimation(CardNode activeNode, CardNode baseNode)

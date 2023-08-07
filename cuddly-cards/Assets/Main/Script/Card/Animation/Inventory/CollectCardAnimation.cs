@@ -6,25 +6,21 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class CollectCardAnimation : CardAnimation
+public class CollectCardAnimation : MainAnimation
 {
     int _minRaiseHeight = 10;
 
     public CollectCardAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween OtherAnimation(CardNode activeNode, CardNode baseNode)
     {
-        // --- Variables
+        Sequence sequence = DOTween.Sequence();
 
         CardNode inventoryNode = _cardManager.CardInventory.InventoryNode;
 
-        // --- Sequence
-
-        Sequence entireSequence = DOTween.Sequence();
-
         int maxNeightbourHeight = 0;
 
-        for(int i = baseNode.Children.IndexOf(activeNode) + 1; i < baseNode.Children.Count; i++)
+        for (int i = baseNode.Children.IndexOf(activeNode) + 1; i < baseNode.Children.Count; i++)
         {
             int tempHeight = baseNode.Children[i].GetNodeCount(CardTraversal.CONTEXT);
 
@@ -37,7 +33,7 @@ public class CollectCardAnimation : CardAnimation
         maxNeightbourHeight += 1;
         maxNeightbourHeight = Math.Max(maxNeightbourHeight, _minRaiseHeight);
 
-        entireSequence.Join(
+        sequence.Join(
             DOTween.Sequence()
                 .Append(_subAnimations.MoveNodeY(activeNode, maxNeightbourHeight))
                 .AppendInterval(_waitTime)
@@ -49,7 +45,7 @@ public class CollectCardAnimation : CardAnimation
 
         int inventoryHeight = maxNeightbourHeight + inventoryNode.GetNodeCount(CardTraversal.CONTEXT);
 
-        entireSequence.Join(
+        sequence.Join(
             DOTween.Sequence()
                 .Append(_subAnimations.MoveNodeY(inventoryNode, inventoryHeight))
                 .AppendInterval(2 * _waitTime + _horizontalTime)
@@ -60,13 +56,13 @@ public class CollectCardAnimation : CardAnimation
 
         for (int i = baseNode.Children.IndexOf(activeNode) + 1; i < baseNode.Children.Count; i++)
         {
-            entireSequence.Join(
+            sequence.Join(
             DOTween.Sequence()
                 .AppendInterval(_verticalTime + _waitTime)
                 .Append(_subAnimations.MoveNodeXChildOneSpaceToLeft(baseNode.Children[i]))
             );
         }
 
-        return entireSequence;
+        return sequence;
     }
 }

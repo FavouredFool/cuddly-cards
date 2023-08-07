@@ -6,20 +6,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class SpreadDialogueAnimationPart3 : CardAnimation
+public class SpreadDialogueAnimationPart3 : MainAnimation
 {
     public SpreadDialogueAnimationPart3(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
-
-        CardNode rootNode = _cardManager.RootNode;
-
-        CardNode backNode = baseNode.Parent;
-
-
-        // -------------- CHILDREN ---------------------
+        Sequence sequence = DOTween.Sequence();
 
         List<CardNode> children = baseNode.Children;
 
@@ -27,21 +20,27 @@ public class SpreadDialogueAnimationPart3 : CardAnimation
         {
             CardNode child = children[i];
 
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .AppendInterval(_waitTime + _horizontalTime)
                 .Append(_subAnimations.FanOutChildFromBase(child))
                 .Append(_subAnimations.MoveNodeYLowerPile(child)));
         }
 
+        return sequence;
+    }
 
-        // -------------- MAIN ---------------------
+    public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        return DOTween.Sequence()
+            .AppendInterval(2 * _horizontalTime + _waitTime)
+            .Append(_subAnimations.MoveNodeYLowerPile(baseNode));
+    }
 
-        entireSequence.Join(DOTween.Sequence()
-            .AppendInterval(2*_horizontalTime + _waitTime)
-            .Append(_subAnimations.MoveNodeYLowerPile(baseNode)));
+    public override Tween BackAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
 
-
-        // -------------- BACK ---------------------
+        CardNode backNode = baseNode.Parent;
 
         List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
 
@@ -65,16 +64,23 @@ public class SpreadDialogueAnimationPart3 : CardAnimation
         }
         */
 
+        return sequence;
+    }
 
-        // -------------- ROOT ---------------------
+    public override Tween RootAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        CardNode backNode = baseNode.Parent;
+        CardNode rootNode = _cardManager.RootNode;
 
         if (rootNode != backNode)
         {
             // FIX THIS WHEN THE JSON EDITOR IS DONE
 
-            entireSequence.Append(_subAnimations.MoveNodeY(rootNode, 300));
+            sequence.Append(_subAnimations.MoveNodeY(rootNode, 300));
         }
 
-        return entireSequence;
+        return sequence;
     }
 }

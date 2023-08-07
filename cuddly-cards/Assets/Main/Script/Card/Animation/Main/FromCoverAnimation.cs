@@ -5,27 +5,36 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
-public class FromCoverAnimation : CardAnimation
+public class FromCoverAnimation : MainAnimation
 {
     public FromCoverAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween RootAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence();
 
         CardNode rootNode = _cardManager.RootNode;
- 
-        entireSequence.Join(DOTween.Sequence()
+
+        sequence.Join(DOTween.Sequence()
             .AppendInterval(_verticalTime)
             .Append(_subAnimations.MoveNodeXToLeft(rootNode))
             .AppendInterval(_waitTime + _horizontalTime)
             .Append(_subAnimations.MoveNodeY(rootNode, 1)));
 
+        return sequence;
+    }
+
+    public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        CardNode rootNode = _cardManager.RootNode;
+
         for (int i = 0; i < rootNode.Children.Count; i++)
         {
             CardNode childNode = rootNode.Children[i];
 
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(_subAnimations.MoveNodeXToLeft(childNode))
                 .AppendInterval(_waitTime)
@@ -33,6 +42,6 @@ public class FromCoverAnimation : CardAnimation
                 .Append(_subAnimations.MoveNodeYLowerPile(childNode)));
         }
 
-        return entireSequence;
+        return sequence;
     }
 }

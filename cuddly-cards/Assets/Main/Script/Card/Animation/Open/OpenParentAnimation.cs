@@ -5,23 +5,18 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public abstract class OpenParentAnimation : CardAnimation
+public abstract class OpenParentAnimation : MainAnimation
 {
     public OpenParentAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        // --- Variables
+        return MoveChildren(baseNode);
+    }
 
-        // --- Sequence
-
-        Sequence entireSequence = DOTween.Sequence();
-
-        entireSequence.Join(MoveChildren(baseNode));
-
-        entireSequence.Join(MoveBaseNode(baseNode));
-
-        return entireSequence;
+    public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        return MoveBaseNode(baseNode);
     }
 
     public abstract Tween MoveChildren(CardNode baseNode);

@@ -7,29 +7,24 @@ using System.Collections.Generic;
 using System.Linq;
 using static CardInfo;
 
-public class ExitInventoryPileAnimation : CardAnimation
+public class ExitInventoryPileAnimation : InventoryAnimation
 {
     public ExitInventoryPileAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween InventoryCardAnimation(CardNode inventoryNode)
+    {
+        return GetMoveOutOfFrameTween(inventoryNode);
+    }
+
+    public override Tween KeysAnimation(CardNode inventoryNode)
     {
         Sequence entireSequence = DOTween.Sequence();
 
-        entireSequence.Join(GetMoveOutOfFrameTween(_cardManager.CardInventory.InventoryNode));
-
-        foreach (CardNode subPartNode in _cardManager.CardInventory.InventoryNode.Children)
+        foreach (var childNode in inventoryNode.Children.Where(childNode => childNode.IsTopLevel))
         {
-            if (subPartNode.IsTopLevel)
-            {
-                entireSequence.Join(GetMoveOutOfFrameTween(subPartNode));
-            }
-
-            foreach (var childNode in subPartNode.Children.Where(childNode => childNode.IsTopLevel))
-            {
-                entireSequence.Join(GetMoveOutOfFrameTween(childNode));
-            }
+            entireSequence.Join(GetMoveOutOfFrameTween(childNode));
         }
-
+  
         return entireSequence;
     }
 

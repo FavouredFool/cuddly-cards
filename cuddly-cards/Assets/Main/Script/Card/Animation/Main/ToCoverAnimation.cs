@@ -5,19 +5,13 @@ using UnityEngine;
 using System;
 using static CardInfo;
 
-public class ToCoverAnimation : CardAnimation
+public class ToCoverAnimation : MainAnimation
 {
     public ToCoverAnimation(CardManager cardManager) : base(cardManager) { }
 
-    public override Sequence GetAnimationSequence(CardNode activeNode, CardNode baseNode)
+    public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence entireSequence = DOTween.Sequence();
-
-        CardNode rootNode = _cardManager.RootNode;
-
-        CardNode backNode = baseNode.Parent;
-
-        // -------------- CHILDREN ---------------------
+        Sequence sequence = DOTween.Sequence();
 
         List<CardNode> children = baseNode.Children;
 
@@ -25,23 +19,29 @@ public class ToCoverAnimation : CardAnimation
         {
             CardNode child = children[i];
 
-            entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.MoveNodeYLiftPile(child, rootNode))
+            sequence.Join(DOTween.Sequence()
+                .Append(_subAnimations.MoveNodeYLiftPile(child, _cardManager.RootNode))
                 .Append(_subAnimations.MoveNodeXToLeft(child))
                 .AppendInterval(2 * _waitTime + _horizontalTime)
                 .Append(_subAnimations.MoveNodeXToMiddle(child)));
         }
 
+        return sequence;
+    }
 
-
-        // -------------- MAIN ---------------------
-        
-        entireSequence.Join(DOTween.Sequence()
-            .Append(_subAnimations.MoveNodeYLiftPile(baseNode, rootNode))
+    public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        return DOTween.Sequence()
+            .Append(_subAnimations.MoveNodeYLiftPile(baseNode, _cardManager.RootNode))
             .AppendInterval(2 * _horizontalTime + 2 * _waitTime)
-            .Append(_subAnimations.MoveNodeXToMiddle(baseNode)));
-        
-        // -------------- BACK ---------------------
+            .Append(_subAnimations.MoveNodeXToMiddle(baseNode));
+    }
+
+    public override Tween BackAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        CardNode backNode = baseNode.Parent;
 
         List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
 
@@ -55,17 +55,24 @@ public class ToCoverAnimation : CardAnimation
 
         foreach (CardNode node in animatingNodesBack)
         {
-            entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.MoveNodeYLiftPile(node, rootNode))
+            sequence.Join(DOTween.Sequence()
+                .Append(_subAnimations.MoveNodeYLiftPile(node, _cardManager.RootNode))
                 .AppendInterval(_horizontalTime + _waitTime)
                 .Append(_subAnimations.MoveNodeZNearer(node))
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.MoveNodeXToMiddle(node)));
         }
 
+        return sequence;
+    }
 
-        // -------------- ROOT ---------------------
-        
+    public override Tween RootAnimation(CardNode activeNode, CardNode baseNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        CardNode backNode = baseNode.Parent;
+        CardNode rootNode = _cardManager.RootNode;
+
         List<CardNode> lowerTopMostCardsRoot = backNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
 
         foreach (CardNode node in lowerTopMostCardsRoot)
@@ -78,7 +85,7 @@ public class ToCoverAnimation : CardAnimation
 
         foreach (CardNode node in animatingNodesRoot)
         {
-            entireSequence.Join(DOTween.Sequence()
+            sequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.MoveNodeYLiftPile(node, rootNode))
                 .Append(_subAnimations.MoveNodeXToLeft(node))
                 .AppendInterval(_waitTime)
@@ -86,8 +93,7 @@ public class ToCoverAnimation : CardAnimation
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.MoveNodeXToMiddle(node)));
         }
-        
-        return entireSequence;
-    }
 
+        return sequence;
+    }
 }
