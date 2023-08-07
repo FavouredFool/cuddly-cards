@@ -40,7 +40,7 @@ public class TalkState : SettedState
 
     public void ToInventoryTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new CloseAnimation(_cardManager), new ToInventoryAnimation(_cardManager, true) };
+        List<CardAnimation> animations = new() { new CloseFanAnimation(_cardManager), new ToInventoryAnimation(_cardManager, true) };
         LayoutState newState = new InventoryState(_cardManager);
 
         ToTransition(clickedNode, animations, newState);
@@ -65,7 +65,7 @@ public class TalkState : SettedState
 
     public void ToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new BackToFanAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);

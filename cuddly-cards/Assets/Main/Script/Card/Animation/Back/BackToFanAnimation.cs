@@ -6,9 +6,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class BackFanAnimation : BackParentAnimation
+public class BackToFanAnimation : BackParentAnimation
 {
-    public BackFanAnimation(CardManager cardManager) : base(cardManager) { }
+    public BackToFanAnimation(CardManager cardManager) : base(cardManager) { }
 
     public override Tween AnimateChildrenAndBase(CardNode activeNode, CardNode baseNode)
     {

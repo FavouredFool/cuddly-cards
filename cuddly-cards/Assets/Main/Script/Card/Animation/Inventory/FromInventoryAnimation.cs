@@ -20,6 +20,14 @@ public class FromInventoryAnimation : InventoryAnimation
 
     public override Tween KeysAnimation(CardNode inventoryNode)
     {
-        return _subAnimations.FanInCardsToRight(_doDelay);
+        Sequence sequence = DOTween.Sequence();
+
+        for (int i = 0; i < inventoryNode.Children.Count; i++)
+        {
+            _cardManager.AddToTopLevel(inventoryNode.Children[i]);
+            sequence.Join(_subAnimations.FanInCard(inventoryNode.Children[i], inventoryNode, _doDelay, true));
+        }
+
+        return sequence;
     }
 }

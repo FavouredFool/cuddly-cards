@@ -37,7 +37,7 @@ public class SubAnimations
         _tweenZFunc = _cardMover.TweenZ;
     }
 
-    public Tween FanOutChildFromBase(CardNode newChild)
+    public Tween MoveOutChildFromBase(CardNode newChild)
     {
         return DOTween.Sequence()
             .Append(MoveNodeXToChild(newChild, newChild))
@@ -90,30 +90,16 @@ public class SubAnimations
         return entireSequence;
     }
 
-    public Tween FanInCardsToRight(bool doDelay)
+    public Tween FanInCard(CardNode node, CardNode relativeNode,  bool doDelay, bool fromRight)
     {
-        Sequence entireSequence = DOTween.Sequence();
-        CardNode inventoryNode = _cardInventory.InventoryNode;
-
         float delay = doDelay ? _horizontalTime + _waitTime : 0;
+        float finalPos = fromRight ? _cardMover.PlaySpaceTopRight.x : _cardMover.PlaySpaceBottomLeft.x;
 
-        int totalChildren = inventoryNode.Children.Count;
-
-        for (int i = 0; i < totalChildren; i++)
-        {
-            CardNode childNode = inventoryNode[i];
-
-            _cardManager.AddToTopLevel(childNode);
-
-            entireSequence.Join(DOTween.Sequence()
-            .Append(MoveNodeYLiftPile(childNode, inventoryNode))
-            .Join(RotateToIdentity(childNode))
+        return DOTween.Sequence()
+            .Append(MoveNodeYLiftPile(node, relativeNode))
+            .Join(RotateToIdentity(node))
             .AppendInterval(delay)
-            .Append(MoveNodeXToRight(childNode)));
-            
-        }
-
-        return entireSequence;
+            .Append(MoveNodeX(node, finalPos));
     }
 
     #endregion

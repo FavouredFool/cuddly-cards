@@ -47,7 +47,7 @@ public class OpenFanAnimation : OpenParentAnimation
                     .AppendInterval(_verticalTime + _horizontalTime)
                     .Append(_subAnimations.MoveNodeY(node, _height)));
         }
-
+        
         return sequence;
     }
 

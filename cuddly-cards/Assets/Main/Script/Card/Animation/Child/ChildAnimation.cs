@@ -23,7 +23,7 @@ public class ChildAnimation : ChildParentAnimation
             sequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.LiftAndMoveChildToBase(childsToBe[i], baseNode))
                 .AppendInterval(_waitTime)
-                .Append(_subAnimations.FanOutChildFromBase(childsToBe[i])));
+                .Append(_subAnimations.MoveOutChildFromBase(childsToBe[i])));
         }
 
         return sequence;

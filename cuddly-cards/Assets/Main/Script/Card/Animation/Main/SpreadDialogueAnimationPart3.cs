@@ -22,7 +22,7 @@ public class SpreadDialogueAnimationPart3 : MainAnimation
 
             sequence.Join(DOTween.Sequence()
                 .AppendInterval(_waitTime + _horizontalTime)
-                .Append(_subAnimations.FanOutChildFromBase(child))
+                .Append(_subAnimations.MoveOutChildFromBase(child))
                 .Append(_subAnimations.MoveNodeYLowerPile(child)));
         }
 
