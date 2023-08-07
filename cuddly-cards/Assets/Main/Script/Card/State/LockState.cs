@@ -63,7 +63,7 @@ public class LockState : SettedState
 
     void ToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager), new FromInventoryAnimation(_cardManager, true) };
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, true, false), new FromInventoryAnimation(_cardManager, true) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);

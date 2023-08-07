@@ -11,41 +11,11 @@ public class CloseFanAnimation : MainAnimation
 
     public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence sequence = DOTween.Sequence();
-
-        List<CardNode> childChildList = new();
-
-        int count = baseNode.Children.Count;
-
-        for (int i = 0; i < count; i++)
-        {
-            CardNode node = baseNode.Children[i];
-
-            foreach (CardNode childChild in node.Children)
-            {
-                _cardManager.AddToTopLevel(childChild, false);
-                childChildList.Add(childChild);
-            }
-
-            sequence.Join(_subAnimations.FanInCard(node, baseNode, false, false));
-        }
-
-        for (int i = childChildList.Count - 1; i >= 0; i--)
-        {
-            CardNode node = childChildList[i];
-
-            sequence.Join(_subAnimations.MoveNodeYLiftPile(node, baseNode));
-        }
-
-        return sequence;
+        return _subAnimations.FanIn(baseNode, activeNode);
     }
 
     public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence sequence = DOTween.Sequence();
-
-        sequence.Join(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode));
-
-        return sequence;
+        return DOTween.Sequence();
     }
 }

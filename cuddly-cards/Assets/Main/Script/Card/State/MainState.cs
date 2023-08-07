@@ -118,7 +118,7 @@ public class MainState : SettedState
 
     public void ToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, false, false) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);

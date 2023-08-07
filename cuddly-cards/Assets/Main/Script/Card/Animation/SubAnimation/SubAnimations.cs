@@ -104,6 +104,44 @@ public class SubAnimations
 
     #endregion
 
+
+    #region Fanning
+
+    public Tween FanIn(CardNode fanInTo, CardNode heighestNode)
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        List<CardNode> childChildList = new();
+
+        int count = fanInTo.Children.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            CardNode node = fanInTo.Children[i];
+
+            foreach (CardNode childChild in node.Children)
+            {
+                _cardManager.AddToTopLevel(childChild, false);
+                childChildList.Add(childChild);
+            }
+
+            sequence.Join(FanInCard(node, fanInTo, false, false));
+        }
+
+        for (int i = childChildList.Count - 1; i >= 0; i--)
+        {
+            CardNode node = childChildList[i];
+
+            sequence.Join(MoveNodeYLiftPile(node, heighestNode));
+        }
+
+        sequence.Join(MoveNodeYLiftPile(fanInTo, heighestNode));
+
+        return sequence;
+    }
+
+    #endregion
+
     #region Move Z
 
     public Tween MoveNodeZ(CardNode node, float positionZ)

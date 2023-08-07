@@ -31,7 +31,7 @@ public class DialogueState : SettedState
 
     public void ToTalkTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackToFanAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, false, true) };
         LayoutState newState = new TalkState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
