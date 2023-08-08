@@ -26,7 +26,7 @@ public class SEReader
         List<SEObjectElement> elementList = serializedObject.elements;
         while (_count < elementList.Count && elementList[_count].Depth == recursionDepth)
         {
-            rootNode.AddChild(InitNodes(elementList, recursionDepth + 1));
+            rootNode.AddChild(InitNodes(elementList, recursionDepth + 1), recursionDepth);
         }
 
         return rootNode;
@@ -48,7 +48,7 @@ public class SEReader
 
         while (_count < elementList.Count && elementList[_count].Depth == recursionDepth)
         {
-            node.AddChild(InitNodes(elementList, recursionDepth + 1));
+            node.AddChild(InitNodes(elementList, recursionDepth + 1), recursionDepth);
         }
 
         return node;

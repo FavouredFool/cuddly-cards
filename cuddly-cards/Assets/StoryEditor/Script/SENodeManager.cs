@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SENodeManager : MonoBehaviour
 {
@@ -8,11 +9,13 @@ public class SENodeManager : MonoBehaviour
     [SerializeField] TextAsset _textBlueprint;
 
     [Header("Transforms")]
-    [SerializeField]
-    Transform _parentPoint;
+    [SerializeField] Transform _parentPoint;
 
-    [SerializeField]
-    List<Transform> _childPoints;
+    [SerializeField] List<Transform> _childPoints;
+
+    [Header("UI")]
+    [SerializeField] TMP_Text _depthHigher;
+    [SerializeField] TMP_Text _depthLower;
 
     public SENode RootNode { get; private set; }
     public SENode BaseNode { get; private set; }
@@ -46,7 +49,7 @@ public class SENodeManager : MonoBehaviour
 
         Builder.InitializeNodeTree(RootNode);
 
-        OnlyEnableActiveNodes(RootNode);
+        SetBaseNode(RootNode);
     }
 
     public void SetBaseNode(SENode newBaseNode)
@@ -61,6 +64,9 @@ public class SENodeManager : MonoBehaviour
         {
             MoveNodeToChildPosition(newBaseNode.Children[i], i);
         }
+
+        _depthHigher.text = "Depth: " + BaseNode.Depth;
+        _depthLower.text = "Depth: " + (BaseNode.Depth + 1);
     }
 
     public void MoveNodeToParentPosition(SENode node)

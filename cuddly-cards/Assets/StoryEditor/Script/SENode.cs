@@ -13,22 +13,23 @@ public class SENode
 		Children = new List<SENode>();
 	}
 
-	public SENode(SEContext context, SENode parent) : this(context)
-	{
-		Parent = parent;
-	}
-
 	public SEContext Context { set; get; }
 	public SEBody Body { set; get; }
 	public SENode Parent { set; get; }
 	public List<SENode> Children { get; }
 	public SENode this[int key] => Children[key];
+	public int Depth { set; get; }
 
 
 	public void AddChild(SENode node)
+    {
+		AddChild(node, Depth + 1);
+    }
+	public void AddChild(SENode node, int depth)
 	{
 		node.Parent = this;
 		Children.Add(node);
+		node.Depth = depth;
 	}
 
 	public void TraverseChildren(TraversalNodeDelegate handler)
