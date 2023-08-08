@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class StoryEditorBody : MonoBehaviour
+public class SEBody : MonoBehaviour
 {
-    public StoryEditorNode CardReferenceNode { get; set; }
+    public SENode CardReferenceNode { get; set; }
 
     public void SetColor(Color color)
     {

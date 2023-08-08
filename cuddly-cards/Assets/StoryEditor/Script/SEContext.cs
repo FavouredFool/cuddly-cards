@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using static CardManager;
 using static CardInfo;
 
-public class StoryEditorContext
+public class SEContext
 {
 
-    public StoryEditorContext(string label, string description, CardType cardType)
+    public SEContext(string label, string description, CardType cardType)
     {
         Label = label;
         Description = description;
         CardType = cardType;
     }
 
-    public StoryEditorContext(int id, string label, string description, CardType cardType) : this(label, description, cardType)
+    public SEContext(int id, string label, string description, CardType cardType) : this(label, description, cardType)
     {
         ID = id;
     }

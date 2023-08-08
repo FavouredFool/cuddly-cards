@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoryEditorNodeManager : MonoBehaviour
+public class SENodeManager : MonoBehaviour
 {
     [Header("Story")]
     [SerializeField] TextAsset _textBlueprint;
 
-    public StoryEditorNode RootNode { get; private set; }
+    public SENode RootNode { get; private set; }
     public SEReader Reader { get; private set; } = null;
 
-    public StoryEditorNodeBuilder Builder { get; private set; }
+    public SENodeBuilder Builder { get; private set; }
 
     public void Awake()
     {
-        Builder = GetComponent<StoryEditorNodeBuilder>();
+        Builder = GetComponent<SENodeBuilder>();
 
         if (_textBlueprint != null)
         {
@@ -36,29 +36,26 @@ public class StoryEditorNodeManager : MonoBehaviour
 
         Builder.InitializeNodeTree(RootNode);
 
-        // Turn off all nodes except those on the active layers.
         OnlyEnableActiveNodes(RootNode);
-
-
     }
 
-    public void OnlyEnableActiveNodes(StoryEditorNode referenceNode)
+    public void OnlyEnableActiveNodes(SENode referenceNode)
     {
         SetEnabledNodeAndChildren(false, RootNode);
 
         referenceNode.Body.gameObject.SetActive(true);
-        foreach (StoryEditorNode child in referenceNode.Children)
+        foreach (SENode child in referenceNode.Children)
         {
             child.Body.gameObject.SetActive(true);
         }
     }
 
-    public void SetEnabledNodeAndChildren(bool enabled, StoryEditorNode referenceNode)
+    public void SetEnabledNodeAndChildren(bool enabled, SENode referenceNode)
     {
         referenceNode.TraverseChildren(
-            delegate (StoryEditorNode SENode)
+            delegate (SENode SENode)
             {
-                SENode.Body.gameObject.SetActive(false);
+                SENode.Body.gameObject.SetActive(enabled);
                 return true;
             }
         );

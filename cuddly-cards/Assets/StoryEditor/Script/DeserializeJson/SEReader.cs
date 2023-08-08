@@ -12,12 +12,12 @@ public class SEReader
         _textBlueprint = text;
     }
 
-    public StoryEditorNode ReadCards()
+    public SENode ReadCards()
     {
         SEObject serializedObject = JsonConvert.DeserializeObject<SEObject>(_textBlueprint.text);
         SEObjectElement activeElement = serializedObject.elements[0];
 
-        StoryEditorNode rootNode = new(new(0, activeElement.Label, activeElement.Description, activeElement.Type));
+        SENode rootNode = new(new(0, activeElement.Label, activeElement.Description, activeElement.Type));
         rootNode.Parent = null;
 
         _count = 1;
@@ -32,17 +32,17 @@ public class SEReader
         return rootNode;
     }
 
-    public StoryEditorNode InitNodes(List<SEObjectElement> elementList, int recursionDepth)
+    public SENode InitNodes(List<SEObjectElement> elementList, int recursionDepth)
     {
         SEObjectElement activeElement = elementList[_count];
 
-        StoryEditorContext context = new(_count, activeElement.Label, activeElement.Description, activeElement.Type);
+        SEContext context = new(_count, activeElement.Label, activeElement.Description, activeElement.Type);
 
         if (activeElement.DesiredKey != null) context.DesiredKey = activeElement.DesiredKey;
         if (activeElement.TalkID != 0) context.TalkID = activeElement.TalkID;
         if (activeElement.Dialogue != null) context.DialogueContexts = activeElement.Dialogue;
 
-        StoryEditorNode node = new(context);
+        SENode node = new(context);
 
         _count += 1;
 

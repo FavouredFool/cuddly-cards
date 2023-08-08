@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-public class StoryEditorNodeBuilder : MonoBehaviour
+public class SENodeBuilder : MonoBehaviour
 {
     [SerializeField] GameObject _nodeBlueprint;
 
@@ -19,21 +19,21 @@ public class StoryEditorNodeBuilder : MonoBehaviour
     [SerializeField]
     List<Transform> _childPoints;
 
-    public void InitializeNodeTree(StoryEditorNode rootNode)
+    public void InitializeNodeTree(SENode rootNode)
     {
         rootNode.TraverseChildren(
-            delegate (StoryEditorNode SENode)
+            delegate (SENode SENode)
             {
-                StoryEditorContext context = SENode.Context;
+                SEContext context = SENode.Context;
                 SENode.Body = BuildCardBody(context, SENode);
                 return true;
             }
         );
     }
 
-    public StoryEditorBody BuildCardBody(StoryEditorContext context, StoryEditorNode nodeReference)
+    public SEBody BuildCardBody(SEContext context, SENode nodeReference)
     {
-        StoryEditorBody body = GameObject.Instantiate(_nodeBlueprint, Vector3.zero, Quaternion.identity, _nodeFolder).GetComponent<StoryEditorBody>();
+        SEBody body = GameObject.Instantiate(_nodeBlueprint, Vector3.zero, Quaternion.identity, _nodeFolder).GetComponent<SEBody>();
 
         body.gameObject.name = "Card: \"" + context.Label + "\"";
         body.CardReferenceNode = nodeReference;
