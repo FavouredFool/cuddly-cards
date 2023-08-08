@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using static CardInfo;
 
 public class SENodeBuilder : MonoBehaviour
 {
@@ -41,15 +42,6 @@ public class SENodeBuilder : MonoBehaviour
         body.BodyContext = body.GetComponent<SEBodyContext>();
         body.BodyContext.InitializeBodyContext(context.ID, context.Label, context.Description, context.CardType, context.DesiredKey, context.TalkID, context.DialogueContexts);
 
-        CardScriptableType type = _types.FirstOrDefault(e => e.GetCardType().Equals(context.CardType));
-
-        if (type == null)
-        {
-            Debug.LogError("Found no fitting type for card: " + context.CardType);
-        }
-
-        body.SetColor(type.GetCardColor());
-
         // Position
         if (node.Parent == null)
         {
@@ -62,5 +54,10 @@ public class SENodeBuilder : MonoBehaviour
         }
 
         return body;
+    }
+
+    public CardScriptableType GetScriptableTypeFromCardType(CardType type)
+    {
+        return _types.FirstOrDefault(e => e.GetCardType().Equals(type));
     }
 }

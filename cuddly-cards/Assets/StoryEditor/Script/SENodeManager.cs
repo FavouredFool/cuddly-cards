@@ -52,6 +52,20 @@ public class SENodeManager : MonoBehaviour
         SetBaseNode(RootNode);
     }
 
+    public void Update()
+    {
+        SetNodeColor(BaseNode);
+        foreach (SENode node in BaseNode.Children)
+        {
+            SetNodeColor(node);
+        }
+    }
+
+    public void SetNodeColor(SENode node)
+    {
+        node.Body.SetColor(Builder.GetScriptableTypeFromCardType(node.Body.BodyContext.CardType).GetCardColor());
+    }
+
     public void SetBaseNode(SENode newBaseNode)
     {
         BaseNode = newBaseNode;
