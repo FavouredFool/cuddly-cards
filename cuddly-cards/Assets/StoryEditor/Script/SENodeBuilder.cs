@@ -24,18 +24,19 @@ public class SENodeBuilder : MonoBehaviour
         rootNode.TraverseChildren(
             delegate (SENode SENode)
             {
-                SEContext context = SENode.Context;
-                SENode.Body = BuildCardBody(context, SENode);
+                SENode.Body = BuildCardBody(SENode);
                 return true;
             }
         );
     }
     
-    public SEBody BuildCardBody(SEContext context, SENode nodeReference)
+    public SEBody BuildCardBody(SENode node)
     {
+        SEContext context = node.Context;
+
         SEBody body = GameObject.Instantiate(_nodeBlueprint, Vector3.zero, Quaternion.identity, _nodeFolder).GetComponent<SEBody>();
         body.gameObject.name = "Card: \"" + context.Label + "\"";
-        body.ReferenceNode = nodeReference;
+        body.ReferenceNode = node;
 
         body.BodyContext = body.GetComponent<SEBodyContext>();
         body.BodyContext.InitializeBodyContext(context.ID, context.Label, context.Description, context.CardType, context.DesiredKey, context.TalkID, context.DialogueContexts);
@@ -50,13 +51,13 @@ public class SENodeBuilder : MonoBehaviour
         body.SetColor(type.GetCardColor());
 
         // Position
-        if (nodeReference.Parent == null)
+        if (node.Parent == null)
         {
             body.transform.position = _manager.ParentPoint.position;
         }
         else
         {
-            int index = nodeReference.Parent.Children.IndexOf(nodeReference);
+            int index = node.Parent.Children.IndexOf(node);
             body.transform.position = _manager.ChildPoints[index].position;
         }
 

@@ -36,12 +36,12 @@ public class SENodeManager : MonoBehaviour
     {
         if (Reader != null)
         {
-            RootNode = Reader.ReadCards();
+            RootNode = BaseNode = Reader.ReadCards();
             
         }
         else
         {
-            RootNode = new(new("Cover", "CoverDescription", CardInfo.CardType.COVER));
+            RootNode = BaseNode = new(new("Cover", "CoverDescription", CardInfo.CardType.COVER));
         }
 
         Builder.InitializeNodeTree(RootNode);
@@ -52,7 +52,6 @@ public class SENodeManager : MonoBehaviour
     public void SetBaseNode(SENode newBaseNode)
     {
         BaseNode = newBaseNode;
-        BaseNode.Body.BodyContext.Label = "NONONO";
 
         OnlyEnableActiveNodes(newBaseNode);
 
@@ -72,6 +71,26 @@ public class SENodeManager : MonoBehaviour
     public void MoveNodeToChildPosition(SENode node, int index)
     {
         node.Body.transform.position = ChildPoints[index].position;
+    }
+
+    public void AddChildNode()
+    {
+        // AUFGERUFEN ÜBER BUTTON
+
+        if (BaseNode.Children.Count >= 4)
+        {
+            Debug.LogWarning("This layer is full");
+            return;
+        }
+
+        SENode node = new(new("defaultLabel", "defaultText", CardInfo.CardType.THING));
+
+        node.Body = Builder.BuildCardBody(node);
+
+        BaseNode.AddChild(node);
+
+        //refresh
+        SetBaseNode(BaseNode);
     }
 
     public void OnlyEnableActiveNodes(SENode referenceNode)
