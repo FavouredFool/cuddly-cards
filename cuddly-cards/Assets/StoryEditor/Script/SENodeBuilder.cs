@@ -30,13 +30,15 @@ public class SENodeBuilder : MonoBehaviour
             }
         );
     }
-
+    
     public SEBody BuildCardBody(SEContext context, SENode nodeReference)
     {
         SEBody body = GameObject.Instantiate(_nodeBlueprint, Vector3.zero, Quaternion.identity, _nodeFolder).GetComponent<SEBody>();
-
         body.gameObject.name = "Card: \"" + context.Label + "\"";
         body.ReferenceNode = nodeReference;
+
+        body.BodyContext = body.GetComponent<SEBodyContext>();
+        body.BodyContext.InitializeBodyContext(context.ID, context.Label, context.Description, context.CardType, context.DesiredKey, context.TalkID, context.DialogueContexts);
 
         CardScriptableType type = _types.FirstOrDefault(e => e.GetCardType().Equals(context.CardType));
 
@@ -60,5 +62,4 @@ public class SENodeBuilder : MonoBehaviour
 
         return body;
     }
-
 }

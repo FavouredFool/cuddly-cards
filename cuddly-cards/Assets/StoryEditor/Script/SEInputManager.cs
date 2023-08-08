@@ -22,8 +22,27 @@ public class SEInputManager : MonoBehaviour
 
             if (node == null) return;
 
+            EvaluateNode(node);
+        }
+    }
+
+    public void EvaluateNode(SENode node)
+    {
+        if (node == _manager.RootNode)
+        {
+            return;
+        }
+
+        if (node == _manager.BaseNode)
+        {
+            _manager.SetBaseNode(node.Parent);
+        }
+        else
+        {
             _manager.SetBaseNode(node);
         }
+
+        
     }
 
     public SENode GetHoveredNode()

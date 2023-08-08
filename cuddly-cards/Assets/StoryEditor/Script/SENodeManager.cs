@@ -15,6 +15,7 @@ public class SENodeManager : MonoBehaviour
     List<Transform> _childPoints;
 
     public SENode RootNode { get; private set; }
+    public SENode BaseNode { get; private set; }
     public SEReader Reader { get; private set; } = null;
     public SENodeBuilder Builder { get; private set; }
 
@@ -50,6 +51,9 @@ public class SENodeManager : MonoBehaviour
 
     public void SetBaseNode(SENode newBaseNode)
     {
+        BaseNode = newBaseNode;
+        BaseNode.Body.BodyContext.Label = "NONONO";
+
         OnlyEnableActiveNodes(newBaseNode);
 
         MoveNodeToParentPosition(newBaseNode);
