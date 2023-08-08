@@ -7,16 +7,18 @@ public class StoryEditorNode
 {
 	public delegate bool TraversalNodeDelegate(StoryEditorNode node);
 
-	public StoryEditorNode()
+	public StoryEditorNode(StoryEditorContext context)
 	{
+		Context = context;
 		Children = new List<StoryEditorNode>();
 	}
 
-	public StoryEditorNode(StoryEditorNode parent) : this()
+	public StoryEditorNode(StoryEditorContext context, StoryEditorNode parent) : this(context)
 	{
 		Parent = parent;
 	}
 
+	public StoryEditorContext Context { set; get; }
 	public StoryEditorBody Body { set; get; }
 	public StoryEditorNode Parent { set; get; }
 	public List<StoryEditorNode> Children { get; }

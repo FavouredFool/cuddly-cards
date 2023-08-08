@@ -31,14 +31,36 @@ public class StoryEditorNodeManager : MonoBehaviour
         }
         else
         {
-            RootNode = new();
+            RootNode = new(new("Cover", "CoverDescription", CardInfo.CardType.COVER));
         }
 
         Builder.InitializeNodeTree(RootNode);
 
+        // Turn off all nodes except those on the active layers.
+        OnlyEnableActiveNodes(RootNode);
 
 
+    }
 
+    public void OnlyEnableActiveNodes(StoryEditorNode referenceNode)
+    {
+        SetEnabledNodeAndChildren(false, RootNode);
 
+        referenceNode.Body.gameObject.SetActive(true);
+        foreach (StoryEditorNode child in referenceNode.Children)
+        {
+            child.Body.gameObject.SetActive(true);
+        }
+    }
+
+    public void SetEnabledNodeAndChildren(bool enabled, StoryEditorNode referenceNode)
+    {
+        referenceNode.TraverseChildren(
+            delegate (StoryEditorNode SENode)
+            {
+                SENode.Body.gameObject.SetActive(false);
+                return true;
+            }
+        );
     }
 }

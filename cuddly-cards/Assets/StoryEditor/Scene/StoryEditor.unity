@@ -405,7 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1390aa1214d82742b702cbf85bf24cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textBlueprint: {fileID: 0}
+  _textBlueprint: {fileID: 4900000, guid: f9e822b8bbba98549ab3786cd6d87587, type: 3}
 --- !u!114 &614326077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,6 +420,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeBlueprint: {fileID: 2429469911318935666, guid: 56c7327831832164f8af737dcf907084,
     type: 3}
+  _types:
+  - {fileID: 11400000, guid: 9230882b3eab1ef45aecb5d9fa86cec7, type: 2}
+  - {fileID: 11400000, guid: 1b447421ceedace499ffa648df0b1e58, type: 2}
+  - {fileID: 11400000, guid: 99bba5316860b1a43858427da33eb44a, type: 2}
+  - {fileID: 11400000, guid: 1a67d8efb6bd3014db4eda07f75bac2b, type: 2}
+  - {fileID: 11400000, guid: 088c0514043b9504ba3e1fbc28670316, type: 2}
+  - {fileID: 11400000, guid: 35de73f05cd0a0e459f3e2cf9d3c8f64, type: 2}
+  - {fileID: 11400000, guid: d4924b3a39fbae84684b2380cbcb0831, type: 2}
+  - {fileID: 11400000, guid: 544215356df8c9141b57517ba913874c, type: 2}
+  - {fileID: 11400000, guid: d15463bba4fa18442a72f9a5d54f249c, type: 2}
+  - {fileID: 11400000, guid: 00932cef1b971ac4f82203e26efbabf6, type: 2}
   _nodeFolder: {fileID: 139620578}
   _parentPoint: {fileID: 2119750546}
   _childPoints:

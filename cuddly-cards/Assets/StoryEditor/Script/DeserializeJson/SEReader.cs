@@ -17,7 +17,7 @@ public class SEReader
         SEObject serializedObject = JsonConvert.DeserializeObject<SEObject>(_textBlueprint.text);
         SEObjectElement activeElement = serializedObject.elements[0];
 
-        StoryEditorNode rootNode = new();
+        StoryEditorNode rootNode = new(new(0, activeElement.Label, activeElement.Description, activeElement.Type));
         rootNode.Parent = null;
 
         _count = 1;
@@ -36,13 +36,13 @@ public class SEReader
     {
         SEObjectElement activeElement = elementList[_count];
 
-        CardContext context = new(_count, activeElement.Label, activeElement.Description, activeElement.Type);
+        StoryEditorContext context = new(_count, activeElement.Label, activeElement.Description, activeElement.Type);
 
         if (activeElement.DesiredKey != null) context.DesiredKey = activeElement.DesiredKey;
         if (activeElement.TalkID != 0) context.TalkID = activeElement.TalkID;
         if (activeElement.Dialogue != null) context.DialogueContexts = activeElement.Dialogue;
 
-        StoryEditorNode node = new();
+        StoryEditorNode node = new(context);
 
         _count += 1;
 

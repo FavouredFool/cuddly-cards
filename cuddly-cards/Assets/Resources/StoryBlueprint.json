@@ -81,7 +81,7 @@
         {
             "label": "A Bloodstain",
             "description": "Dies ist ein Test",
-            "type": "CLUE",
+            "type": "KEY",
             "depth": "5"
         },
         {
