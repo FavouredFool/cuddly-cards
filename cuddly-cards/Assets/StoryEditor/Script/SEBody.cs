@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SEBody : MonoBehaviour
 {
-    public SENode CardReferenceNode { get; set; }
+    public SENode ReferenceNode { get; set; }
 
     public void SetColor(Color color)
     {

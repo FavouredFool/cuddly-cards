@@ -12,12 +12,12 @@ public class SENodeBuilder : MonoBehaviour
     [Header("Organization")]
     [SerializeField] Transform _nodeFolder;
 
-    [Header("Transforms")]
-    [SerializeField]
-    Transform _parentPoint;
+    SENodeManager _manager;
 
-    [SerializeField]
-    List<Transform> _childPoints;
+    public void Awake()
+    {
+        _manager = GetComponent<SENodeManager>();
+    }
 
     public void InitializeNodeTree(SENode rootNode)
     {
@@ -36,7 +36,7 @@ public class SENodeBuilder : MonoBehaviour
         SEBody body = GameObject.Instantiate(_nodeBlueprint, Vector3.zero, Quaternion.identity, _nodeFolder).GetComponent<SEBody>();
 
         body.gameObject.name = "Card: \"" + context.Label + "\"";
-        body.CardReferenceNode = nodeReference;
+        body.ReferenceNode = nodeReference;
 
         CardScriptableType type = _types.FirstOrDefault(e => e.GetCardType().Equals(context.CardType));
 
@@ -50,12 +50,12 @@ public class SENodeBuilder : MonoBehaviour
         // Position
         if (nodeReference.Parent == null)
         {
-            body.transform.position = _parentPoint.position;
+            body.transform.position = _manager.ParentPoint.position;
         }
         else
         {
             int index = nodeReference.Parent.Children.IndexOf(nodeReference);
-            body.transform.position = _childPoints[index].position;
+            body.transform.position = _manager.ChildPoints[index].position;
         }
 
         return body;
