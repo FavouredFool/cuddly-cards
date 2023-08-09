@@ -33,7 +33,6 @@ public class BackAnimation : BackParentAnimation
 
         sequence.Append(FromDone(activeNode, baseNode));
 
-
         _cardManager.AddToTopLevel(baseNode);
         int index = activeNode.Children.IndexOf(baseNode);
         int count = activeNode.Children.Count;
@@ -100,8 +99,8 @@ public class BackAnimation : BackParentAnimation
         else
         {
             return DOTween.Sequence()
-            .Append(_subAnimations.MoveNodeXToChild(baseNode, baseNode))
-            .Append(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode));
+                .Append(_subAnimations.MoveNodeXToChild(baseNode, baseNode))
+                .Append(_subAnimations.MoveNodeYLowerPile(baseNode));
         }
     }
 

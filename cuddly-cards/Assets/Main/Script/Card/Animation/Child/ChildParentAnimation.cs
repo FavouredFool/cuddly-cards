@@ -16,6 +16,8 @@ public abstract class ChildParentAnimation : MainAnimation
 
         List<CardNode> childNodes = baseNode.Children;
 
+        int height = 0;
+
         for (int i = childNodes.Count - 1; i >= 0; i--)
         {
             CardNode previousChild = childNodes[i];
@@ -25,11 +27,13 @@ public abstract class ChildParentAnimation : MainAnimation
                 continue;
             }
 
+            height += previousChild.GetNodeCount(CardTraversal.CONTEXT);
+
             sequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.LiftAndMoveChildToBase(previousChild, baseNode))
                 .AppendInterval(_waitTime)
                 .Append(_subAnimations.MoveNodeZFarther(previousChild))
-                .Append(_subAnimations.MoveNodeYLiftPile(previousChild, baseNode.Parent)));
+                .Append(_subAnimations.MoveNodeY(previousChild, height)));
         }
 
         return sequence;
