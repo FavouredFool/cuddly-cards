@@ -1,18 +1,21 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Sirenix.Serialization;
+using Sirenix.OdinInspector;
 using static CardManager;
 using static CardInfo;
 
-public class SEBodyContext : MonoBehaviour
+[ShowOdinSerializedPropertiesInInspector]
+public class SEBodyContext : SerializedMonoBehaviour
 {
-    [SerializeField] int _id;
-    [SerializeField] string _label;
-    [SerializeField] string _description;
-    [SerializeField] CardType _cardType;
-    [SerializeField] string _desiredKey;
-    [SerializeField] int _talkID;
-    [SerializeField] List<DialogueContext> _dialogueContexts;
+    [OdinSerialize] int _id;
+    [OdinSerialize] string _label;
+    [OdinSerialize] string _description;
+    [OdinSerialize] CardType _cardType;
+    [OdinSerialize] string _desiredKey;
+    [OdinSerialize] int _talkID;
+    [OdinSerialize] List<DialogueContext> _dialogueContexts;
 
     public int ID => _id;
     public string Label { get { return _label; } set { _label = value; } }

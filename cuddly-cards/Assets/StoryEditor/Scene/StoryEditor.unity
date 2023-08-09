@@ -578,7 +578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1390aa1214d82742b702cbf85bf24cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textBlueprint: {fileID: 0}
+  _textBlueprint: {fileID: 4900000, guid: 71ee71fa69de05b4e83ad3813d47fb8d, type: 3}
   _parentPoint: {fileID: 2119750546}
   _childPoints:
   - {fileID: 1729728093}
