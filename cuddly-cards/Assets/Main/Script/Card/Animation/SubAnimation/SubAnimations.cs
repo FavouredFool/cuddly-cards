@@ -215,6 +215,8 @@ public class SubAnimations
 
     public Tween MoveNodeYLiftPile(CardNode node, CardNode relativeHeightNode)
     {
+        if (relativeHeightNode == null) relativeHeightNode = _cardManager.RootNode;
+
         return MoveNodeY(node, node.GetNodeCountUpToNodeInPile(relativeHeightNode, CardTraversal.CONTEXT));
     }
     

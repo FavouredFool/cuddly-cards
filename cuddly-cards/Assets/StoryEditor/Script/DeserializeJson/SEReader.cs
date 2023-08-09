@@ -15,7 +15,7 @@ public class SEReader
     public SENode ReadCards()
     {
         SEObject serializedObject = JsonConvert.DeserializeObject<SEObject>(_textBlueprint.text);
-        SEObjectElement activeElement = serializedObject.elements[0];
+        SEObjectElement activeElement = serializedObject.Elements[0];
 
         SENode rootNode = new(new(0, activeElement.Label, activeElement.Description, activeElement.Type));
         rootNode.Parent = null;
@@ -23,7 +23,7 @@ public class SEReader
         _count = 1;
         int recursionDepth = 1;
 
-        List<SEObjectElement> elementList = serializedObject.elements;
+        List<SEObjectElement> elementList = serializedObject.Elements;
         while (_count < elementList.Count && elementList[_count].Depth == recursionDepth)
         {
             rootNode.AddChild(InitNodes(elementList, recursionDepth + 1), recursionDepth);
@@ -40,7 +40,7 @@ public class SEReader
 
         if (activeElement.DesiredKey != null) context.DesiredKey = activeElement.DesiredKey;
         if (activeElement.TalkID != 0) context.TalkID = activeElement.TalkID;
-        if (activeElement.Dialogue != null) context.DialogueContexts = activeElement.Dialogue;
+        if (activeElement.DialogueContext != null) context.DialogueContexts = activeElement.DialogueContext;
 
         SENode node = new(context);
 

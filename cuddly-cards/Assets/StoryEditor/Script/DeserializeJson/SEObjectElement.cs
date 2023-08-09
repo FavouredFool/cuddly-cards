@@ -6,6 +6,18 @@ using static CardInfo;
 
 public class SEObjectElement
 {
+    public SEObjectElement(int depth, string label, string description, CardType type, string desiredKey, int talkID, List<DialogueContext> dialogueContext)
+    {
+        Depth = depth;
+        Label = label;
+        Description = description;
+        Type = type;
+        DesiredKey = desiredKey;
+        TalkID = talkID;
+        DialogueContext = dialogueContext;
+    }
+
+
     public string Label { get; set; }
     public string Description { get; set; }
     [JsonConverter(typeof(StringEnumConverter))]
@@ -14,6 +26,6 @@ public class SEObjectElement
 
     public string DesiredKey { get; set; }
     public int TalkID { get; set; }
-    public List<DialogueContext> Dialogue { get; set; }
+    public List<DialogueContext> DialogueContext { get; set; }
     
 }

@@ -20,6 +20,7 @@ public class SENodeManager : MonoBehaviour
     public SENode RootNode { get; private set; }
     public SENode BaseNode { get; private set; }
     public SEReader Reader { get; private set; } = null;
+    public SESaveManager Saver { get; private set; }
     public SENodeBuilder Builder { get; private set; }
 
     public Transform ParentPoint => _parentPoint;
@@ -33,6 +34,8 @@ public class SENodeManager : MonoBehaviour
         {
             Reader = new SEReader(_textBlueprint);
         }
+
+        Saver = new SESaveManager();
     }
 
     public void Start()
@@ -59,6 +62,11 @@ public class SENodeManager : MonoBehaviour
         {
             SetNodeColor(node);
         }
+    }
+
+    public void SaveToJSON()
+    {
+        Saver.SaveToJSON(RootNode);
     }
 
     public void SetNodeColor(SENode node)
