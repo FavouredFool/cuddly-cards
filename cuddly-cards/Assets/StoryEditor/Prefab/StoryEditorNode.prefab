@@ -152,12 +152,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcfa160092c87d740ad94630eafa434f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: 0
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _dialogueContexts
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[DialogueContext, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   _label: 
   _description: 
-  _cardType: 0
-  _desiredKey: 0
-  _talkID: 0
+  _cardType: 4
+  _desiredKeyBody: {fileID: 0}
+  _talkBody: {fileID: 0}
 --- !u!114 &5538394697556236891
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -39,6 +39,6 @@ public class SESaveManager
     {
         SEBodyContext bodyContext = node.Body.BodyContext;
 
-        return new SEObjectElement(node.Depth, bodyContext.Label, bodyContext.Description, bodyContext.CardType, bodyContext.DesiredKey, bodyContext.TalkID, bodyContext.DialogueContexts);
+        return new SEObjectElement(node.Depth, bodyContext.Label, bodyContext.Description, bodyContext.CardType);
     }
 }

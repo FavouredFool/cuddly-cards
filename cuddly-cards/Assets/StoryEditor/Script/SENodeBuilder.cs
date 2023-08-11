@@ -40,7 +40,7 @@ public class SENodeBuilder : MonoBehaviour
         body.ReferenceNode = node;
 
         body.BodyContext = body.GetComponent<SEBodyContext>();
-        body.BodyContext.InitializeBodyContext(context.ID, context.Label, context.Description, context.CardType, context.DesiredKey, context.TalkID, context.DialogueContexts);
+        body.BodyContext.InitializeBodyContext(context.Label, context.Description, context.CardType);
 
         // Position
         if (node.Parent == null)

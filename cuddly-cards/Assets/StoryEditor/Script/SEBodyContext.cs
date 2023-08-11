@@ -9,30 +9,43 @@ using static CardInfo;
 [ShowOdinSerializedPropertiesInInspector]
 public class SEBodyContext : SerializedMonoBehaviour
 {
-    [OdinSerialize] int _id;
-    [OdinSerialize] string _label;
-    [OdinSerialize] string _description;
-    [OdinSerialize] CardType _cardType;
-    [OdinSerialize] string _desiredKey;
-    [OdinSerialize] int _talkID;
-    [OdinSerialize] List<DialogueContext> _dialogueContexts;
+    [BoxGroup("Basics")]
+    [SerializeField]
+    string _label;
+    [BoxGroup("Basics")]
+    [SerializeField]
+    string _description;
+    [BoxGroup("Basics")]
+    [SerializeField]
+    CardType _cardType;
 
-    public int ID => _id;
+    [ShowIf("_cardType", CardType.LOCK)]
+    // Hier sicherstellen, dass der übergebene BodyContext "KEY" als Enum hat.
+    [BoxGroup("Key")]
+    [SerializeField]
+    SEBodyContext _desiredKeyBody;
+
+    [ShowIf("_cardType", CardType.DIALOGUE)]
+    // Hier sicherstellen, dass der übergebene BodyContext "TALK" als Enum hat.
+    [BoxGroup("Dialogue")]
+    [SerializeField]
+    SEBodyContext _talkBody;
+    [ShowIf("_cardType", CardType.DIALOGUE)]
+    [BoxGroup("Dialogue")]
+    [SerializeField]
+    List<DialogueContext> _dialogueContexts;
+
     public string Label { get { return _label; } set { _label = value; } }
     public string Description => _description;
     public CardType CardType => _cardType;
-    public string DesiredKey => _desiredKey;
-    public int TalkID => _talkID;
+    public SEBodyContext DesiredKeyBody => _desiredKeyBody;
+    public SEBodyContext TalkBody => _talkBody;
     public List<DialogueContext> DialogueContexts => _dialogueContexts;
 
-    public void InitializeBodyContext(int id, string label, string description, CardType cardType, string desiredKey, int talkID, List<DialogueContext> dialogueContexts)
+    public void InitializeBodyContext(string label, string description, CardType cardType)
     {
-        _id = id;
         _label = label;
         _description = description;
         _cardType = cardType;
-        _desiredKey = desiredKey;
-        _talkID = talkID;
-        _dialogueContexts = dialogueContexts;
     }
 }

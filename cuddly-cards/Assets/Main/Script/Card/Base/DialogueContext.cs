@@ -3,16 +3,23 @@ using System;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
-public class DialogueContext
+public struct DialogueContext
 {
-    public DialogueContext(string name, string text)
+    public DialogueContext(bool isLockDialogue, string name, string text)
     {
-        Name = name;
-        Text = text;
+        _isLockDialogue = isLockDialogue;
+        _name = name;
+        _text = text;
     }
 
-    [OdinSerialize]
-    public string Name { get; set; }
-    [OdinSerialize]
-    public string Text { get; set; }
+    [SerializeField]
+    bool _isLockDialogue;
+    [SerializeField]
+    string _name;
+    [SerializeField]
+    string _text;
+
+    public bool IsLockDialogue => _isLockDialogue;
+    public string Name => _name;
+    public string Text => _text;
 }

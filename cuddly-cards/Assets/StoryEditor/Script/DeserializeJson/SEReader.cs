@@ -38,9 +38,9 @@ public class SEReader
 
         SEContext context = new(_count, activeElement.Label, activeElement.Description, activeElement.Type);
 
-        if (activeElement.DesiredKey != null) context.DesiredKey = activeElement.DesiredKey;
-        if (activeElement.TalkID != 0) context.TalkID = activeElement.TalkID;
-        if (activeElement.DialogueContext != null) context.DialogueContexts = activeElement.DialogueContext;
+        //if (activeElement.DesiredKey != null) context.DesiredKey = activeElement.DesiredKey;
+        //if (activeElement.TalkID != 0) context.TalkID = activeElement.TalkID;
+        //if (activeElement.DialogueContext != null) context.DialogueContexts = activeElement.DialogueContext;
 
         SENode node = new(context);
 
