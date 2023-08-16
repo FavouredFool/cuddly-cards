@@ -107,7 +107,7 @@ public class SENodeManager : MonoBehaviour
     {
         // AUFGERUFEN ÜBER BUTTON
 
-        if (BaseNode.Children.Count >= 4 && BaseNode.Body.BodyContext.CardType != CardInfo.CardType.DWRAPPER)
+        if (BaseNode.Children.Count >= 4 && BaseNode.Body.BodyContext.CardType != CardInfo.CardType.DWRAPPER && BaseNode.Body.BodyContext.CardType != CardInfo.CardType.DIALOGUE)
         {
             Debug.LogWarning("This layer is full");
             return;
@@ -143,6 +143,21 @@ public class SENodeManager : MonoBehaviour
 
         SetBaseNode(BaseNode);
     }
+
+    public void SwapChildren(int index)
+    {
+        if (BaseNode.Children.Count <= index + 1)
+        {
+            return;
+        }
+
+        SENode leftNode = BaseNode.Children[index];
+
+        BaseNode.Children.RemoveAt(index);
+        BaseNode.Children.Insert(index + 1, leftNode);
+
+        SetBaseNode(BaseNode);
+    } 
 
     public void OnlyEnableActiveNodes(SENode referenceNode)
     {
