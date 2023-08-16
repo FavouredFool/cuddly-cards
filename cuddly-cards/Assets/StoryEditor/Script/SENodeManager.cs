@@ -13,7 +13,7 @@ public class SENodeManager : MonoBehaviour
     [Header("Transforms")]
     [SerializeField] Transform _parentPoint;
 
-    [SerializeField] List<Transform> _childPoints;
+    [SerializeField] Transform _childStartPoint;
 
     [Header("UI")]
     [SerializeField] TMP_Text _depthHigher;
@@ -26,7 +26,7 @@ public class SENodeManager : MonoBehaviour
     public SENodeBuilder Builder { get; private set; }
 
     public Transform ParentPoint => _parentPoint;
-    public List<Transform> ChildPoints => _childPoints;
+    public Transform ChildStartPoint => _childStartPoint;
 
     public void Awake()
     {
@@ -100,14 +100,14 @@ public class SENodeManager : MonoBehaviour
 
     public void MoveNodeToChildPosition(SENode node, int index)
     {
-        node.Body.transform.position = ChildPoints[index].position;
+        node.Body.transform.position = ChildStartPoint.position + Vector3.right * index * 3f;
     }
 
     public void AddChildNode()
     {
         // AUFGERUFEN ÜBER BUTTON
 
-        if (BaseNode.Children.Count >= 4)
+        if (BaseNode.Children.Count >= 4 && BaseNode.Body.BodyContext.CardType != CardInfo.CardType.DWRAPPER)
         {
             Debug.LogWarning("This layer is full");
             return;
@@ -120,6 +120,27 @@ public class SENodeManager : MonoBehaviour
         BaseNode.AddChild(node);
 
         //refresh
+        SetBaseNode(BaseNode);
+    }
+
+    public void DeleteChild(int index)
+    {
+        if (BaseNode.Children.Count <= index)
+        {
+            return;
+        }
+
+        SENode node = BaseNode.Children[index];
+
+        if (node.Children.Count != 0)
+        {
+            Debug.Log("not empty");
+            return;
+        }
+
+        BaseNode.Children.Remove(node);
+        Destroy(node.Body.gameObject);
+
         SetBaseNode(BaseNode);
     }
 

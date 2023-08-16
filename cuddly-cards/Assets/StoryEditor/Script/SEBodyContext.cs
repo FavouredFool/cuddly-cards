@@ -13,6 +13,7 @@ public class SEBodyContext : SerializedMonoBehaviour
     [SerializeField]
     string _label;
     [BoxGroup("Basics")]
+    [TextArea(3, 6)]
     [SerializeField]
     string _description;
     [BoxGroup("Basics")]

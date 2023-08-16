@@ -47,11 +47,6 @@ public class SENodeBuilder : MonoBehaviour
         {
             body.transform.position = _manager.ParentPoint.position;
         }
-        else
-        {
-            int index = node.Parent.Children.IndexOf(node);
-            body.transform.position = _manager.ChildPoints[index].position;
-        }
 
         return body;
     }

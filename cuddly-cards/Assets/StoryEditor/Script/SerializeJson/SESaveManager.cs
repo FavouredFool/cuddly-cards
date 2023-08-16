@@ -15,9 +15,6 @@ public class SESaveManager
         string output = JsonConvert.SerializeObject(objectToSerialize);
 
         File.WriteAllText("Z:/Dokumente/Game Development/Unity/Repositories/cuddly-cards/cuddly-cards/Assets/Resources/GeneratedBlueprints/newBlueprint.json", output);
-
-        Debug.Log("finished!");
-        Debug.Log(output);
     }
 
     public List<SEObjectElement> FillObjectElementListFromRootNode(SENode rootNode)
