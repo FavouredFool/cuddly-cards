@@ -151,12 +151,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e08f242eced744082c312cc1388cf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SEObjectElement:
-    Label: 
-    Description: 
-    CardType: 0
-    Depth: 0
-  _label: {fileID: 8769443829346860643}
+  CardType: 0
+  Label: 
+  Description: 
+  DesiredKey: {fileID: 0}
+  DesiredTalk: {fileID: 0}
+  DialogueContexts: []
+  UILabel: {fileID: 8769443829346860643}
 --- !u!33 &93707395105617996
 MeshFilter:
   m_ObjectHideFlags: 0

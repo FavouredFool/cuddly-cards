@@ -34,7 +34,7 @@ public class SENodeBuilder : MonoBehaviour
     public SEBody BuildCardBody(SENode node)
     {
         SEBody body = GameObject.Instantiate(_nodeBlueprint, Vector3.zero, Quaternion.identity, _nodeFolder).GetComponent<SEBody>();
-        body.gameObject.name = "Card: \"" + node.SEObjectElement.Label + "\"";
+        body.gameObject.name = "Card: \"" + node.Context.Label + "\"";
         body.ReferenceNode = node;
 
         // Fill Context

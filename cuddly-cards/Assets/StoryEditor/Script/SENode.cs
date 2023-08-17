@@ -9,12 +9,12 @@ public class SENode
 
 	public SENode(SEContext objectElement)
 	{
-		SEObjectElement = objectElement;
+		Context = objectElement;
 		Children = new List<SENode>();
 	}
 
 	[SerializeField, HideInInspector]
-	public SEContext SEObjectElement;
+	public SEContext Context;
 
 	public SEBody Body { set; get; }
 	public SENode Parent { set; get; }
@@ -23,13 +23,13 @@ public class SENode
 
 	public void AddChild(SENode node)
     {
-		AddChild(node, SEObjectElement.Depth + 1);
+		AddChild(node, Context.Depth + 1);
     }
 	public void AddChild(SENode node, int depth)
 	{
 		node.Parent = this;
 		Children.Add(node);
-		node.SEObjectElement.Depth = depth;
+		node.Context.Depth = depth;
 	}
 
 	public void TraverseChildren(TraversalNodeDelegate handler)

@@ -1,45 +1,51 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using static CardInfo;
 
 public class SEBody : MonoBehaviour
 {
+    [PropertyOrder(1)]
     [BoxGroup("Basics")]
-    [ShowInInspector]
-    public CardType CardType
-    {
-        get { return this.ReferenceNode.SEObjectElement.CardType; }
-        set { this.ReferenceNode.SEObjectElement.CardType = value; }
-    }
+    public CardType CardType;
 
+    [PropertyOrder(1)]
     [BoxGroup("Basics")]
     [MultiLineProperty(2)]
-    [ShowInInspector]
-    public string Label
-    {
-        get { return this.ReferenceNode.SEObjectElement.Label; }
-        set { this.ReferenceNode.SEObjectElement.Label = value; }
-    }
+    public string Label;
+
+    [PropertyOrder(1)]
     [BoxGroup("Basics")]
     [MultiLineProperty(5)]
-    [ShowInInspector]
-    public string Description
-    {
-        get { return this.ReferenceNode.SEObjectElement.Description; }
-        set { this.ReferenceNode.SEObjectElement.Description = value; }
-    }
+    public string Description;
 
+    [ShowIf("CardType", CardType.LOCK)]
+    [PropertyOrder(2)]
+    [BoxGroup("Key")]
+    public SEBody DesiredKey;
 
-    [SerializeField] TMP_Text _label;
+    [ShowIf("CardType", CardType.DIALOGUE)]
+    [PropertyOrder(3)]
+    [BoxGroup("Dialogue")]
+    public SEBody DesiredTalk;
+
+    [ShowIf("CardType", CardType.DIALOGUE)]
+    [PropertyOrder(3)]
+    [BoxGroup("Dialogue")]
+    public List<DialogueContext> DialogueContexts;
+
+    [PropertyOrder(4)]
+    [BoxGroup("Other")]
+    public TMP_Text UILabel;
 
     public SENode ReferenceNode { get; set; }
 
     public void Update()
     {
-        _label.text = ReferenceNode.SEObjectElement.Label;
-        gameObject.name = "Card: \"" + ReferenceNode.SEObjectElement.Label + "\"";
+        UILabel.text = ReferenceNode.Body.Label;
+        gameObject.name = "Card: \"" + ReferenceNode.Body.Label + "\"";
     }
 
     public void SetColor(Color color)

@@ -3,6 +3,7 @@ using System;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
+[Serializable]
 public struct DialogueContext
 {
     public DialogueContext(bool isLockDialogue, string name, string text)

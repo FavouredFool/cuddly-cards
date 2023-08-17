@@ -1,39 +1,97 @@
 {
     "$id": 0,
-    "$type": "0|System.Collections.Generic.List`1[[SEObjectElement, Assembly-CSharp]], mscorlib",
+    "$type": "0|System.Collections.Generic.List`1[[SEContext, Assembly-CSharp]], mscorlib",
     "$rlength": 4,
     "$rcontent": [
         {
             "$id": 1,
-            "$type": "1|SEObjectElement, Assembly-CSharp",
+            "$type": "1|SEContext, Assembly-CSharp",
+            "CardID": 0,
             "CardType": 0,
-            "Label": "This is covered",
-            "Description": "CoverDescription",
+            "Label": "asd",
+            "Description": "as",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 2,
+                "$type": "2|System.Collections.Generic.List`1[[DialogueContext, Assembly-CSharp]], mscorlib",
+                "$rlength": 0,
+                "$rcontent": [
+                ]
+            },
             "Depth": 0
-        },
-        {
-            "$id": 2,
-            "$type": 1,
-            "CardType": 2,
-            "Label": "Depth 1a",
-            "Description": "awdsf",
-            "Depth": 1
         },
         {
             "$id": 3,
             "$type": 1,
-            "CardType": 3,
-            "Label": "Placed",
-            "Description": "asdf",
-            "Depth": 2
+            "CardID": 1,
+            "CardType": 6,
+            "Label": "asd",
+            "Description": "",
+            "DesiredKeyID": 2,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 4,
+                "$type": 2,
+                "$rlength": 0,
+                "$rcontent": [
+                ]
+            },
+            "Depth": 1
         },
         {
-            "$id": 4,
+            "$id": 5,
             "$type": 1,
-            "CardType": 2,
-            "Label": "Thingy",
-            "Description": "defaultText",
-            "Depth": 2
+            "CardID": 2,
+            "CardType": 5,
+            "Label": "dasf",
+            "Description": "a<sdf",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 6,
+                "$type": 2,
+                "$rlength": 0,
+                "$rcontent": [
+                ]
+            },
+            "Depth": 1
+        },
+        {
+            "$id": 7,
+            "$type": 1,
+            "CardID": 3,
+            "CardType": 4,
+            "Label": "",
+            "Description": "",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 8,
+                "$type": 2,
+                "$rlength": 3,
+                "$rcontent": [
+                    {
+                        "$type": "3|DialogueContext, Assembly-CSharp",
+                        "_name": "213",
+                        "_text": "123",
+                        "_isLockDialogue": true
+                    },
+                    {
+                        "$type": 3,
+                        "_name": "asdf",
+                        "_text": "a",
+                        "_isLockDialogue": false
+                    },
+                    {
+                        "$type": 3,
+                        "_name": "aa",
+                        "_text": "nn",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 1
         }
     ]
 }

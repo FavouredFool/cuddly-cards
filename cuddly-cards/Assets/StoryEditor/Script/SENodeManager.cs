@@ -63,7 +63,7 @@ public class SENodeManager : MonoBehaviour
 
     public void SetNodeColor(SENode node)
     {
-        node.Body.SetColor(Builder.GetScriptableTypeFromCardType(node.SEObjectElement.CardType).GetCardColor());
+        node.Body.SetColor(Builder.GetScriptableTypeFromCardType(node.Body.CardType).GetCardColor());
     }
 
     public void SetBaseNode(SENode newBaseNode)
@@ -79,8 +79,8 @@ public class SENodeManager : MonoBehaviour
             MoveNodeToChildPosition(newBaseNode.Children[i], i);
         }
 
-        _depthHigher.text = "Depth: " + BaseNode.SEObjectElement.Depth;
-        _depthLower.text = "Depth: " + (BaseNode.SEObjectElement.Depth + 1);
+        _depthHigher.text = "Depth: " + BaseNode.Context.Depth;
+        _depthLower.text = "Depth: " + (BaseNode.Context.Depth + 1);
     }
 
     public void MoveNodeToParentPosition(SENode node)
@@ -97,7 +97,7 @@ public class SENodeManager : MonoBehaviour
     {
         // AUFGERUFEN ÜBER BUTTON
 
-        if (BaseNode.Children.Count >= 4 && BaseNode.SEObjectElement.CardType != CardInfo.CardType.DWRAPPER && BaseNode.SEObjectElement.CardType != CardInfo.CardType.DIALOGUE)
+        if (BaseNode.Children.Count >= 4 && BaseNode.Context.CardType != CardInfo.CardType.DWRAPPER && BaseNode.Context.CardType != CardInfo.CardType.DIALOGUE)
         {
             Debug.LogWarning("This layer is full");
             return;

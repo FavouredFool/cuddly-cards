@@ -6,10 +6,43 @@ using Sirenix.Serialization;
 
 public class SESaveLoadManager
 {
-    int _count = 0;
+    int _count;
 
     public void OdinSave(SENode rootNode)
     {
+        // first step: Give all nodes an ID
+        int IDCounter = 0;
+        rootNode.TraverseChildren(
+            delegate (SENode SENode)
+            {
+                SENode.Context.CardID = IDCounter;
+                IDCounter++;
+                return true;
+            }
+        );
+
+        // Second Step: Fill values
+        rootNode.TraverseChildren(
+            delegate (SENode SENode)
+            {
+                SENode.Context.CardType = SENode.Body.CardType;
+                SENode.Context.Label = SENode.Body.Label;
+                SENode.Context.Description = SENode.Body.Description;
+
+                // References
+                SEBody body = SENode.Body.DesiredKey;
+                SENode.Context.DesiredKeyID = (body != null) ? body.ReferenceNode.Context.CardID : -1;
+                SEBody talk = SENode.Body.DesiredTalk;
+                SENode.Context.DesiredTalkID = (talk != null) ? talk.ReferenceNode.Context.CardID : -1;
+
+                SENode.Context.DialogueContext = SENode.Body.DialogueContexts;
+
+                IDCounter++;
+                return true;
+            }
+        );
+
+
         List<SEContext> objectElementList = FillObjectElementListFromRootNode(rootNode);
 
         byte[] bytes = SerializationUtility.SerializeValue(objectElementList, DataFormat.JSON);
@@ -76,7 +109,7 @@ public class SESaveLoadManager
         rootNode.TraverseChildren(
             delegate (SENode SENode)
             {
-                objectElementList.Add(SENode.SEObjectElement);
+                objectElementList.Add(SENode.Context);
                 return true;
             }
         );
