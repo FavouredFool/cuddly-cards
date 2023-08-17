@@ -1,7 +1,7 @@
 {
     "$id": 0,
     "$type": "0|System.Collections.Generic.List`1[[SEContext, Assembly-CSharp]], mscorlib",
-    "$rlength": 4,
+    "$rlength": 8,
     "$rcontent": [
         {
             "$id": 1,
@@ -62,10 +62,10 @@
             "$type": 1,
             "CardID": 3,
             "CardType": 4,
-            "Label": "",
-            "Description": "",
+            "Label": "test",
+            "Description": "test",
             "DesiredKeyID": -1,
-            "DesiredTalkID": -1,
+            "DesiredTalkID": 7,
             "DialogueContext": {
                 "$id": 8,
                 "$type": 2,
@@ -91,6 +91,60 @@
                     }
                 ]
             },
+            "Depth": 1
+        },
+        {
+            "$id": 9,
+            "$type": 1,
+            "CardID": 4,
+            "CardType": 6,
+            "Label": "Sublock",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 2
+        },
+        {
+            "$id": 10,
+            "$type": 1,
+            "CardID": 5,
+            "CardType": 8,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 2
+        },
+        {
+            "$id": 11,
+            "$type": 1,
+            "CardID": 6,
+            "CardType": 4,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 12,
+                "$type": 2,
+                "$rlength": 0,
+                "$rcontent": [
+                ]
+            },
+            "Depth": 3
+        },
+        {
+            "$id": 13,
+            "$type": 1,
+            "CardID": 7,
+            "CardType": 9,
+            "Label": "Talk",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
             "Depth": 1
         }
     ]

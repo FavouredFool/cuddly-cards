@@ -105,7 +105,7 @@ public class SENodeManager : MonoBehaviour
 
         SENode node = new(new("defaultLabel", "defaultText", CardInfo.CardType.THING));
 
-        node.Body = Builder.BuildCardBody(node);
+        node.Body = Builder.BuildCardBody(node, RootNode);
 
         BaseNode.AddChild(node);
 

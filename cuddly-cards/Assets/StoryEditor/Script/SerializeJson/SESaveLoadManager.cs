@@ -70,7 +70,7 @@ public class SESaveLoadManager
         // Distribute
         SEContext activeElement = objectElementList[0];
 
-        SENode rootNode = new(new(0, activeElement.Label, activeElement.Description, activeElement.CardType));
+        SENode rootNode = new(activeElement);
         rootNode.Parent = null;
 
         _count = 1;
@@ -88,9 +88,7 @@ public class SESaveLoadManager
     {
         SEContext activeElement = elementList[_count];
 
-        SEContext objectElement = new(_count, activeElement.Label, activeElement.Description, activeElement.CardType);
-
-        SENode node = new(objectElement);
+        SENode node = new(activeElement);
 
         _count += 1;
 
