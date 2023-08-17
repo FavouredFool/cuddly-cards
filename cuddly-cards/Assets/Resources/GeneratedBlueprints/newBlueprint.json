@@ -1,1 +1,16 @@
-{"Elements":[{"Label":"Cover","Description":"I am covering ","Type":"COVER","Depth":0},{"Label":"chuu chuu","Description":"chuchuchcu","Type":"PLACE","Depth":1},{"Label":"Iam train","Description":"trane","Type":"PLACE","Depth":2},{"Label":"iam thinNONONONO","Description":"defaultText","Type":"THING","Depth":2},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":3},{"Label":"look at thi","Description":"defaultText","Type":"THING","Depth":3},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":4},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":5},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":6},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":7},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":7},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":7},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":8},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":8},{"Label":"sheep","Description":"defaultText","Type":"THING","Depth":9},{"Label":"defaultLabel","Description":"defaultText","Type":"THING","Depth":7},{"Label":"SomeKey","Description":"defaultText","Type":"KEY","Depth":1},{"Label":"SomeLock","Description":"defaultText","Type":"LOCK","Depth":1}]}
+{
+    "Elements": [
+        {
+            "Label": "Cover",
+            "Description": "CoverDescription",
+            "Type": "COVER",
+            "Depth": 0
+        },
+        {
+            "Label": "dialogaa",
+            "Description": "aaaade",
+            "Type": "DIALOGUE",
+            "Depth": 1
+        }
+    ]
+}

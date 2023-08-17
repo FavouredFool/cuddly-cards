@@ -11,14 +11,16 @@ public class SEBodyContext : SerializedMonoBehaviour
 {
     [BoxGroup("Basics")]
     [SerializeField]
+    CardType _cardType;
+    [BoxGroup("Basics")]
+    [TextArea(1, 2)]
+    [SerializeField]
     string _label;
     [BoxGroup("Basics")]
     [TextArea(3, 6)]
     [SerializeField]
     string _description;
-    [BoxGroup("Basics")]
-    [SerializeField]
-    CardType _cardType;
+    
 
     [ShowIf("_cardType", CardType.LOCK)]
     // Hier sicherstellen, dass der übergebene BodyContext "KEY" als Enum hat.
