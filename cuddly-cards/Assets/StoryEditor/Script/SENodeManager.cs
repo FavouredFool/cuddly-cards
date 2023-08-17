@@ -21,8 +21,7 @@ public class SENodeManager : MonoBehaviour
 
     public SENode RootNode { get; private set; }
     public SENode BaseNode { get; private set; }
-    public SEReader Reader { get; private set; } = null;
-    public SESaveManager Saver { get; private set; }
+    public SESaveLoadManager ReadWriter { get; private set; }
     public SENodeBuilder Builder { get; private set; }
 
     public Transform ParentPoint => _parentPoint;
@@ -32,25 +31,16 @@ public class SENodeManager : MonoBehaviour
     {
         Builder = GetComponent<SENodeBuilder>();
 
-        if (_textBlueprint != null)
-        {
-            Reader = new SEReader(_textBlueprint);
-        }
-
-        Saver = new SESaveManager();
+        ReadWriter = new SESaveLoadManager();
     }
 
     public void Start()
     {
-        if (Reader != null)
-        {
-            RootNode = BaseNode = Reader.ReadCards();
-            
-        }
-        else
-        {
-            RootNode = BaseNode = new(new("Cover", "CoverDescription", CardInfo.CardType.COVER));
-        }
+        SENode loadedNode = ReadWriter.OdinLoad();
+
+        if (loadedNode == null) loadedNode = new(new(0, "Cover", "CoverDescription", CardInfo.CardType.COVER));
+
+        RootNode = BaseNode = loadedNode;
 
         Builder.InitializeNodeTree(RootNode);
 
@@ -68,12 +58,12 @@ public class SENodeManager : MonoBehaviour
 
     public void SaveToJSON()
     {
-        Saver.SaveToJSON(RootNode);
+        ReadWriter.OdinSave(RootNode);
     }
 
     public void SetNodeColor(SENode node)
     {
-        node.Body.SetColor(Builder.GetScriptableTypeFromCardType(node.Body.BodyContext.CardType).GetCardColor());
+        node.Body.SetColor(Builder.GetScriptableTypeFromCardType(node.SEObjectElement.CardType).GetCardColor());
     }
 
     public void SetBaseNode(SENode newBaseNode)
@@ -89,8 +79,8 @@ public class SENodeManager : MonoBehaviour
             MoveNodeToChildPosition(newBaseNode.Children[i], i);
         }
 
-        _depthHigher.text = "Depth: " + BaseNode.Depth;
-        _depthLower.text = "Depth: " + (BaseNode.Depth + 1);
+        _depthHigher.text = "Depth: " + BaseNode.SEObjectElement.Depth;
+        _depthLower.text = "Depth: " + (BaseNode.SEObjectElement.Depth + 1);
     }
 
     public void MoveNodeToParentPosition(SENode node)
@@ -107,7 +97,7 @@ public class SENodeManager : MonoBehaviour
     {
         // AUFGERUFEN ÜBER BUTTON
 
-        if (BaseNode.Children.Count >= 4 && BaseNode.Body.BodyContext.CardType != CardInfo.CardType.DWRAPPER && BaseNode.Body.BodyContext.CardType != CardInfo.CardType.DIALOGUE)
+        if (BaseNode.Children.Count >= 4 && BaseNode.SEObjectElement.CardType != CardInfo.CardType.DWRAPPER && BaseNode.SEObjectElement.CardType != CardInfo.CardType.DIALOGUE)
         {
             Debug.LogWarning("This layer is full");
             return;

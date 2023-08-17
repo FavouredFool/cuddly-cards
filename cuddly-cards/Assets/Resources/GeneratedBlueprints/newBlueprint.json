@@ -1,16 +1,39 @@
 {
-    "Elements": [
+    "$id": 0,
+    "$type": "0|System.Collections.Generic.List`1[[SEObjectElement, Assembly-CSharp]], mscorlib",
+    "$rlength": 4,
+    "$rcontent": [
         {
-            "Label": "Cover",
+            "$id": 1,
+            "$type": "1|SEObjectElement, Assembly-CSharp",
+            "CardType": 0,
+            "Label": "This is covered",
             "Description": "CoverDescription",
-            "Type": "COVER",
             "Depth": 0
         },
         {
-            "Label": "dialogaa",
-            "Description": "aaaade",
-            "Type": "DIALOGUE",
+            "$id": 2,
+            "$type": 1,
+            "CardType": 2,
+            "Label": "Depth 1a",
+            "Description": "awdsf",
             "Depth": 1
+        },
+        {
+            "$id": 3,
+            "$type": 1,
+            "CardType": 3,
+            "Label": "Placed",
+            "Description": "asdf",
+            "Depth": 2
+        },
+        {
+            "$id": 4,
+            "$type": 1,
+            "CardType": 2,
+            "Label": "Thingy",
+            "Description": "defaultText",
+            "Depth": 2
         }
     ]
 }

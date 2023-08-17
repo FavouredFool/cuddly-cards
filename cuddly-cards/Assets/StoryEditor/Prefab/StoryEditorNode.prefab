@@ -112,7 +112,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8495484604200227778}
-  - component: {fileID: 336768787140969398}
   - component: {fileID: 5538394697556236891}
   - component: {fileID: 93707395105617996}
   - component: {fileID: 743463003550701705}
@@ -140,45 +139,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &336768787140969398
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2429469911318935666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcfa160092c87d740ad94630eafa434f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _dialogueContexts
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[DialogueContext, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  _label: 
-  _description: 
-  _cardType: 4
-  _desiredKeyBody: {fileID: 0}
-  _talkBody: {fileID: 0}
 --- !u!114 &5538394697556236891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,6 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e08f242eced744082c312cc1388cf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SEObjectElement:
+    Label: 
+    Description: 
+    CardType: 0
+    Depth: 0
   _label: {fileID: 8769443829346860643}
 --- !u!33 &93707395105617996
 MeshFilter:
