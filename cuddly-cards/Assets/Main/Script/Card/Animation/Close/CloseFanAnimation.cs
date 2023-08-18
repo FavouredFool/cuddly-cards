@@ -11,7 +11,8 @@ public class CloseFanAnimation : MainAnimation
 
     public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        return _subAnimations.FanIn(baseNode, activeNode);
+        return DOTween.Sequence();
+        //return _subAnimations.FanIn(baseNode, activeNode);
     }
 
     public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)

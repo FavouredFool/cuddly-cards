@@ -21,8 +21,8 @@ public class BackAnimation : BackParentAnimation
     {
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Join(SetOtherChildren(activeNode, baseNode));
-        sequence.Join(SetBaseChild(activeNode, baseNode));
+        //sequence.Join(SetOtherChildren(activeNode, baseNode));
+        //sequence.Join(SetBaseChild(activeNode, baseNode));
 
         return sequence;
     }
@@ -61,6 +61,8 @@ public class BackAnimation : BackParentAnimation
     {
         Sequence sequence = DOTween.Sequence();
 
+        
+
         if (_fromFan)
         {
             sequence.Append(_subAnimations.FanIn(baseNode, activeNode));
@@ -80,6 +82,7 @@ public class BackAnimation : BackParentAnimation
 
             sequence.Append(fromSubSequence);
         }
+        
 
         return sequence;
     }

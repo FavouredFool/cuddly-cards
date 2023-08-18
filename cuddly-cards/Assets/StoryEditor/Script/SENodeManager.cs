@@ -97,7 +97,7 @@ public class SENodeManager : MonoBehaviour
     {
         // AUFGERUFEN ÜBER BUTTON
 
-        if (BaseNode.Children.Count >= 4 && BaseNode.Context.CardType != CardInfo.CardType.DWRAPPER && BaseNode.Context.CardType != CardInfo.CardType.DIALOGUE)
+        if (BaseNode.Children.Count >= 4 && BaseNode.Context.CardType != CardInfo.CardType.DWRAPPER && BaseNode.Context.CardType != CardInfo.CardType.DIALOGUE && BaseNode.Context.CardType != CardInfo.CardType.TALK)
         {
             Debug.LogWarning("This layer is full");
             return;
