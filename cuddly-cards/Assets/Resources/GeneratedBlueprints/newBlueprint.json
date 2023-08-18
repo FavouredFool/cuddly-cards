@@ -112,7 +112,7 @@
             "CardType": 6,
             "Label": "Look at your face",
             "Description": "I'm sorry that you have to do this.",
-            "DesiredKeyID": -1,
+            "DesiredKeyID": 14,
             "DesiredTalkID": -1,
             "DialogueContext": null,
             "Depth": 4
@@ -121,7 +121,7 @@
             "$id": 8,
             "$type": 1,
             "CardID": 6,
-            "CardType": 1,
+            "CardType": 5,
             "Label": "The mirror world",
             "Description": "You did it. You're here. Perfect.",
             "DesiredKeyID": -1,
@@ -141,8 +141,14 @@
             "DialogueContext": {
                 "$id": 10,
                 "$type": 2,
-                "$rlength": 0,
+                "$rlength": 1,
                 "$rcontent": [
+                    {
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
                 ]
             },
             "Depth": 3
@@ -159,8 +165,14 @@
             "DialogueContext": {
                 "$id": 12,
                 "$type": 2,
-                "$rlength": 0,
+                "$rlength": 1,
                 "$rcontent": [
+                    {
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
                 ]
             },
             "Depth": 3
@@ -177,8 +189,14 @@
             "DialogueContext": {
                 "$id": 14,
                 "$type": 2,
-                "$rlength": 0,
+                "$rlength": 1,
                 "$rcontent": [
+                    {
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
                 ]
             },
             "Depth": 3
@@ -195,8 +213,14 @@
             "DialogueContext": {
                 "$id": 16,
                 "$type": 2,
-                "$rlength": 0,
+                "$rlength": 1,
                 "$rcontent": [
+                    {
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
                 ]
             },
             "Depth": 3
@@ -213,8 +237,14 @@
             "DialogueContext": {
                 "$id": 18,
                 "$type": 2,
-                "$rlength": 0,
+                "$rlength": 1,
                 "$rcontent": [
+                    {
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
                 ]
             },
             "Depth": 3
@@ -272,6 +302,30 @@
             "$type": 1,
             "CardID": 16,
             "CardType": 9,
+            "Label": "defaultLabel1",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 5
+        },
+        {
+            "$id": 24,
+            "$type": 1,
+            "CardID": 17,
+            "CardType": 9,
+            "Label": "defaultLabel2",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 5
+        },
+        {
+            "$id": 25,
+            "$type": 1,
+            "CardID": 18,
+            "CardType": 9,
             "Label": "TalkGoal3",
             "Description": "defaultText",
             "DesiredKeyID": -1,
@@ -280,37 +334,7 @@
             "Depth": 4
         },
         {
-            "$id": 24,
-            "$type": 1,
-            "CardID": 17,
-            "CardType": 9,
-            "Label": "TalkGoal2",
-            "Description": "defaultText",
-            "DesiredKeyID": -1,
-            "DesiredTalkID": -1,
-            "DialogueContext": null,
-            "Depth": 3
-        },
-        {
-            "$id": 25,
-            "$type": 1,
-            "CardID": 18,
-            "CardType": 9,
-            "Label": "TalkGoal 5",
-            "Description": "defaultText",
-            "DesiredKeyID": -1,
-            "DesiredTalkID": -1,
-            "DialogueContext": {
-                "$id": 26,
-                "$type": 2,
-                "$rlength": 0,
-                "$rcontent": [
-                ]
-            },
-            "Depth": 3
-        },
-        {
-            "$id": 27,
+            "$id": 26,
             "$type": 1,
             "CardID": 19,
             "CardType": 8,
@@ -322,7 +346,7 @@
             "Depth": 2
         },
         {
-            "$id": 28,
+            "$id": 27,
             "$type": 1,
             "CardID": 20,
             "CardType": 4,
@@ -331,7 +355,7 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": 25,
             "DialogueContext": {
-                "$id": 29,
+                "$id": 28,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -346,16 +370,16 @@
             "Depth": 3
         },
         {
-            "$id": 30,
+            "$id": 29,
             "$type": 1,
             "CardID": 21,
             "CardType": 4,
-            "Label": "defaultLabel",
+            "Label": "aa",
             "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": 17,
             "DialogueContext": {
-                "$id": 31,
+                "$id": 30,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -370,16 +394,16 @@
             "Depth": 3
         },
         {
-            "$id": 32,
+            "$id": 31,
             "$type": 1,
             "CardID": 22,
             "CardType": 4,
-            "Label": "defaultLabel",
+            "Label": "defaultLabeleaaa",
             "Description": "defaultText",
             "DesiredKeyID": -1,
-            "DesiredTalkID": 16,
+            "DesiredTalkID": 18,
             "DialogueContext": {
-                "$id": 33,
+                "$id": 32,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -394,16 +418,16 @@
             "Depth": 3
         },
         {
-            "$id": 34,
+            "$id": 33,
             "$type": 1,
             "CardID": 23,
             "CardType": 4,
-            "Label": "defaultLabel",
+            "Label": "defaultLabeltest",
             "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": 3,
             "DialogueContext": {
-                "$id": 35,
+                "$id": 34,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -418,16 +442,16 @@
             "Depth": 3
         },
         {
-            "$id": 36,
+            "$id": 35,
             "$type": 1,
             "CardID": 24,
             "CardType": 4,
             "Label": "where does dis go?",
             "Description": "defaultText",
             "DesiredKeyID": -1,
-            "DesiredTalkID": 18,
+            "DesiredTalkID": 16,
             "DialogueContext": {
-                "$id": 37,
+                "$id": 36,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -442,7 +466,7 @@
             "Depth": 3
         },
         {
-            "$id": 38,
+            "$id": 37,
             "$type": 1,
             "CardID": 25,
             "CardType": 9,

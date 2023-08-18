@@ -49,10 +49,173 @@ public class SENodeManager : MonoBehaviour
 
     public void Update()
     {
+
+        ValidateCurrentTree();
+
         SetNodeColor(BaseNode);
         foreach (SENode node in BaseNode.Children)
         {
             SetNodeColor(node);
+        }
+    }
+
+    public void ValidateCurrentTree()
+    {
+        RootNode.TraverseChildren(
+            delegate (SENode SENode)
+            {
+                ValidateCurrentNode(SENode);
+                return true;
+            }
+        );
+    }
+
+    public void ValidateCurrentNode(SENode node)
+    {
+        ValidateDialogue(node);
+        ValidateCurrentNodeChildAmount(node);
+        RestrictCardTypesForChildren(node);
+        ValidateReferences(node);
+    }
+
+    public void ValidateDialogue(SENode node)
+    {
+        if (node.Body.CardType != CardInfo.CardType.DIALOGUE)
+        {
+            return;
+        }
+
+        if (node.Body.DialogueContexts == null || node.Body.DialogueContexts.Count == 0)
+        {
+            Debug.LogWarning(node.Body.name + " has no dialogue.");
+        }
+
+        // check that only the first X children are locks with X being the amount of locks in dialogue
+        int count = 0;
+
+        foreach (DialogueContext context in node.Body.DialogueContexts)
+        {
+            if (context.IsLockDialogue)
+            {
+                count += 1;
+            }
+        }
+
+        bool flagged = false;
+
+        foreach (SENode child in node.Children)
+        {
+            if (count > 0)
+            {
+                // should be lock
+                if (child.Body.CardType != CardInfo.CardType.LOCK)
+                {
+                    flagged = true;
+                }
+            }
+            else
+            {
+                // should not be lock
+                if (child.Body.CardType == CardInfo.CardType.LOCK)
+                {
+                    flagged = true;
+                }
+            }
+            count -= 1;
+        }
+
+        if (flagged)
+        {
+            Debug.LogWarning(node.Body.name + " is not lock-synchronized");
+        }
+        
+
+    }
+
+    public void ValidateReferences(SENode node)
+    {
+        switch (node.Body.CardType)
+        {
+            case CardInfo.CardType.LOCK:
+                if (node.Body.DesiredKey == null || node.Body.DesiredKey.CardType != CardInfo.CardType.KEY)
+                {
+                    Debug.LogWarning(node.Body.name + " has no key.");
+                }
+
+                break;
+
+            case CardInfo.CardType.DIALOGUE:
+
+                if (node.Body.DesiredTalk == null && node.Parent.Body.CardType == CardInfo.CardType.DWRAPPER)
+                {
+                    Debug.LogWarning(node.Body.name + " has no talk-reference.");
+                }
+
+                if (node.Body.DesiredTalk != null && node.Body.DesiredTalk.CardType != CardInfo.CardType.TALK)
+                {
+                    Debug.LogWarning(node.Body.name + " talk has wrong type.");
+                }
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void RestrictCardTypesForChildren(SENode node)
+    {
+        switch (node.Body.CardType)
+        {
+            case CardInfo.CardType.TALK:
+                foreach (SENode child in node.Children)
+                {
+                    if (child.Body.CardType != CardInfo.CardType.DIALOGUE)
+                    {
+                        Debug.LogWarning(node.Body.name + " has invalid children-cardtypes");
+                    }
+                }
+                break;
+
+            case CardInfo.CardType.DIALOGUE:
+
+                foreach (SENode child in node.Children)
+                {
+                    if (child.Body.CardType == CardInfo.CardType.DWRAPPER || child.Body.CardType == CardInfo.CardType.KEY || child.Body.CardType == CardInfo.CardType.LOCK)
+                    {
+                        continue;
+                    }
+
+                    Debug.LogWarning(node.Body.name + " has invalid children-cardtypes");
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void ValidateCurrentNodeChildAmount(SENode node)
+    {
+        switch (node.Body.CardType)
+        {
+            case CardInfo.CardType.LOCK:
+                if (node.Children.Count > 1)
+                {
+                    Debug.LogWarning(node.Body.name + " has too many children.");
+                }
+                break;
+            case CardInfo.CardType.TALK:
+            case CardInfo.CardType.DIALOGUE:
+            case CardInfo.CardType.DWRAPPER:
+                break;
+
+            default:
+                if (node.Children.Count > 4)
+                {
+                    Debug.LogWarning(node.Body.name + " has too many children.");
+                }
+                break;
         }
     }
 
@@ -96,12 +259,6 @@ public class SENodeManager : MonoBehaviour
     public void AddChildNode()
     {
         // AUFGERUFEN ÜBER BUTTON
-
-        if (BaseNode.Children.Count >= 4 && BaseNode.Context.CardType != CardInfo.CardType.DWRAPPER && BaseNode.Context.CardType != CardInfo.CardType.DIALOGUE && BaseNode.Context.CardType != CardInfo.CardType.TALK)
-        {
-            Debug.LogWarning("This layer is full");
-            return;
-        }
 
         SENode node = new(new("defaultLabel", "defaultText", CardInfo.CardType.THING));
 

@@ -39,11 +39,14 @@ public class AnimationManager
 
         Sequence allAnimations = DOTween.Sequence();
 
+        /*
         foreach (CardAnimation animation in _activeAnimations)
         {
             Sequence animSequence = animation.GetAnimationSequence(activeNode, baseNode);
             allAnimations.Join(animSequence);
-        }
+        }*/
+
+        
 
         // OnComplete is necessary because of a problem with Dotween
         await allAnimations.Play().OnComplete(() => { }).AsyncWaitForCompletion();
