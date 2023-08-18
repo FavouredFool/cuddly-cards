@@ -14,7 +14,7 @@ public class CardInventory
 
     public void InitializeInventory(CardBuilder builder)
     {
-        InventoryNode = new CardNode(new CardContext("Inventory", "All the things I have and know.", CardType.INVENTORY));
+        InventoryNode = new CardNode(new(-1, CardType.INVENTORY, "Inventory", "All the things I have and know", -1, -1, null));
         InventoryNode.Body = builder.BuildCardBody(InventoryNode.Context, InventoryNode, _cardManager.CardFolder);
         _cardManager.AddToTopLevel(InventoryNode);
     }

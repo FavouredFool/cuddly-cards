@@ -7,6 +7,11 @@ public class CardNode
 {
 	public delegate bool TraversalNodeDelegate(CardNode node);
 
+	public CardNode()
+    {
+		Children = new List<CardNode>();
+	}
+
     public CardNode(CardContext context)
 	{
 		Context = context;

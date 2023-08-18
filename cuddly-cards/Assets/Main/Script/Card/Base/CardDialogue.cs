@@ -40,7 +40,7 @@ public class CardDialogue
             animationManager.AddAnimation(new SpreadDialogueAnimationPart2(_cardManager));
             await animationManager.PlayAnimations(node, _cardManager.BaseNode);
 
-            CardNode talkParentNode = _cardManager.GetCardNodeFromID(node.Context.TalkID);
+            CardNode talkParentNode = _cardManager.GetCardNodeFromID(node.Context.DesiredTalkID);
             talkParentNode.AddChild(node);
         }
 

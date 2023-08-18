@@ -6,24 +6,22 @@ using static CardInfo;
 
 public class CardContext
 {
-
-    public CardContext(string label, string description, CardType cardType)
+    public CardContext(int cardID, CardType cardType, string label, string description, int desiredKeyID, int desiredTalkID, List<DialogueContext> dialogueContexts)
     {
+        CardID = cardID;
+        CardType = cardType;
         Label = label;
         Description = description;
-        CardType = cardType;
+        DesiredKeyID = desiredKeyID;
+        DesiredTalkID = desiredTalkID;
+        DialogueContexts = dialogueContexts;
     }
 
-    public CardContext(int id, string label, string description, CardType cardType) : this(label, description, cardType)
-    {
-        ID = id;
-    }
-
-    public int ID { get; private set; } = -1;
+    public int CardID { get; private set; }
     public string Label { get; private set; }
     public string Description { get; private set; }
     public CardType CardType { get; private set; }
-    public string DesiredKey { get; set; }
-    public int TalkID { get; set; } = -1;
+    public int DesiredKeyID { get; set; }
+    public int DesiredTalkID { get; set; }
     public List<DialogueContext> DialogueContexts { get; set; }
 }

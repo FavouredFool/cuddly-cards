@@ -73,7 +73,7 @@ public class LockState : SettedState
     {
         CardNode baseNode = _cardManager.BaseNode;
 
-        if (baseNode.Context.DesiredKey.Equals(clickedNode.Context.Label))
+        if (baseNode.Context.DesiredKeyID.Equals(clickedNode.Context.Label))
         {
             NodeCorrect(clickedNode, baseNode);
         }

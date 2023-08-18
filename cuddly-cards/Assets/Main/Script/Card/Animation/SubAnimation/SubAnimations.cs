@@ -76,7 +76,17 @@ public class SubAnimations
         float totalSpace = _cardMover.PlaySpaceTopRight.x - _cardMover.PlaySpaceBottomLeft.x;
         float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
         float startOffset = fromRight ? _cardMover.PlaySpaceBottomLeft.x + _cardMover.Border : _cardMover.PlaySpaceTopRight.x - _cardMover.Border;
-        float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren - 1);
+
+        float cardPercentage;
+        if (totalChildren > 1)
+        {
+           cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren - 1);
+        }
+        else
+        {
+            cardPercentage = 1;
+        }
+         
 
         int directionSign = fromRight ? 1 : -1;
         float endPositionHorizontal = startOffset + directionSign * (totalChildren - index - 1) * CardInfo.CARDWIDTH * cardPercentage;

@@ -14,7 +14,7 @@ public class SpreadDialogueAnimationPart2 : MainAnimation
     {
         Sequence sequence = DOTween.Sequence();
 
-        CardNode parentTalkNode = _cardManager.GetCardNodeFromID(activeNode.Context.TalkID);
+        CardNode parentTalkNode = _cardManager.GetCardNodeFromID(activeNode.Context.DesiredTalkID);
         CardNode rootNode = _cardManager.RootNode;
 
         List<CardNode> lowerTopMostCards = parentTalkNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
@@ -36,7 +36,7 @@ public class SpreadDialogueAnimationPart2 : MainAnimation
     {
         Sequence sequence = DOTween.Sequence();
 
-        CardNode parentTalkNode = _cardManager.GetCardNodeFromID(activeNode.Context.TalkID);
+        CardNode parentTalkNode = _cardManager.GetCardNodeFromID(activeNode.Context.DesiredTalkID);
 
         int activeHeight = parentTalkNode.GetNodeCountBelowNodeInPile(_cardManager.RootNode, CardTraversal.CONTEXT) + activeNode.GetNodeCount(CardTraversal.CONTEXT);
 
