@@ -39,12 +39,12 @@ public class AnimationManager
 
         Sequence allAnimations = DOTween.Sequence();
 
-        /*
+        
         foreach (CardAnimation animation in _activeAnimations)
         {
             Sequence animSequence = animation.GetAnimationSequence(activeNode, baseNode);
             allAnimations.Join(animSequence);
-        }*/
+        }
 
         
 

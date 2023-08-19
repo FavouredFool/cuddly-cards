@@ -1,7 +1,7 @@
 {
     "$id": 0,
     "$type": "0|System.Collections.Generic.List`1[[SEContext, Assembly-CSharp]], mscorlib",
-    "$rlength": 26,
+    "$rlength": 28,
     "$rcontent": [
         {
             "$id": 1,
@@ -472,6 +472,30 @@
             "CardType": 9,
             "Label": "TalkGoal1",
             "Description": "Talk 1",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 1
+        },
+        {
+            "$id": 38,
+            "$type": 1,
+            "CardID": 26,
+            "CardType": 5,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 1
+        },
+        {
+            "$id": 39,
+            "$type": 1,
+            "CardID": 27,
+            "CardType": 5,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": null,

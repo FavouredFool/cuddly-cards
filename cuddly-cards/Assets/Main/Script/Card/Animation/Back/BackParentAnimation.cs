@@ -17,6 +17,8 @@ public abstract class BackParentAnimation : MainAnimation
 
     public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
     {
+        return DOTween.Sequence();
+
         return DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(activeNode, activeNode))
             .Append(_subAnimations.MoveNodeZNearer(activeNode))
@@ -31,6 +33,8 @@ public abstract class BackParentAnimation : MainAnimation
 
     public override Tween RootAnimation(CardNode activeNode, CardNode baseNode)
     {
+        return DOTween.Sequence();
+
         Sequence sequence = DOTween.Sequence();
 
         CardNode backToBe = activeNode.Parent;

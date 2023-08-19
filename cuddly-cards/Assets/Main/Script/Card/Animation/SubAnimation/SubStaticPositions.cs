@@ -29,20 +29,22 @@ public class SubStaticPositions
         float fannedCardSpace = (totalSpace - 2 * _cardMover.Border);
         float startOffset = fromRight ? _cardMover.PlaySpaceBottomLeft.x + _cardMover.Border : _cardMover.PlaySpaceTopRight.x - _cardMover.Border;
 
-        float cardPercentage;
-        if (totalChildren > 1)
-        {
-            cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren - 1);
-        }
-        else
-        {
-            cardPercentage = 1;
-        }
-         
+        Vector2 cardPosition;
 
         int directionSign = fromRight ? 1 : -1;
 
-        _cardMover.MoveCard(node, new Vector2(startOffset + directionSign * (totalChildren - index - 1) * CardInfo.CARDWIDTH * cardPercentage, _cardMover.GetPlaySpaceBottomLeft().y));
+
+        if (totalChildren > 1)
+        {
+            float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren - 1);
+            cardPosition = new Vector2(startOffset + directionSign * (totalChildren - index - 1) * CardInfo.CARDWIDTH * cardPercentage, _cardMover.GetPlaySpaceBottomLeft().y);
+        }
+        else
+        {
+            cardPosition = new Vector2(startOffset + directionSign * fannedCardSpace, _cardMover.GetPlaySpaceBottomLeft().y);
+        }
+         
+        _cardMover.MoveCard(node, cardPosition);
 
         node.Body.SetHeightFloat(2 - (index * 0.01f));
         node.Body.transform.localRotation = Quaternion.Euler(0, 0, -directionSign *_cardMover.InventoryCardRotationAmount);

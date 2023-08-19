@@ -77,24 +77,23 @@ public class SubAnimations
         float fannedCardSpace = totalSpace - 2 * _cardMover.Border;
         float startOffset = fromRight ? _cardMover.PlaySpaceBottomLeft.x + _cardMover.Border : _cardMover.PlaySpaceTopRight.x - _cardMover.Border;
 
-        float cardPercentage;
+        float cardPositionHorizontal;
+        int directionSign = fromRight ? 1 : -1;
+
         if (totalChildren > 1)
         {
-           cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren - 1);
+            float cardPercentage = fannedCardSpace / (CardInfo.CARDWIDTH * totalChildren - 1);
+            cardPositionHorizontal = startOffset + directionSign * (totalChildren - index - 1) * CardInfo.CARDWIDTH * cardPercentage;
         }
         else
         {
-            cardPercentage = 1;
+            cardPositionHorizontal = startOffset + directionSign * fannedCardSpace;
         }
-         
-
-        int directionSign = fromRight ? 1 : -1;
-        float endPositionHorizontal = startOffset + directionSign * (totalChildren - index - 1) * CardInfo.CARDWIDTH * cardPercentage;
 
         entireSequence.Join(DOTween.Sequence()
             .Append(MoveNodeX(node, startOffset))
             .Append(RotateOffset(node, fromRight))
-            .Append(MoveNodeX(node, endPositionHorizontal))
+            .Append(MoveNodeX(node, cardPositionHorizontal))
             .Join(_tweenYFunc(node, 2)));
 
         return entireSequence;
