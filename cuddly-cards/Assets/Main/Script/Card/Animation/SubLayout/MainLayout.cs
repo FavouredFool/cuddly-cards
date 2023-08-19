@@ -21,12 +21,28 @@ public class MainLayout : SubLayout
                 break;
             case LockState:
             case InventoryState:
-            case DialogueState:
                 _subStatics.ResetBaseBackRoot(baseNode);
+                break;
+            case DialogueState:
+                ResetDialogue(baseNode);
                 break;
             default:
                 ResetDefault(baseNode);
                 break;
+        }
+    }
+
+    public void ResetDialogue(CardNode baseNode)
+    {
+        DialogueState dialogueState = (DialogueState)_stateManager.States.Peek();
+
+        if (dialogueState.GetDialogueCondition() != DialogueState.DialogueCondition.ACCEPTED)
+        {
+            _subStatics.ResetBaseBackRoot(baseNode);
+        }
+        else
+        {
+            ResetDefault(baseNode);
         }
     }
 

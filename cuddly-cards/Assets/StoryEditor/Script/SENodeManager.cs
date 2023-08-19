@@ -190,6 +190,19 @@ public class SENodeManager : MonoBehaviour
                 }
                 break;
 
+            case CardInfo.CardType.DWRAPPER:
+
+                foreach (SENode child in node.Children)
+                {
+                    if (child.Body.CardType == CardInfo.CardType.DIALOGUE)
+                    {
+                        continue;
+                    }
+
+                    Debug.LogWarning(node.Body.name + " has invalid children-cardtypes");
+                }
+                break;
+
             default:
                 break;
         }

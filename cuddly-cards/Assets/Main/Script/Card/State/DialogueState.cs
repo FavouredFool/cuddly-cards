@@ -6,27 +6,111 @@ using static CardInfo;
 
 public class DialogueState : SettedState
 {
-    bool _initialDialogueStart;
+
+    public enum DialogueCondition { NOTSHOWN, REJECTED, ACCEPTED }
+
+    DialogueCondition _dialogueCondition = DialogueCondition.NOTSHOWN;
+
     public DialogueState(CardManager cardManager, CardNode newBaseNode) : base(cardManager, newBaseNode)
     {
-        _initialDialogueStart = true;
+
     }
 
     public override void StartState()
     {
-        if (_initialDialogueStart)
-        {
-            _cardManager.BaseNode = _newBaseNode;
-            SetStatic();
+        _cardManager.BaseNode = _newBaseNode;
 
-            _stateManager.PushState(new DialogueUpCloseState(_cardManager, _newBaseNode));
-            _initialDialogueStart = false;
-        }
-        else
+        // Animations?
+
+        SetStatic();
+
+        switch (_dialogueCondition)
         {
-            ToTalkTransition(_newBaseNode.Parent);
+            case DialogueCondition.NOTSHOWN:
+                    _stateManager.PushState(new DialogueUpCloseState(_cardManager, _newBaseNode, this));
+                break;
+            case DialogueCondition.REJECTED:
+                    ToTalkTransition(_newBaseNode.Parent);
+                break;
+            case DialogueCondition.ACCEPTED:
+                    SetStatic();
+                break;
         }
-        
+    }
+
+    public override void HandleIndividualTransitions(CardNode clickedNode)
+    {
+        CardType cardType = clickedNode.Context.CardType;
+
+        switch (cardType)
+        {
+            case CardType.DWRAPPER:
+                CollectDialogue(clickedNode);
+                return;
+
+            case CardType.KEY:
+                CollectKey(clickedNode);
+                return;
+
+            case CardType.COVER:
+            case CardType.PLACE:
+            case CardType.THING:
+            case CardType.PERSON:
+            default:
+                ToDefaultTransitions(clickedNode);
+                return;
+        }
+    }
+
+    public void CollectKey(CardNode clickedNode)
+    {
+        _cardInventory.MoveKeyFromMainToInventory(clickedNode);
+    }
+
+    public void CollectDialogue(CardNode clickedNode)
+    {
+        _cardDialogue.SpreadDialogues(clickedNode);
+    }
+
+    public void ToDefaultTransitions(CardNode clickedNode)
+    {
+        if (clickedNode == _cardManager.BaseNode) return;
+
+        if (_cardManager.BaseNode.Parent == clickedNode)
+        {
+            ToBackTransition(clickedNode);
+            return;
+        }
+
+        if (clickedNode == _cardManager.RootNode)
+        {
+            ToRootTransition(clickedNode);
+            return;
+        }
+    }
+
+    public void ToChildTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new ChildAnimation(_cardManager) };
+        LayoutState newState = new MainState(_cardManager, clickedNode);
+
+        ToTransition(clickedNode, animations, newState);
+    }
+
+    public void ToBackTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, false, false) };
+        LayoutState newState = new MainState(_cardManager, clickedNode);
+
+        ToTransition(clickedNode, animations, newState);
+    }
+
+    public void ToRootTransition(CardNode clickedNode)
+    {
+        List<CardAnimation> animations = new() { new ToCoverAnimation(_cardManager), new ExitInventoryPileAnimation(_cardManager) };
+        LayoutState newState = new CoverState(_cardManager);
+
+        ToTransition(clickedNode, animations, newState);
     }
 
     public void ToTalkTransition(CardNode clickedNode)
@@ -37,11 +121,6 @@ public class DialogueState : SettedState
         ToTransition(clickedNode, animations, newState);
     }
 
-    public override void HandleIndividualTransitions(CardNode clickedNode)
-    {
-
-    }
-
     public override void StartHover(CardNode hoveredNode)
     {
         
@@ -50,5 +129,15 @@ public class DialogueState : SettedState
     public override void EndHover(CardNode hoveredNode)
     {
         
+    }
+
+    public void SetDialogueCondition(DialogueCondition condition)
+    {
+        _dialogueCondition = condition;
+    }
+
+    public DialogueCondition GetDialogueCondition()
+    {
+        return _dialogueCondition;
     }
 }

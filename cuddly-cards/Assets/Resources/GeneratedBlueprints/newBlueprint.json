@@ -1,7 +1,7 @@
 {
     "$id": 0,
     "$type": "0|System.Collections.Generic.List`1[[SEContext, Assembly-CSharp]], mscorlib",
-    "$rlength": 28,
+    "$rlength": 33,
     "$rcontent": [
         {
             "$id": 1,
@@ -112,7 +112,7 @@
             "CardType": 6,
             "Label": "Look at your face",
             "Description": "I'm sorry that you have to do this.",
-            "DesiredKeyID": 14,
+            "DesiredKeyID": 17,
             "DesiredTalkID": -1,
             "DialogueContext": null,
             "Depth": 4
@@ -133,13 +133,73 @@
             "$id": 9,
             "$type": 1,
             "CardID": 7,
+            "CardType": 8,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 4
+        },
+        {
+            "$id": 10,
+            "$type": 1,
+            "CardID": 8,
+            "CardType": 4,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": 21,
+            "DialogueContext": {
+                "$id": 11,
+                "$type": 2,
+                "$rlength": 1,
+                "$rcontent": [
+                    {
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 5
+        },
+        {
+            "$id": 12,
+            "$type": 1,
+            "CardID": 9,
+            "CardType": 4,
+            "Label": "defaultLabel2",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": 22,
+            "DialogueContext": {
+                "$id": 13,
+                "$type": 2,
+                "$rlength": 1,
+                "$rcontent": [
+                    {
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 5
+        },
+        {
+            "$id": 14,
+            "$type": 1,
+            "CardID": 10,
             "CardType": 4,
             "Label": "More",
             "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 10,
+                "$id": 15,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -154,16 +214,16 @@
             "Depth": 3
         },
         {
-            "$id": 11,
+            "$id": 16,
             "$type": 1,
-            "CardID": 8,
+            "CardID": 11,
             "CardType": 4,
             "Label": "MORE",
             "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 12,
+                "$id": 17,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -178,16 +238,16 @@
             "Depth": 3
         },
         {
-            "$id": 13,
+            "$id": 18,
             "$type": 1,
-            "CardID": 9,
+            "CardID": 12,
             "CardType": 4,
             "Label": "MOREMOREMOREM",
             "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 14,
+                "$id": 19,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -202,16 +262,16 @@
             "Depth": 3
         },
         {
-            "$id": 15,
+            "$id": 20,
             "$type": 1,
-            "CardID": 10,
+            "CardID": 13,
             "CardType": 4,
             "Label": "MLOOHAOSHO",
             "Description": "ASDO\u00d6HA\u00d6SLFGHL\u00d6",
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 16,
+                "$id": 21,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -226,16 +286,16 @@
             "Depth": 3
         },
         {
-            "$id": 17,
+            "$id": 22,
             "$type": 1,
-            "CardID": 11,
+            "CardID": 14,
             "CardType": 4,
             "Label": "[...]",
             "Description": "no",
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 18,
+                "$id": 23,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -250,9 +310,9 @@
             "Depth": 3
         },
         {
-            "$id": 19,
+            "$id": 24,
             "$type": 1,
-            "CardID": 12,
+            "CardID": 15,
             "CardType": 6,
             "Label": "A door",
             "Description": "Open up the thing. WIth the key. You know how it works.",
@@ -262,9 +322,9 @@
             "Depth": 2
         },
         {
-            "$id": 20,
+            "$id": 25,
             "$type": 1,
-            "CardID": 13,
+            "CardID": 16,
             "CardType": 1,
             "Label": "The outside work",
             "Description": "a scary place. But once you conquered it, you'll feel better.",
@@ -274,9 +334,9 @@
             "Depth": 3
         },
         {
-            "$id": 21,
+            "$id": 26,
             "$type": 1,
-            "CardID": 14,
+            "CardID": 17,
             "CardType": 5,
             "Label": "Composure",
             "Description": "You're the buddha walking. Go get'em.",
@@ -286,9 +346,9 @@
             "Depth": 4
         },
         {
-            "$id": 22,
+            "$id": 27,
             "$type": 1,
-            "CardID": 15,
+            "CardID": 18,
             "CardType": 1,
             "Label": "Subway",
             "Description": "Of course there would be.",
@@ -298,9 +358,9 @@
             "Depth": 4
         },
         {
-            "$id": 23,
+            "$id": 28,
             "$type": 1,
-            "CardID": 16,
+            "CardID": 19,
             "CardType": 9,
             "Label": "defaultLabel1",
             "Description": "defaultText",
@@ -310,9 +370,9 @@
             "Depth": 5
         },
         {
-            "$id": 24,
+            "$id": 29,
             "$type": 1,
-            "CardID": 17,
+            "CardID": 20,
             "CardType": 9,
             "Label": "defaultLabel2",
             "Description": "defaultText",
@@ -322,9 +382,33 @@
             "Depth": 5
         },
         {
-            "$id": 25,
+            "$id": 30,
             "$type": 1,
-            "CardID": 18,
+            "CardID": 21,
+            "CardType": 9,
+            "Label": "TAAALK",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 5
+        },
+        {
+            "$id": 31,
+            "$type": 1,
+            "CardID": 22,
+            "CardType": 9,
+            "Label": "TALLLK2",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 5
+        },
+        {
+            "$id": 32,
+            "$type": 1,
+            "CardID": 23,
             "CardType": 9,
             "Label": "TalkGoal3",
             "Description": "defaultText",
@@ -334,9 +418,9 @@
             "Depth": 4
         },
         {
-            "$id": 26,
+            "$id": 33,
             "$type": 1,
-            "CardID": 19,
+            "CardID": 24,
             "CardType": 8,
             "Label": "DialogueWrapper",
             "Description": "Aiming for dem TalkGoals yow",
@@ -346,16 +430,16 @@
             "Depth": 2
         },
         {
-            "$id": 27,
+            "$id": 34,
             "$type": 1,
-            "CardID": 20,
+            "CardID": 25,
             "CardType": 4,
             "Label": "Dialoge1",
             "Description": "defaultText",
             "DesiredKeyID": -1,
-            "DesiredTalkID": 25,
+            "DesiredTalkID": 30,
             "DialogueContext": {
-                "$id": 28,
+                "$id": 35,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -370,16 +454,16 @@
             "Depth": 3
         },
         {
-            "$id": 29,
+            "$id": 36,
             "$type": 1,
-            "CardID": 21,
+            "CardID": 26,
             "CardType": 4,
             "Label": "aa",
             "Description": "defaultText",
             "DesiredKeyID": -1,
-            "DesiredTalkID": 17,
+            "DesiredTalkID": 20,
             "DialogueContext": {
-                "$id": 30,
+                "$id": 37,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -394,16 +478,16 @@
             "Depth": 3
         },
         {
-            "$id": 31,
+            "$id": 38,
             "$type": 1,
-            "CardID": 22,
+            "CardID": 27,
             "CardType": 4,
             "Label": "defaultLabeleaaa",
             "Description": "defaultText",
             "DesiredKeyID": -1,
-            "DesiredTalkID": 18,
+            "DesiredTalkID": 23,
             "DialogueContext": {
-                "$id": 32,
+                "$id": 39,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -418,16 +502,16 @@
             "Depth": 3
         },
         {
-            "$id": 33,
+            "$id": 40,
             "$type": 1,
-            "CardID": 23,
+            "CardID": 28,
             "CardType": 4,
             "Label": "defaultLabeltest",
             "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": 3,
             "DialogueContext": {
-                "$id": 34,
+                "$id": 41,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -442,16 +526,16 @@
             "Depth": 3
         },
         {
-            "$id": 35,
+            "$id": 42,
             "$type": 1,
-            "CardID": 24,
+            "CardID": 29,
             "CardType": 4,
             "Label": "where does dis go?",
             "Description": "defaultText",
             "DesiredKeyID": -1,
-            "DesiredTalkID": 16,
+            "DesiredTalkID": 19,
             "DialogueContext": {
-                "$id": 36,
+                "$id": 43,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
@@ -466,9 +550,9 @@
             "Depth": 3
         },
         {
-            "$id": 37,
+            "$id": 44,
             "$type": 1,
-            "CardID": 25,
+            "CardID": 30,
             "CardType": 9,
             "Label": "TalkGoal1",
             "Description": "Talk 1",
@@ -478,9 +562,9 @@
             "Depth": 1
         },
         {
-            "$id": 38,
+            "$id": 45,
             "$type": 1,
-            "CardID": 26,
+            "CardID": 31,
             "CardType": 5,
             "Label": "defaultLabel",
             "Description": "defaultText",
@@ -490,9 +574,9 @@
             "Depth": 1
         },
         {
-            "$id": 39,
+            "$id": 46,
             "$type": 1,
-            "CardID": 27,
+            "CardID": 32,
             "CardType": 5,
             "Label": "defaultLabel",
             "Description": "defaultText",

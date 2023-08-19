@@ -11,10 +11,13 @@ public class DialogueUpCloseState : LayoutState
     bool _blockInputs;
     int _dialogueIterator = 0;
 
-    public DialogueUpCloseState(CardManager cardManager, CardNode clickedNode) : base(cardManager)
+    DialogueState _dialogueState;
+
+    public DialogueUpCloseState(CardManager cardManager, CardNode clickedNode, DialogueState dialogueState) : base(cardManager)
     {
         _closeUpNode = clickedNode;
         _cardBuilder = cardManager.CardBuilder;
+        _dialogueState = dialogueState;
     }
 
     public override async void StartState()
@@ -97,6 +100,16 @@ public class DialogueUpCloseState : LayoutState
         _blockInputs = false;
 
         _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.DIALOGUE);
+
+        if (flipRight)
+        {
+            _dialogueState.SetDialogueCondition(DialogueState.DialogueCondition.ACCEPTED);
+        }
+        else
+        {
+            _dialogueState.SetDialogueCondition(DialogueState.DialogueCondition.REJECTED);
+        }
+        
 
         _stateManager.PopState();
     }
