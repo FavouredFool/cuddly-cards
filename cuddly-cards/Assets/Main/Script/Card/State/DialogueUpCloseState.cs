@@ -9,15 +9,18 @@ public class DialogueUpCloseState : LayoutState
     Vector3 _originalPosition;
     Quaternion _originalRotation;
     bool _blockInputs;
-    int _dialogueIterator = 0;
+    int _dialogueIterator;
+    int _dialogueStartPosition;
 
     DialogueState _dialogueState;
 
-    public DialogueUpCloseState(CardManager cardManager, CardNode clickedNode, DialogueState dialogueState) : base(cardManager)
+    public DialogueUpCloseState(CardManager cardManager, CardNode clickedNode, int dialogueStartPosition, DialogueState dialogueState) : base(cardManager)
     {
         _closeUpNode = clickedNode;
         _cardBuilder = cardManager.CardBuilder;
         _dialogueState = dialogueState;
+        _dialogueStartPosition = dialogueStartPosition;
+        _dialogueIterator = dialogueStartPosition;
     }
 
     public override async void StartState()
@@ -26,7 +29,7 @@ public class DialogueUpCloseState : LayoutState
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
 
-        DialogueContext dialogueContext = _closeUpNode.Context.DialogueContexts[0];
+        DialogueContext dialogueContext = _closeUpNode.Context.DialogueContexts[_dialogueStartPosition];
 
         _blockInputs = true;
         await _closeUpManager.SetCloseUpAnimated(_closeUpNode, CloseUpStyle.DIALOGUE, _cardManager, dialogueContext, true);
@@ -68,8 +71,35 @@ public class DialogueUpCloseState : LayoutState
         SetUpDialogue(_dialogueIterator, false);
     }
 
+    public async void EncounterLock()
+    {
+        // tell DialogueState about the currentPosition and the necessary lock
+        // Leave closeup
+        // Present lock 
+        // f
+
+        _blockInputs = true;
+        await _closeUpManager.RevertCloseUpNoFlip(_closeUpNode, _originalPosition, _originalRotation);
+        _blockInputs = false;
+
+        _closeUpManager.RevertCloseUpStatic(_closeUpNode, _originalPosition, _originalRotation, CloseUpStyle.DIALOGUE);
+
+        _dialogueState.SetDialogueCondition(DialogueState.DialogueCondition.LOCKED);
+        _dialogueState.SetDialogueStartPosition(_dialogueIterator);
+        _dialogueState.IncreaseLockAmount();
+        _stateManager.PopState();
+    }
+
     public void RightClick()
     {
+        DialogueContext currentContext = _closeUpNode.Context.DialogueContexts[_dialogueIterator];
+        if (currentContext.IsLockDialogue)
+        {
+            EncounterLock();
+            return;
+        }
+
+
         _dialogueIterator += 1;
 
         if (_dialogueIterator >= _closeUpNode.Context.DialogueContexts.Count)

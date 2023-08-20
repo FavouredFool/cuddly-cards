@@ -7,9 +7,11 @@ using static CardInfo;
 public class DialogueState : SettedState
 {
 
-    public enum DialogueCondition { NOTSHOWN, REJECTED, ACCEPTED }
+    public enum DialogueCondition { UPCLOSE, REJECTED, ACCEPTED, LOCKED }
 
-    DialogueCondition _dialogueCondition = DialogueCondition.NOTSHOWN;
+    DialogueCondition _dialogueCondition = DialogueCondition.UPCLOSE;
+    int _dialogueStartPosition = 0;
+    int _lockAmount = -1;
 
     public DialogueState(CardManager cardManager, CardNode newBaseNode) : base(cardManager, newBaseNode)
     {
@@ -26,8 +28,11 @@ public class DialogueState : SettedState
 
         switch (_dialogueCondition)
         {
-            case DialogueCondition.NOTSHOWN:
-                    _stateManager.PushState(new DialogueUpCloseState(_cardManager, _newBaseNode, this));
+            case DialogueCondition.UPCLOSE:
+                    _stateManager.PushState(new DialogueUpCloseState(_cardManager, _newBaseNode, _dialogueStartPosition, this));
+                break;
+            case DialogueCondition.LOCKED:
+                ToDialogueLockTransition(_cardManager.BaseNode.Children[_lockAmount]);
                 break;
             case DialogueCondition.REJECTED:
                     ToTalkTransition(_newBaseNode.Parent);
@@ -70,6 +75,26 @@ public class DialogueState : SettedState
     public void CollectDialogue(CardNode clickedNode)
     {
         _cardDialogue.SpreadDialogues(clickedNode);
+    }
+
+    public void ToDialogueLockTransition(CardNode lockNode)
+    {
+        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new ToInventoryAnimation(_cardManager, false) };
+        LayoutState newState = new DialogueLockState(_cardManager, lockNode, this);
+
+        PushTransition(lockNode, animations, newState);
+    }
+
+    public async void PushTransition(CardNode clickedNode, List<CardAnimation> animations, LayoutState state)
+    {
+        foreach (CardAnimation animation in animations)
+        {
+            _animationManager.AddAnimation(animation);
+        }
+
+        await _animationManager.PlayAnimations(clickedNode, _cardManager.BaseNode);
+
+        _stateManager.PushState(state);
     }
 
     public void ToDefaultTransitions(CardNode clickedNode)
@@ -139,5 +164,20 @@ public class DialogueState : SettedState
     public DialogueCondition GetDialogueCondition()
     {
         return _dialogueCondition;
+    }
+
+    public void SetDialogueStartPosition(int dialogueStartPosition)
+    {
+        _dialogueStartPosition = dialogueStartPosition;
+    }
+
+    public void IncreaseDialogueStartPosition()
+    {
+        _dialogueStartPosition++;
+    }
+
+    public void IncreaseLockAmount()
+    {
+        _lockAmount++;
     }
 }

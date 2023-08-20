@@ -81,6 +81,16 @@ public class CloseUpManager : MonoBehaviour
         }
     }
 
+    public async Task RevertCloseUpNoFlip(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation)
+    {
+        _closeUpCanvas.SetActive(false);
+
+        _cameraMovement.SetCardTableRotation(_transitionTime, _easing);
+
+        closeUpNode.Body.transform.DOMove(originalPosition, _transitionTime).SetEase(_easing);
+        await closeUpNode.Body.transform.DORotateQuaternion(originalRotation, _transitionTime).SetEase(_easing).AsyncWaitForCompletion();
+    }
+
     public async Task RevertCloseUpAnimated(CardNode closeUpNode, Vector3 originalPosition, Quaternion originalRotation, CloseUpStyle style, CardManager cardManager, bool flipRight)
     {
         _closeUpCanvas.SetActive(false);

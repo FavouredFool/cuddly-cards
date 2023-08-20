@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static CardInfo;
 
-public class LockState : SettedState
+public class DialogueLockState : SettedState
 {
-    public LockState(CardManager cardManager, CardNode baseNode) : base (cardManager, baseNode)
+    DialogueState _dialogueState;
+
+    public DialogueLockState(CardManager cardManager, CardNode baseNode, DialogueState dialogueState) : base (cardManager, baseNode)
     {
+        _dialogueState = dialogueState;
     }
 
     public override void HandleIndividualTransitions(CardNode clickedNode)
@@ -42,6 +45,8 @@ public class LockState : SettedState
 
         if (_cardManager.BaseNode.Parent == clickedNode)
         {
+            _dialogueState.SetDialogueCondition(DialogueState.DialogueCondition.UPCLOSE);
+
             ToBackTransition(clickedNode);
             return;
         }
@@ -63,10 +68,23 @@ public class LockState : SettedState
 
     void ToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, true, false), new FromInventoryAnimation(_cardManager, true) };
-        LayoutState newState = new MainState(_cardManager, clickedNode);
+        // Transition back to the dialogue to the previously active position.
 
-        ToTransition(clickedNode, animations, newState);
+        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, true, false), new FromInventoryAnimation(_cardManager, true) };
+
+        PopTransition(clickedNode, animations);
+    }
+
+    public async void PopTransition(CardNode clickedNode, List<CardAnimation> animations)
+    {
+        foreach (CardAnimation animation in animations)
+        {
+            _animationManager.AddAnimation(animation);
+        }
+
+        await _animationManager.PlayAnimations(clickedNode, _cardManager.BaseNode);
+
+        _stateManager.PopState();
     }
 
     void PlayNode(CardNode clickedNode)
@@ -92,14 +110,17 @@ public class LockState : SettedState
     {
         await LockOpened(baseNode, clickedNode);
 
-        CardNode childNode = baseNode.Children[0];
+        CardNode dialogueNode = baseNode.Parent;
+
         // Für die Animation muss ich das im Voraus machen, bevor es erneut von dem MainState gesetzt wird
-        _cardManager.BaseNode = childNode;
+        _cardManager.BaseNode = dialogueNode;
 
         List<CardAnimation> animations = new() { new FromInventoryAnimation(_cardManager, false), new OpenAnimation(_cardManager) };
-        LayoutState newState = new MainState(_cardManager, childNode);
 
-        ToTransition(childNode, animations, newState);
+        _dialogueState.SetDialogueCondition(DialogueState.DialogueCondition.UPCLOSE);
+        _dialogueState.IncreaseDialogueStartPosition();
+
+        PopTransition(dialogueNode, animations);
     }
 
     public async Task LockOpened(CardNode lockNode, CardNode keyNode)
@@ -119,11 +140,7 @@ public class LockState : SettedState
 
     public void RemoveLockFromTree(CardNode lockNode)
     {
-        CardNode exposedNode = lockNode.Children[0];
-        CardNode parentNode = lockNode.Parent;
-        exposedNode.Parent = parentNode;
-        parentNode.Children.Remove(lockNode);
-        parentNode.Children.Add(exposedNode);
+        lockNode.Parent.Children.Remove(lockNode);
     }
 
     public void RemoveKeyFromTree(CardNode keyNode)

@@ -24,7 +24,7 @@ public class InventoryLayout : SubLayout
             _cardMover.MoveCard(_cardInventory.InventoryNode, new Vector2(_cardMover.GetPlaySpaceTopRight().x, _cardMover.GetPlaySpaceBottomLeft().y));
         }
 
-        if (_stateManager.States.Peek() is InventoryState or LockState)
+        if (_stateManager.States.Peek() is InventoryState or LockState or DialogueLockState)
         {
             ResetFannedOutState(inventoryNode);
         }
