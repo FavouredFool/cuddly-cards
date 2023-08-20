@@ -44,8 +44,6 @@ public class BackDefaultToDefaultAnimation : BackParentAnimation
 
         foreach (CardNode child in baseNode.Children)
         {
-            _cardManager.AddToTopLevel(child);
-
             sequence.Join(DOTween.Sequence()
                 .Append(_subAnimations.LiftAndMoveChildToBase(child, activeNode))
                 .AppendInterval(_waitTime)
