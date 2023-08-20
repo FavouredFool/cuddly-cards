@@ -94,7 +94,7 @@ public class MainState : SettedState
 
     public void ToTalkTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new ChildFanAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new ChildDefaultToFanAnimation(_cardManager) };
         LayoutState newState = new TalkState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
@@ -102,7 +102,7 @@ public class MainState : SettedState
 
     public void ToLockTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new ToInventoryAnimation(_cardManager, false) };
+        List<CardAnimation> animations = new() { new DefaultToNoChildrenAnimation(_cardManager), new ToInventoryAnimation(_cardManager, false) };
         LayoutState newState = new LockState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
@@ -110,7 +110,7 @@ public class MainState : SettedState
 
     public void ToChildTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new ChildAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new ChildDefaultToDefaultAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);

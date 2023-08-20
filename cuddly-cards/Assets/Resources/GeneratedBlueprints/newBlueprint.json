@@ -1,7 +1,7 @@
 {
     "$id": 0,
     "$type": "0|System.Collections.Generic.List`1[[SEContext, Assembly-CSharp]], mscorlib",
-    "$rlength": 33,
+    "$rlength": 41,
     "$rcontent": [
         {
             "$id": 1,
@@ -66,36 +66,42 @@
                 "$rlength": 6,
                 "$rcontent": [
                     {
+                        "$id": 7,
                         "$type": "3|DialogueContext, Assembly-CSharp",
                         "_name": "Narrator",
                         "_text": "As you wipe away the fog, a face clears up. It stands in a room just like yours, staring at you.",
                         "_isLockDialogue": false
                     },
                     {
+                        "$id": 8,
                         "$type": 3,
                         "_name": "Narrator",
                         "_text": "It is alien as can be. But do you have the composure to face it?",
                         "_isLockDialogue": true
                     },
                     {
+                        "$id": 9,
                         "$type": 3,
                         "_name": "Narrator",
                         "_text": "You find your composure and look at it. Gods, it is hideous.",
                         "_isLockDialogue": false
                     },
                     {
+                        "$id": 10,
                         "$type": 3,
                         "_name": "The detec",
                         "_text": "Oh fuck off Narrator",
                         "_isLockDialogue": false
                     },
                     {
+                        "$id": 11,
                         "$type": 3,
                         "_name": "Narrator",
                         "_text": "You know it to be true.",
                         "_isLockDialogue": false
                     },
                     {
+                        "$id": 12,
                         "$type": 3,
                         "_name": "Narrator",
                         "_text": "The detec walks through the mirror to greet his disgusting other self.",
@@ -106,7 +112,7 @@
             "Depth": 3
         },
         {
-            "$id": 7,
+            "$id": 13,
             "$type": 1,
             "CardID": 5,
             "CardType": 6,
@@ -118,7 +124,7 @@
             "Depth": 4
         },
         {
-            "$id": 8,
+            "$id": 14,
             "$type": 1,
             "CardID": 6,
             "CardType": 5,
@@ -130,7 +136,7 @@
             "Depth": 4
         },
         {
-            "$id": 9,
+            "$id": 15,
             "$type": 1,
             "CardID": 7,
             "CardType": 8,
@@ -142,7 +148,7 @@
             "Depth": 4
         },
         {
-            "$id": 10,
+            "$id": 16,
             "$type": 1,
             "CardID": 8,
             "CardType": 4,
@@ -151,11 +157,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": 21,
             "DialogueContext": {
-                "$id": 11,
+                "$id": 17,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 18,
                         "$type": 3,
                         "_name": "",
                         "_text": "",
@@ -166,7 +173,7 @@
             "Depth": 5
         },
         {
-            "$id": 12,
+            "$id": 19,
             "$type": 1,
             "CardID": 9,
             "CardType": 4,
@@ -175,11 +182,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": 22,
             "DialogueContext": {
-                "$id": 13,
+                "$id": 20,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 21,
                         "$type": 3,
                         "_name": "",
                         "_text": "",
@@ -190,7 +198,7 @@
             "Depth": 5
         },
         {
-            "$id": 14,
+            "$id": 22,
             "$type": 1,
             "CardID": 10,
             "CardType": 4,
@@ -199,11 +207,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 15,
+                "$id": 23,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 24,
                         "$type": 3,
                         "_name": "",
                         "_text": "",
@@ -214,7 +223,7 @@
             "Depth": 3
         },
         {
-            "$id": 16,
+            "$id": 25,
             "$type": 1,
             "CardID": 11,
             "CardType": 4,
@@ -223,11 +232,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 17,
+                "$id": 26,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 27,
                         "$type": 3,
                         "_name": "",
                         "_text": "",
@@ -238,7 +248,7 @@
             "Depth": 3
         },
         {
-            "$id": 18,
+            "$id": 28,
             "$type": 1,
             "CardID": 12,
             "CardType": 4,
@@ -247,11 +257,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 19,
+                "$id": 29,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 30,
                         "$type": 3,
                         "_name": "",
                         "_text": "",
@@ -262,7 +273,7 @@
             "Depth": 3
         },
         {
-            "$id": 20,
+            "$id": 31,
             "$type": 1,
             "CardID": 13,
             "CardType": 4,
@@ -271,11 +282,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 21,
+                "$id": 32,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 33,
                         "$type": 3,
                         "_name": "",
                         "_text": "",
@@ -286,7 +298,7 @@
             "Depth": 3
         },
         {
-            "$id": 22,
+            "$id": 34,
             "$type": 1,
             "CardID": 14,
             "CardType": 4,
@@ -295,11 +307,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
             "DialogueContext": {
-                "$id": 23,
+                "$id": 35,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 36,
                         "$type": 3,
                         "_name": "",
                         "_text": "",
@@ -310,7 +323,7 @@
             "Depth": 3
         },
         {
-            "$id": 24,
+            "$id": 37,
             "$type": 1,
             "CardID": 15,
             "CardType": 6,
@@ -322,7 +335,7 @@
             "Depth": 2
         },
         {
-            "$id": 25,
+            "$id": 38,
             "$type": 1,
             "CardID": 16,
             "CardType": 1,
@@ -334,7 +347,7 @@
             "Depth": 3
         },
         {
-            "$id": 26,
+            "$id": 39,
             "$type": 1,
             "CardID": 17,
             "CardType": 5,
@@ -346,7 +359,7 @@
             "Depth": 4
         },
         {
-            "$id": 27,
+            "$id": 40,
             "$type": 1,
             "CardID": 18,
             "CardType": 1,
@@ -358,7 +371,7 @@
             "Depth": 4
         },
         {
-            "$id": 28,
+            "$id": 41,
             "$type": 1,
             "CardID": 19,
             "CardType": 9,
@@ -370,7 +383,7 @@
             "Depth": 5
         },
         {
-            "$id": 29,
+            "$id": 42,
             "$type": 1,
             "CardID": 20,
             "CardType": 9,
@@ -382,7 +395,7 @@
             "Depth": 5
         },
         {
-            "$id": 30,
+            "$id": 43,
             "$type": 1,
             "CardID": 21,
             "CardType": 9,
@@ -394,7 +407,7 @@
             "Depth": 5
         },
         {
-            "$id": 31,
+            "$id": 44,
             "$type": 1,
             "CardID": 22,
             "CardType": 9,
@@ -406,7 +419,7 @@
             "Depth": 5
         },
         {
-            "$id": 32,
+            "$id": 45,
             "$type": 1,
             "CardID": 23,
             "CardType": 9,
@@ -418,7 +431,7 @@
             "Depth": 4
         },
         {
-            "$id": 33,
+            "$id": 46,
             "$type": 1,
             "CardID": 24,
             "CardType": 8,
@@ -430,7 +443,7 @@
             "Depth": 2
         },
         {
-            "$id": 34,
+            "$id": 47,
             "$type": 1,
             "CardID": 25,
             "CardType": 4,
@@ -439,11 +452,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": 30,
             "DialogueContext": {
-                "$id": 35,
+                "$id": 48,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 49,
                         "$type": 3,
                         "_name": "1",
                         "_text": "Aiming for dat 1",
@@ -454,7 +468,7 @@
             "Depth": 3
         },
         {
-            "$id": 36,
+            "$id": 50,
             "$type": 1,
             "CardID": 26,
             "CardType": 4,
@@ -463,11 +477,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": 20,
             "DialogueContext": {
-                "$id": 37,
+                "$id": 51,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 52,
                         "$type": 3,
                         "_name": "nono",
                         "_text": "nonono",
@@ -478,7 +493,7 @@
             "Depth": 3
         },
         {
-            "$id": 38,
+            "$id": 53,
             "$type": 1,
             "CardID": 27,
             "CardType": 4,
@@ -487,11 +502,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": 23,
             "DialogueContext": {
-                "$id": 39,
+                "$id": 54,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 55,
                         "$type": 3,
                         "_name": "miro",
                         "_text": "",
@@ -502,7 +518,7 @@
             "Depth": 3
         },
         {
-            "$id": 40,
+            "$id": 56,
             "$type": 1,
             "CardID": 28,
             "CardType": 4,
@@ -511,11 +527,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": 3,
             "DialogueContext": {
-                "$id": 41,
+                "$id": 57,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 58,
                         "$type": 3,
                         "_name": "More mirror dialogue!",
                         "_text": "",
@@ -526,7 +543,7 @@
             "Depth": 3
         },
         {
-            "$id": 42,
+            "$id": 59,
             "$type": 1,
             "CardID": 29,
             "CardType": 4,
@@ -535,11 +552,12 @@
             "DesiredKeyID": -1,
             "DesiredTalkID": 19,
             "DialogueContext": {
-                "$id": 43,
+                "$id": 60,
                 "$type": 2,
                 "$rlength": 1,
                 "$rcontent": [
                     {
+                        "$id": 61,
                         "$type": 3,
                         "_name": "no clo",
                         "_text": "",
@@ -550,7 +568,7 @@
             "Depth": 3
         },
         {
-            "$id": 44,
+            "$id": 62,
             "$type": 1,
             "CardID": 30,
             "CardType": 9,
@@ -562,11 +580,186 @@
             "Depth": 1
         },
         {
-            "$id": 45,
+            "$id": 63,
             "$type": 1,
             "CardID": 31,
+            "CardType": 4,
+            "Label": "DefaultLock",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 64,
+                "$type": 2,
+                "$rlength": 3,
+                "$rcontent": [
+                    {
+                        "$id": 65,
+                        "$type": 3,
+                        "_name": "a",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    },
+                    {
+                        "$id": 66,
+                        "$type": 3,
+                        "_name": "b",
+                        "_text": "",
+                        "_isLockDialogue": true
+                    },
+                    {
+                        "$id": 67,
+                        "$type": 3,
+                        "_name": "c",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 2
+        },
+        {
+            "$id": 68,
+            "$type": 1,
+            "CardID": 32,
+            "CardType": 6,
+            "Label": "mylock<33",
+            "Description": "defaultText",
+            "DesiredKeyID": 39,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 3
+        },
+        {
+            "$id": 69,
+            "$type": 1,
+            "CardID": 33,
             "CardType": 5,
             "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 3
+        },
+        {
+            "$id": 70,
+            "$type": 1,
+            "CardID": 34,
+            "CardType": 5,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 3
+        },
+        {
+            "$id": 71,
+            "$type": 1,
+            "CardID": 35,
+            "CardType": 4,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 72,
+                "$type": 2,
+                "$rlength": 1,
+                "$rcontent": [
+                    {
+                        "$id": 73,
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 2
+        },
+        {
+            "$id": 74,
+            "$type": 1,
+            "CardID": 36,
+            "CardType": 4,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 75,
+                "$type": 2,
+                "$rlength": 1,
+                "$rcontent": [
+                    {
+                        "$id": 76,
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 2
+        },
+        {
+            "$id": 77,
+            "$type": 1,
+            "CardID": 37,
+            "CardType": 4,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 78,
+                "$type": 2,
+                "$rlength": 1,
+                "$rcontent": [
+                    {
+                        "$id": 79,
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 2
+        },
+        {
+            "$id": 80,
+            "$type": 1,
+            "CardID": 38,
+            "CardType": 4,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 81,
+                "$type": 2,
+                "$rlength": 1,
+                "$rcontent": [
+                    {
+                        "$id": 82,
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 2
+        },
+        {
+            "$id": 83,
+            "$type": 1,
+            "CardID": 39,
+            "CardType": 5,
+            "Label": "MyKey<3",
             "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
@@ -574,9 +767,9 @@
             "Depth": 1
         },
         {
-            "$id": 46,
+            "$id": 84,
             "$type": 1,
-            "CardID": 32,
+            "CardID": 40,
             "CardType": 5,
             "Label": "defaultLabel",
             "Description": "defaultText",

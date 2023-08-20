@@ -80,7 +80,7 @@ public class DialogueState : SettedState
 
     public void ToDialogueLockTransition(CardNode lockNode)
     {
-        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager), new ToInventoryAnimation(_cardManager, false) };
+        List<CardAnimation> animations = new() { new DefaultToNoChildrenAnimation(_cardManager), new ToInventoryAnimation(_cardManager, false) };
         LayoutState newState = new DialogueLockState(_cardManager, lockNode, this);
 
         PushTransition(lockNode, animations, newState);
@@ -117,7 +117,7 @@ public class DialogueState : SettedState
 
     public void ToChildTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new ChildAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new ChildDefaultToDefaultAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);

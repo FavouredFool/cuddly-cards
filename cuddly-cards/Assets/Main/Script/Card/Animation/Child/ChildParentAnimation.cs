@@ -12,31 +12,7 @@ public abstract class ChildParentAnimation : MainAnimation
 
     public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
-        Sequence sequence = DOTween.Sequence();
-
-        List<CardNode> childNodes = baseNode.Children;
-
-        int height = 0;
-
-        for (int i = childNodes.Count - 1; i >= 0; i--)
-        {
-            CardNode previousChild = childNodes[i];
-
-            if (previousChild == activeNode)
-            {
-                continue;
-            }
-
-            height += previousChild.GetNodeCount(CardTraversal.CONTEXT);
-
-            sequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.LiftAndMoveChildToBase(previousChild, baseNode))
-                .AppendInterval(_waitTime)
-                .Append(_subAnimations.MoveNodeZFarther(previousChild))
-                .Append(_subAnimations.MoveNodeY(previousChild, height)));
-        }
-
-        return sequence;
+        return AnimateOldChildren(activeNode, baseNode);
     }
 
     public override Tween BaseAnimation(CardNode activeNode, CardNode baseNode)
@@ -121,10 +97,14 @@ public abstract class ChildParentAnimation : MainAnimation
         return sequence;
     }
 
+    public abstract Tween AnimateOldChildren(CardNode activeNode, CardNode baseNode);
+
     public abstract Tween AnimateChildren(CardNode activeNode, CardNode baseNode);
 
     public virtual Tween MoveNewBaseNode(CardNode activeNode, CardNode baseNode)
     {
+        // I need to change this one
+
         return DOTween.Sequence()
             .Append(_subAnimations.LiftAndMoveChildToBase(activeNode, baseNode))
             .AppendInterval(_waitTime + _horizontalTime)

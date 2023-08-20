@@ -32,7 +32,7 @@ public class TalkState : SettedState
 
     public void ToDialogueTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new NoChildrenAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new FanToNoChildrenAnimation(_cardManager) };
         LayoutState newState = new DialogueState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);

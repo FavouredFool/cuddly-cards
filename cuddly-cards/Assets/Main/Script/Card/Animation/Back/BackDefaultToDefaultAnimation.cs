@@ -13,6 +13,15 @@ public class BackDefaultToDefaultAnimation : BackParentAnimation
     {
     }
 
+    public override Tween SetActiveNode(CardNode activeNode, CardNode baseNode)
+    {
+        return DOTween.Sequence()
+            .Append(_subAnimations.MoveNodeYLiftPile(activeNode, activeNode))
+            .Append(_subAnimations.MoveNodeZNearer(activeNode))
+            .AppendInterval(_waitTime + _horizontalTime)
+            .Append(_subAnimations.MoveNodeYLowerPile(activeNode));
+    }
+
     public override Tween AnimateChildrenAndBase(CardNode activeNode, CardNode baseNode)
     {
         Sequence sequence = DOTween.Sequence();
