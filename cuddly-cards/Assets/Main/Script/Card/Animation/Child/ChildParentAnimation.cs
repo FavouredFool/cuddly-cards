@@ -116,14 +116,14 @@ public abstract class ChildParentAnimation : MainAnimation
         sequence.Join(AnimateChildren(activeNode, baseNode));
 
         // newActiveNode
-        sequence.Join(MoveBaseNode(activeNode, baseNode));
+        sequence.Join(MoveNewBaseNode(activeNode, baseNode));
         
         return sequence;
     }
 
     public abstract Tween AnimateChildren(CardNode activeNode, CardNode baseNode);
 
-    public virtual Tween MoveBaseNode(CardNode activeNode, CardNode baseNode)
+    public virtual Tween MoveNewBaseNode(CardNode activeNode, CardNode baseNode)
     {
         return DOTween.Sequence()
             .Append(_subAnimations.LiftAndMoveChildToBase(activeNode, baseNode))

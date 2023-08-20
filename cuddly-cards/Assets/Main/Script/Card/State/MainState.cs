@@ -94,7 +94,7 @@ public class MainState : SettedState
 
     public void ToTalkTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new FanDialogueAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new ChildFanAnimation(_cardManager) };
         LayoutState newState = new TalkState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
