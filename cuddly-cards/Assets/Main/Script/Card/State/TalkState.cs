@@ -65,7 +65,7 @@ public class TalkState : SettedState
 
     public void ToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, true, false) };
+        List<CardAnimation> animations = new() { new BackFanToDefaultAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);

@@ -69,7 +69,7 @@ public class InventoryState : DefaultState
 
     public void FromInventoryToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, true, false), new FromInventoryAnimation(_cardManager, true) };
+        List<CardAnimation> animations = new() { new BackFanToDefaultAnimation(_cardManager), new FromInventoryAnimation(_cardManager, true) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);

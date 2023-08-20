@@ -70,7 +70,7 @@ public class DialogueLockState : SettedState
     {
         // Transition back to the dialogue to the previously active position.
 
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, true, false), new FromInventoryAnimation(_cardManager, true) };
+        List<CardAnimation> animations = new() { new BackFanToDefaultAnimation(_cardManager), new FromInventoryAnimation(_cardManager, true) };
 
         PopTransition(clickedNode, animations);
     }
