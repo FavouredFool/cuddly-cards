@@ -38,7 +38,6 @@ public class ChildFanAnimation : ChildParentAnimation
                 .Append(_subAnimations.FanOutCard(node, i, childsToBe.Count, false))
             );
         }
-
         
         for (int i = childChildList.Count-1; i >= 0; i--)
         {
@@ -53,7 +52,6 @@ public class ChildFanAnimation : ChildParentAnimation
                 .AppendInterval(_waitTime + _horizontalTime)
                 .Append(_subAnimations.MoveNodeY(node, _height)));
         }
-        
 
         return sequence;
     }

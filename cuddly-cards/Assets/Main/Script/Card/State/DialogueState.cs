@@ -125,7 +125,7 @@ public class DialogueState : SettedState
 
     public void ToBackTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new BackAnimation(_cardManager, false, false) };
+        List<CardAnimation> animations = new() { new BackDefaultToDefaultAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, clickedNode);
 
         ToTransition(clickedNode, animations, newState);
