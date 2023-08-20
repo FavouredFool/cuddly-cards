@@ -1,7 +1,7 @@
 {
     "$id": 0,
     "$type": "0|System.Collections.Generic.List`1[[SEContext, Assembly-CSharp]], mscorlib",
-    "$rlength": 41,
+    "$rlength": 46,
     "$rcontent": [
         {
             "$id": 1,
@@ -625,7 +625,7 @@
             "CardType": 6,
             "Label": "mylock<33",
             "Description": "defaultText",
-            "DesiredKeyID": 39,
+            "DesiredKeyID": 44,
             "DesiredTalkID": -1,
             "DialogueContext": null,
             "Depth": 3
@@ -708,31 +708,42 @@
             "$id": 77,
             "$type": 1,
             "CardID": 37,
-            "CardType": 4,
+            "CardType": 5,
             "Label": "defaultLabel",
             "Description": "defaultText",
             "DesiredKeyID": -1,
             "DesiredTalkID": -1,
-            "DialogueContext": {
-                "$id": 78,
-                "$type": 2,
-                "$rlength": 1,
-                "$rcontent": [
-                    {
-                        "$id": 79,
-                        "$type": 3,
-                        "_name": "",
-                        "_text": "",
-                        "_isLockDialogue": false
-                    }
-                ]
-            },
-            "Depth": 2
+            "DialogueContext": null,
+            "Depth": 3
+        },
+        {
+            "$id": 78,
+            "$type": 1,
+            "CardID": 38,
+            "CardType": 5,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 3
+        },
+        {
+            "$id": 79,
+            "$type": 1,
+            "CardID": 39,
+            "CardType": 5,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 3
         },
         {
             "$id": 80,
             "$type": 1,
-            "CardID": 38,
+            "CardID": 40,
             "CardType": 4,
             "Label": "defaultLabel",
             "Description": "defaultText",
@@ -757,7 +768,56 @@
         {
             "$id": 83,
             "$type": 1,
-            "CardID": 39,
+            "CardID": 41,
+            "CardType": 4,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": {
+                "$id": 84,
+                "$type": 2,
+                "$rlength": 1,
+                "$rcontent": [
+                    {
+                        "$id": 85,
+                        "$type": 3,
+                        "_name": "",
+                        "_text": "",
+                        "_isLockDialogue": false
+                    }
+                ]
+            },
+            "Depth": 2
+        },
+        {
+            "$id": 86,
+            "$type": 1,
+            "CardID": 42,
+            "CardType": 5,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 3
+        },
+        {
+            "$id": 87,
+            "$type": 1,
+            "CardID": 43,
+            "CardType": 5,
+            "Label": "defaultLabel",
+            "Description": "defaultText",
+            "DesiredKeyID": -1,
+            "DesiredTalkID": -1,
+            "DialogueContext": null,
+            "Depth": 3
+        },
+        {
+            "$id": 88,
+            "$type": 1,
+            "CardID": 44,
             "CardType": 5,
             "Label": "MyKey<3",
             "Description": "defaultText",
@@ -767,9 +827,9 @@
             "Depth": 1
         },
         {
-            "$id": 84,
+            "$id": 89,
             "$type": 1,
-            "CardID": 40,
+            "CardID": 45,
             "CardType": 5,
             "Label": "defaultLabel",
             "Description": "defaultText",
