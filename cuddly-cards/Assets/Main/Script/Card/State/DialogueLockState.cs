@@ -110,12 +110,14 @@ public class DialogueLockState : SettedState
     {
         await LockOpened(baseNode, clickedNode);
 
+        _dialogueState.RemoveLock();
+
         CardNode dialogueNode = baseNode.Parent;
 
         // Für die Animation muss ich das im Voraus machen, bevor es erneut von dem MainState gesetzt wird
         _cardManager.BaseNode = dialogueNode;
 
-        List<CardAnimation> animations = new() { new FromInventoryAnimation(_cardManager, false), new OpenAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { };
 
         _dialogueState.SetDialogueCondition(DialogueState.DialogueCondition.UPCLOSE);
         _dialogueState.IncreaseDialogueStartPosition();

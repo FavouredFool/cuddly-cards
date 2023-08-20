@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
 [Serializable]
-public struct DialogueContext
+public class DialogueContext
 {
     public DialogueContext(bool isLockDialogue, string name, string text)
     {
@@ -22,7 +22,7 @@ public struct DialogueContext
     [SerializeField]
     bool _isLockDialogue;
 
-    public bool IsLockDialogue => _isLockDialogue;
+    public bool IsLockDialogue { get { return _isLockDialogue; } set { _isLockDialogue = value; } }
     public string Name => _name;
     public string Text => _text;
 }

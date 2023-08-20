@@ -86,7 +86,6 @@ public class DialogueUpCloseState : LayoutState
 
         _dialogueState.SetDialogueCondition(DialogueState.DialogueCondition.LOCKED);
         _dialogueState.SetDialogueStartPosition(_dialogueIterator);
-        _dialogueState.IncreaseLockAmount();
         _stateManager.PopState();
     }
 

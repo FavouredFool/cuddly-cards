@@ -11,11 +11,11 @@ public class DialogueState : SettedState
 
     DialogueCondition _dialogueCondition = DialogueCondition.UPCLOSE;
     int _dialogueStartPosition = 0;
-    int _lockAmount = -1;
+    CardNode dialogueNode;
 
     public DialogueState(CardManager cardManager, CardNode newBaseNode) : base(cardManager, newBaseNode)
     {
-
+        dialogueNode = newBaseNode;
     }
 
     public override void StartState()
@@ -32,7 +32,8 @@ public class DialogueState : SettedState
                     _stateManager.PushState(new DialogueUpCloseState(_cardManager, _newBaseNode, _dialogueStartPosition, this));
                 break;
             case DialogueCondition.LOCKED:
-                ToDialogueLockTransition(_cardManager.BaseNode.Children[_lockAmount]);
+                // Always take the first one. After one lock is opened, it dies and the next lock turns into the first lock.
+                ToDialogueLockTransition(_cardManager.BaseNode.Children[0]);
                 break;
             case DialogueCondition.REJECTED:
                     ToTalkTransition(_newBaseNode.Parent);
@@ -176,8 +177,9 @@ public class DialogueState : SettedState
         _dialogueStartPosition++;
     }
 
-    public void IncreaseLockAmount()
+    public void RemoveLock()
     {
-        _lockAmount++;
+        DialogueContext currentContext = dialogueNode.Context.DialogueContexts[_dialogueStartPosition];
+        currentContext.IsLockDialogue = false;
     }
 }
