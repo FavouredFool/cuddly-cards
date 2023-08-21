@@ -39,7 +39,7 @@ public abstract class BackParentAnimation : MainAnimation
 
         if (backToBe != rootNode)
         {
-            int rootHeight = rootNode.GetNodeCount(CardTraversal.BODY);
+            int rootHeight = rootNode.GetNodeCount(CardTraversal.BODY) - backToBe.GetNodeCount(CardTraversal.BODY);
 
             List<CardNode> lowerTopMostCardsRoot = backToBe.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
 
