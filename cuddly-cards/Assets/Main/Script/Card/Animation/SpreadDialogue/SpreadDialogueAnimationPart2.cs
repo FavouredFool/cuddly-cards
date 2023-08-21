@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using static CardInfo;
 
-public class SpreadDialogueAnimationPart2 : MainAnimation
+public class SpreadDialogueAnimationPart2 : FreeAnimationParent
 {
     public SpreadDialogueAnimationPart2(CardManager cardManager) : base(cardManager) { }
 
@@ -17,11 +17,12 @@ public class SpreadDialogueAnimationPart2 : MainAnimation
         CardNode parentTalkNode = _cardManager.GetCardNodeFromID(activeNode.Context.DesiredTalkID);
         CardNode rootNode = _cardManager.RootNode;
 
-        List<CardNode> lowerTopMostCards = parentTalkNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.BODY);
+        _cardManager.AddToTopLevel(rootNode);
+
+        List<CardNode> lowerTopMostCards = parentTalkNode.GetTopNodesBelowNodeInPile(rootNode, CardTraversal.CONTEXT);
 
         foreach (CardNode node in lowerTopMostCards)
         {
-            // Braucht man die noch, wenn man sie in Part1 bereits toplevel gemacht hat? Ist so'ne Dependency überhaupt OK? Vllt. pro Animation top-level resetten TODO
             _cardManager.AddToTopLevel(node);
         }
 
@@ -40,9 +41,9 @@ public class SpreadDialogueAnimationPart2 : MainAnimation
 
         int activeHeight = parentTalkNode.GetNodeCountBelowNodeInPile(_cardManager.RootNode, CardTraversal.CONTEXT) + activeNode.GetNodeCount(CardTraversal.CONTEXT);
 
-        sequence.Join(DOTween.Sequence()
+        sequence
             .Append(_subAnimations.MoveNodeY(activeNode, activeHeight))
-            .Append(_subAnimations.MoveNodeXToLeft(activeNode)));
+            .Append(_subAnimations.MoveNodeXToLeft(activeNode));
 
         return sequence;
     }

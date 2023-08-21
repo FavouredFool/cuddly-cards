@@ -42,27 +42,10 @@ public class SpreadDialogueAnimationPart3 : MainAnimation
 
         CardNode backNode = baseNode.Parent;
 
-        List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
-
-        foreach (CardNode node in lowerTopMostCardsBack)
-        {
-            _cardManager.AddToTopLevel(node);
-        }
-
-        List<CardNode> animatingNodesBack = lowerTopMostCardsBack;
-        animatingNodesBack.Add(backNode);
-
-        // TODO FIX THIS WHEN THE JSON EDITOR IS DONE
-
-        /*
-        foreach (CardNode node in animatingNodesBack)
-        {
-            entireSequence.Join(DOTween.Sequence()
-                .Append(_subAnimations.MoveNodeFarther(node))
-                .AppendInterval(_horizontalTime + _waitTime)
-                .Append(_subAnimations.RaiseNodeToHeight(node, node.GetNodeCountUpToNodeInPile(backNode, CardTraversal.BODY))));
-        }
-        */
+        sequence.Join(DOTween.Sequence()
+            .Append(_subAnimations.MoveNodeZFarther(backNode))
+            .AppendInterval(_waitTime + _horizontalTime)
+            .Append(_subAnimations.MoveNodeY(backNode, backNode.GetNodeCount(CardTraversal.BODY))));
 
         return sequence;
     }
@@ -76,9 +59,35 @@ public class SpreadDialogueAnimationPart3 : MainAnimation
 
         if (rootNode != backNode)
         {
-            // FIX THIS WHEN THE JSON EDITOR IS DONE
+            List<CardNode> lowerTopMostCardsBack = baseNode.GetTopNodesBelowNodeInPile(backNode, CardTraversal.BODY);
 
-            sequence.Append(_subAnimations.MoveNodeY(rootNode, 300));
+            foreach (CardNode node in lowerTopMostCardsBack)
+            {
+                _cardManager.AddToTopLevel(node);
+            }
+
+            foreach (CardNode node in lowerTopMostCardsBack)
+            {
+                int height = node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT);
+                int backNodeHeight = backNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT;
+
+                if (height > backNodeHeight)
+                {
+                    height -= backNodeHeight;
+                }
+
+                sequence.Join(DOTween.Sequence()
+                    .Append(_subAnimations.MoveNodeZFarther(node))
+                    .AppendInterval(_waitTime)
+                    .Append(_subAnimations.MoveNodeXToRight(node))
+                    .Append(_subAnimations.MoveNodeY(node, height)));
+            }
+
+            sequence.Join(DOTween.Sequence()
+                .Append(_subAnimations.MoveNodeZFarther(rootNode))
+                .AppendInterval(_waitTime)
+                .Append(_subAnimations.MoveNodeXToRight(rootNode))
+                .Append(_subAnimations.MoveNodeY(rootNode, rootNode.GetNodeCount(CardTraversal.CONTEXT) - backNode.GetNodeCount(CardTraversal.CONTEXT))));
         }
 
         return sequence;
