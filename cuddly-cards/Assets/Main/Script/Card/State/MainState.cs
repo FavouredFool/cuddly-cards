@@ -86,7 +86,7 @@ public class MainState : SettedState
 
     public void ToInventoryTransition(CardNode clickedNode)
     {
-        List<CardAnimation> animations = new() { new CloseAnimation(_cardManager), new ToInventoryAnimation(_cardManager, true) };
+        List<CardAnimation> animations = new() { new CloseDefaultAnimation(_cardManager), new ToInventoryAnimation(_cardManager, true) };
         LayoutState newState = new InventoryState(_cardManager);
 
         ToTransition(clickedNode, animations, newState);

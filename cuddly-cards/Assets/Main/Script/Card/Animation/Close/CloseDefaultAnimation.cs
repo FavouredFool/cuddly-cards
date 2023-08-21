@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CloseAnimation : MainAnimation
+public class CloseDefaultAnimation : MainAnimation
 {
-    public CloseAnimation(CardManager cardManager) : base(cardManager) { }
+    public CloseDefaultAnimation(CardManager cardManager) : base(cardManager) { }
 
     public override Tween ChildAnimation(CardNode activeNode, CardNode baseNode)
     {
@@ -27,7 +27,7 @@ public class CloseAnimation : MainAnimation
     {
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Join(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode));
+        sequence.Append(_subAnimations.MoveNodeYLiftPile(baseNode, baseNode));
 
         return sequence;
     }

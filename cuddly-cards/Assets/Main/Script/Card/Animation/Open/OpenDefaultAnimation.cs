@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class OpenAnimation : OpenParentAnimation
+public class OpenDefaultAnimation : OpenParentAnimation
 {
-    public OpenAnimation(CardManager cardManager) : base(cardManager) { }
+    public OpenDefaultAnimation(CardManager cardManager) : base(cardManager) { }
 
     public override Tween MoveChildren(CardNode baseNode)
     {

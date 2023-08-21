@@ -96,7 +96,7 @@ public class LockState : SettedState
         // Für die Animation muss ich das im Voraus machen, bevor es erneut von dem MainState gesetzt wird
         _cardManager.BaseNode = childNode;
 
-        List<CardAnimation> animations = new() { new FromInventoryAnimation(_cardManager, false), new OpenAnimation(_cardManager) };
+        List<CardAnimation> animations = new() { new FromInventoryAnimation(_cardManager, false), new OpenDefaultAnimation(_cardManager) };
         LayoutState newState = new MainState(_cardManager, childNode);
 
         ToTransition(childNode, animations, newState);
