@@ -69,7 +69,7 @@ public class SpreadDialogueAnimationPart3 : MainAnimation
             foreach (CardNode node in lowerTopMostCardsBack)
             {
                 int height = node.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT);
-                int backNodeHeight = backNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT;
+                int backNodeHeight = backNode.GetNodeCountUpToNodeInPile(rootNode, CardTraversal.CONTEXT);
 
                 if (height > backNodeHeight)
                 {
