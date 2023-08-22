@@ -70,7 +70,7 @@ public class DialogueLockState : SettedState
     {
         // Transition back to the dialogue to the previously active position.
 
-        List<CardAnimation> animations = new() { new BackCloseToCloseAnimation(_cardManager), new FromInventoryAnimation(_cardManager, true) };
+        List<CardAnimation> animations = new() { new BackCloseToCloseAnimation(_cardManager), new FromInventoryAnimation(_cardManager, false) };
 
         PopTransition(clickedNode, animations);
     }
@@ -117,7 +117,7 @@ public class DialogueLockState : SettedState
         // Für die Animation muss ich das im Voraus machen, bevor es erneut von dem MainState gesetzt wird
         _cardManager.BaseNode = dialogueNode;
 
-        List<CardAnimation> animations = new() { };
+        List<CardAnimation> animations = new() { new BackCloseToCloseAnimation(_cardManager), new FromInventoryAnimation(_cardManager, false) };
 
         _dialogueState.SetDialogueCondition(DialogueState.DialogueCondition.UPCLOSE);
         _dialogueState.IncreaseDialogueStartPosition();

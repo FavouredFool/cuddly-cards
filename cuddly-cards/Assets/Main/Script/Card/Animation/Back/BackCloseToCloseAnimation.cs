@@ -19,7 +19,7 @@ public class BackCloseToCloseAnimation : BackParentAnimation
             .Append(_subAnimations.MoveNodeYLiftPile(activeNode, activeNode))
             .Append(_subAnimations.MoveNodeZNearer(activeNode))
             .AppendInterval(_waitTime + _horizontalTime)
-            .Append(_subAnimations.MoveNodeY(activeNode, activeNode.GetNodeCount(CardTraversal.CONTEXT) - baseNode.GetNodeCount(CardTraversal.CONTEXT)));
+            .Append(_subAnimations.MoveNodeY(activeNode, activeNode.GetNodeCount(CardTraversal.CONTEXT)));
     }
 
     public override Tween AnimateChildrenAndBase(CardNode activeNode, CardNode baseNode)
@@ -39,9 +39,7 @@ public class BackCloseToCloseAnimation : BackParentAnimation
 
         return DOTween.Sequence()
             .Append(_subAnimations.MoveNodeYLiftPile(baseNode, activeNode))
-            .AppendInterval(_horizontalTime + _waitTime)
-            .Append(_subAnimations.MoveNodeXToChild(baseNode, baseNode))
-            .Append(_subAnimations.MoveNodeY(baseNode, baseNode.GetNodeCount(CardTraversal.CONTEXT)));
+            .AppendInterval(_horizontalTime + _waitTime + _horizontalTime + _verticalTime);
     }
 
     public Tween SetOtherChildren(CardNode activeNode, CardNode baseNode)

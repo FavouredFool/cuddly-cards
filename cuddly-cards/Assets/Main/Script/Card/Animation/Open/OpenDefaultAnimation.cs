@@ -13,8 +13,11 @@ public class OpenDefaultAnimation : OpenParentAnimation
     {
         Sequence sequence = DOTween.Sequence();
 
+        
         for (int i = 0; i < baseNode.Children.Count; i++)
         {
+            //_cardManager.AddToTopLevel(baseNode.Children[i]);
+
             sequence.Join(DOTween.Sequence()
                 .AppendInterval(_verticalTime)
                 .Append(_subAnimations.MoveNodeXToChild(baseNode.Children[i], baseNode.Children[i]))

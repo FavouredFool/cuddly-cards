@@ -22,10 +22,6 @@ public class DialogueState : SettedState
     {
         _cardManager.BaseNode = _newBaseNode;
 
-        // Animations?
-
-        SetStatic();
-
         switch (_dialogueCondition)
         {
             case DialogueCondition.UPCLOSE:
@@ -39,7 +35,7 @@ public class DialogueState : SettedState
                     ToTalkTransition(_newBaseNode.Parent);
                 break;
             case DialogueCondition.ACCEPTED:
-                    SetStatic();
+                    OpenDialogue();
                 break;
         }
     }
@@ -66,6 +62,20 @@ public class DialogueState : SettedState
                 ToDefaultTransitions(clickedNode);
                 return;
         }
+    }
+
+    public async void OpenDialogue()
+    {
+        List<CardAnimation> animations = new() { new OpenDefaultAnimation(_cardManager) };
+
+        foreach (CardAnimation animation in animations)
+        {
+            _animationManager.AddAnimation(animation);
+        }
+
+        await _animationManager.PlayAnimations(_cardManager.BaseNode, _cardManager.BaseNode);
+        
+        SetStatic();
     }
 
     public void CollectKey(CardNode clickedNode)
@@ -104,7 +114,7 @@ public class DialogueState : SettedState
 
         if (_cardManager.BaseNode.Parent == clickedNode)
         {
-            ToBackTransition(clickedNode);
+            ToTalkTransition(clickedNode);
             return;
         }
 
@@ -113,22 +123,6 @@ public class DialogueState : SettedState
             ToRootTransition(clickedNode);
             return;
         }
-    }
-
-    public void ToChildTransition(CardNode clickedNode)
-    {
-        List<CardAnimation> animations = new() { new ChildDefaultToDefaultAnimation(_cardManager) };
-        LayoutState newState = new MainState(_cardManager, clickedNode);
-
-        ToTransition(clickedNode, animations, newState);
-    }
-
-    public void ToBackTransition(CardNode clickedNode)
-    {
-        List<CardAnimation> animations = new() { new BackDefaultToDefaultAnimation(_cardManager) };
-        LayoutState newState = new MainState(_cardManager, clickedNode);
-
-        ToTransition(clickedNode, animations, newState);
     }
 
     public void ToRootTransition(CardNode clickedNode)
