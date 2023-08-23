@@ -140,7 +140,7 @@ public class CardManager : MonoBehaviour
     {
         if (_topLevelNodesMainPile.Contains(cardNode))
         {
-            Debug.LogWarning("Toplevels versucht zu doppeln");
+            //Debug.LogWarning("Toplevels versucht zu doppeln");
             return;
         }
 
